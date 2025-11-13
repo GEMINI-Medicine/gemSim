@@ -366,6 +366,7 @@ dummy_diag <- function(
 #' @importFrom sn rsn
 #' @importFrom MCMCpack rdirichlet
 #' @importFrom lubridate ymd_hm
+#' @import Rgemini
 #' @export
 #'
 #' @examples
