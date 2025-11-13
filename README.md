@@ -1,2 +1,2 @@
-# GEMINI-dummy-data
+# GEMINI-data-simulation
 `GEMINI-dummy-data` is a custom R package providing functions that generate synthetic data based on the [GEMINI database](https://geminimedicine.ca/the-gemini-database/).
