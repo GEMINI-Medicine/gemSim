@@ -1,3 +1,17 @@
+#' Imports for the entire package
+#' Doesn't require Depends or `@import` per function
+#'
+#' @rawNamespace
+#' import(data.table, except = c("first", "last", "between", "month", "hour",
+#' "quarter", "week", "year", "wday", "second", "minute", "mday", "yday",
+#' "isoweek"))
+#' @rawNamespace
+#' import(dplyr, except = c("first", "last", "between", "matches"))
+#' @rawNamespace
+#' import(lubridate)
+#'
+NULL
+
 #' @title
 #' Check user inputs
 #'
