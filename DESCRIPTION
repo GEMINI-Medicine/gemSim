@@ -18,6 +18,9 @@ Imports:
     RPostgreSQL,
     SuppDists,
     MCMCpack,
+    Rgemini,
     sn,
     stringi,
     textstem
+Remotes:
+    GEMINI-Medicine/Rgemini
