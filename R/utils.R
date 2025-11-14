@@ -1357,7 +1357,8 @@ sample_time_shifted_lnorm <- function(nrow, meanlog, sdlog, min = 0, max = 48, s
 #' generate_id_hospital(nid = 1000, n_hospitals = 10, avg_repeats = 1)
 #'
 generate_id_hospital <- function(
-    nid = 1000, n_hospitals = 10, avg_repeats = 1.5, include_prop = 1, cohort = NULL, by_los = FALSE, seed = NULL) {
+  nid = 1000, n_hospitals = 10, avg_repeats = 1.5, include_prop = 1, cohort = NULL, by_los = FALSE, seed = NULL
+) {
   if (!is.null(seed)) {
     set.seed(seed)
   }
