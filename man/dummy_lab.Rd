@@ -4,9 +4,41 @@
 \alias{dummy_lab}
 \title{Generated simulated lab data}
 \usage{
-dummy_lab(id, omop, value, unit, mintime)
+dummy_lab(
+  nid = 1000,
+  n_hospitals = 10,
+  time_period = c(2015, 2023),
+  cohort = NULL,
+  seed = NULL
+)
+
+dummy_lab(
+  nid = 1000,
+  n_hospitals = 10,
+  time_period = c(2015, 2023),
+  cohort = NULL,
+  seed = NULL
+)
 }
 \arguments{
+\item{nid}{(\code{integer}) Number of unique encounter IDs to simulate. In this data table, each ID occurs once.}
+
+\item{n_hospitals}{(\code{integer}) Number of hospitals in simulated dataset}
+
+\item{time_period}{(\code{numeric}): Date range of data, by years or specific dates in either format:
+("yyyy-mm-dd", "yyyy-mm-dd") or (yyyy, yyyy)}
+
+\item{cohort}{(\code{data.frame|data.table})\cr Optional, a data frame or data table with columns:
+\itemize{
+\item \code{genc_id} (\code{integer}): GEMINI encounter ID
+\item \code{hospital_num} (\code{integer}): Hospital ID
+\item \code{admission_date_time} (\code{character}): Date and time of IP admission in YYYY-MM-DD HH:MM format
+\item \code{discharge_date_time} (\code{character}): Date and time of IP discharge in YYYY-MM-DD HH:MM format.
+When \code{cohort} is not NULL, \code{nid}, \code{n_hospitals}, and \code{time_period} are ignored.
+}}
+
+\item{seed}{(\code{integer}) Optional, a number for setting the seed to get reproducible results.}
+
 \item{id}{(\code{numeric})\cr
 A single identifier that is repeated to match the length of \code{value}.}
 
@@ -25,10 +57,28 @@ In the format yyyy-mm-dd hh:mm. Earliest recorded test performed time.}
 \value{
 (\code{data.table})\cr
 With the columns, \code{id}, \code{omop}, \code{value}, \code{unit}, and \code{collection_date_time} as described above.
+
+(\code{data.table})\cr A data.table object similar to the "lab" table that contains the following fields:
+\itemize{
+\item \code{genc_id} (\code{integer}): GEMINI encounter ID
+\item \code{hospital_num} (\code{integer}): Hospital ID
+\item \code{test_type_mapped_omop} (\code{character}):	Test name and code mapped by GEMINI following international standard
+\item \code{test_name_raw} (\code{character}): Test name as reported by hospital
+\item \code{test_code_raw} (\code{character}): Test code as reported by hospital, either 3000963 (CBC) or 3019550 (electrolyte)
+\item \code{result_value} (\code{character}): Test results
+\item \code{collection_date_time} (\code{character}):	Date and time when the sample was collected
+}
 }
 \description{
 Designed to mimic the most important elements of the GEMINI lab table as defined in the
 \href{https://geminimedicine.ca/the-gemini-database/}{GEMINI Data Repository Dictionary}.
+
+This function creates a dummy dataset with a subset of variables that
+are contained in the GEMINI "lab" table, as seen in
+\href{https://geminimedicine.ca/the-gemini-database/}{GEMINI Data Repository Dictionary}.
+
+This function will return: collection date time, information about the test type, test code, and test result value.
+It is a long format data table.
 }
 \examples{
 lab <- dummy_lab(1, 3024641, c(7, 8, 15, 30), "mmol/L", "2023-01-02 08:00")
