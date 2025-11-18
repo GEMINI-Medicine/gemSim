@@ -28,10 +28,10 @@ dummy_lab(
 \item{time_period}{(\code{numeric}): Date range of data, by years or specific dates in either format:
 ("yyyy-mm-dd", "yyyy-mm-dd") or (yyyy, yyyy)}
 
-\item{cohort}{(\code{data.frame|data.table})\cr Optional, a data frame or data table with columns:
+\item{cohort}{(\verb{data.frame or data.table})\cr Optional, a data frame or data table with columns:
 \itemize{
-\item \code{genc_id} (\code{integer}): GEMINI encounter ID
-\item \code{hospital_num} (\code{integer}): Hospital ID
+\item \code{genc_id} (\code{integer}): Mock encounter ID numbers
+\item \code{hospital_num} (\code{integer}): Mock hospital ID numbers
 \item \code{admission_date_time} (\code{character}): Date and time of IP admission in YYYY-MM-DD HH:MM format
 \item \code{discharge_date_time} (\code{character}): Date and time of IP discharge in YYYY-MM-DD HH:MM format.
 When \code{cohort} is not NULL, \code{nid}, \code{n_hospitals}, and \code{time_period} are ignored.
@@ -60,8 +60,8 @@ With the columns, \code{id}, \code{omop}, \code{value}, \code{unit}, and \code{c
 
 (\code{data.table})\cr A data.table object similar to the "lab" table that contains the following fields:
 \itemize{
-\item \code{genc_id} (\code{integer}): GEMINI encounter ID
-\item \code{hospital_num} (\code{integer}): Hospital ID
+\item \code{genc_id} (\code{integer}): Mock encounter ID; integers starting from 1 or as seen in \code{cohort}
+\item \code{hospital_num} (\code{integer}): Mock hospital ID; integers starting from 1 or as seen in \code{cohort}
 \item \code{test_type_mapped_omop} (\code{character}):	Test name and code mapped by GEMINI following international standard
 \item \code{test_name_raw} (\code{character}): Test name as reported by hospital
 \item \code{test_code_raw} (\code{character}): Test code as reported by hospital, either 3000963 (CBC) or 3019550 (electrolyte)
