@@ -669,9 +669,9 @@ dummy_admdad <- function(id, admtime) {
 #' @param time_period (`numeric`): Date range of data, by years or specific dates in either format:
 #' ("yyyy-mm-dd", "yyyy-mm-dd") or (yyyy, yyyy)
 #'
-#' @param cohort (`data.frame|data.table`)\cr Optional, a data frame or data table with columns:
-#' - `genc_id` (`integer`): GEMINI encounter ID
-#' - `hospital_num` (`integer`): Hospital ID
+#' @param cohort (`data.frame or data.table`)\cr Optional, a data frame or data table with columns:
+#' - `genc_id` (`integer`): Mock encounter ID numbers
+#' - `hospital_num` (`integer`): Mock hospital ID numbers
 #' - `admission_date_time` (`character`): Date and time of IP admission in YYYY-MM-DD HH:MM format
 #' - `discharge_date_time` (`character`): Date and time of IP discharge in YYYY-MM-DD HH:MM format.
 #' When `cohort` is not NULL, `nid`, `n_hospitals`, and `time_period` are ignored.
@@ -679,8 +679,8 @@ dummy_admdad <- function(id, admtime) {
 #' @param seed (`integer`) Optional, a number for setting the seed to get reproducible results.
 #'
 #' @return (`data.table`)\cr A data.table object similar to the "lab" table that contains the following fields:
-#' - `genc_id` (`integer`): GEMINI encounter ID
-#' - `hospital_num` (`integer`): Hospital ID
+#' - `genc_id` (`integer`): Mock encounter ID; integers starting from 1 or as seen in `cohort`
+#' - `hospital_num` (`integer`): Mock hospital ID; integers starting from 1 or as seen in `cohort`
 #' - `test_type_mapped_omop` (`character`):	Test name and code mapped by GEMINI following international standard
 #' - `test_name_raw` (`character`): Test name as reported by hospital
 #' - `test_code_raw` (`character`): Test code as reported by hospital, either 3000963 (CBC) or 3019550 (electrolyte)
@@ -779,9 +779,8 @@ dummy_lab <- function(nid = 1000, n_hospitals = 10, time_period = c(2015, 2023),
       tz = "UTC"
     )
 
-    # include 0.91 of IP admissions are in `lab`
-    # on average, the included encounters have 15.8 lab tests
-    df1 <- generate_id_hospital(cohort = cohort, include_prop = 1, avg_repeats = 15.8, by_los = FALSE, seed = seed)
+        # on average, the included encounters have 15.8 lab tests
+        df1 <- generate_id_hospital(cohort = cohort, include_prop = 1, avg_repeats = 15.8, by_los = FALSE, seed = seed)
 
     ####### get `collection_date_time` #######
     # add sampled hours to `admission_date_time`
@@ -791,11 +790,11 @@ dummy_lab <- function(nid = 1000, n_hospitals = 10, time_period = c(2015, 2023),
     ))) +
       dhours(rsn_trunc(.N, 3.5, 7.1, 4.6, min_n = 0, max = 24, seed = seed))]
 
-    # if `collection_date_time` is sampled to be greater than discharge, re-sample
-    while (length(which(df1$collection_date_time > df1$discharge_date_time))) {
-      df1[collection_date_time > discharge_date_time, collection_date_time := as.Date(admission_date_time) +
-        dhours(rsn_trunc(.N, 3.5, 7.1, 4.6, min_n = 0, max = 24))]
-    }
+        # if `collection_date_time` is sampled to be later than `discharge+date_time`, re-sample
+        while (length(which(df1$collection_date_time > df1$discharge_date_time))) {
+            df1[collection_date_time > discharge_date_time, collection_date_time := as.Date(admission_date_time) +
+            dhours(rsn_trunc(.N, 3.5, 7.1, 4.6, min_n = 0, max = 24))]
+        }
 
     # only include the genc_id and hospital_num columns from `cohort`
     df1 <- df1[, c("genc_id", "hospital_num", "collection_date_time")]
