@@ -779,8 +779,8 @@ dummy_lab <- function(nid = 1000, n_hospitals = 10, time_period = c(2015, 2023),
       tz = "UTC"
     )
 
-        # on average, the included encounters have 15.8 lab tests
-        df1 <- generate_id_hospital(cohort = cohort, include_prop = 1, avg_repeats = 15.8, by_los = FALSE, seed = seed)
+    # on average, the included encounters have 15.8 lab tests
+    df1 <- generate_id_hospital(cohort = cohort, include_prop = 1, avg_repeats = 15.8, by_los = FALSE, seed = seed)
 
     ####### get `collection_date_time` #######
     # add sampled hours to `admission_date_time`
@@ -790,11 +790,11 @@ dummy_lab <- function(nid = 1000, n_hospitals = 10, time_period = c(2015, 2023),
     ))) +
       dhours(rsn_trunc(.N, 3.5, 7.1, 4.6, min_n = 0, max = 24, seed = seed))]
 
-        # if `collection_date_time` is sampled to be later than `discharge+date_time`, re-sample
-        while (length(which(df1$collection_date_time > df1$discharge_date_time))) {
-            df1[collection_date_time > discharge_date_time, collection_date_time := as.Date(admission_date_time) +
-            dhours(rsn_trunc(.N, 3.5, 7.1, 4.6, min_n = 0, max = 24))]
-        }
+    # if `collection_date_time` is sampled to be later than `discharge+date_time`, re-sample
+    while (length(which(df1$collection_date_time > df1$discharge_date_time))) {
+      df1[collection_date_time > discharge_date_time, collection_date_time := as.Date(admission_date_time) +
+        dhours(rsn_trunc(.N, 3.5, 7.1, 4.6, min_n = 0, max = 24))]
+    }
 
     # only include the genc_id and hospital_num columns from `cohort`
     df1 <- df1[, c("genc_id", "hospital_num", "collection_date_time")]
