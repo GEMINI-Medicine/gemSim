@@ -692,13 +692,14 @@ dummy_admdad <- function(id, admtime) {
 #' @importFrom MCMCpack rdirichlet
 #'
 #' @export
-#' 
+#'
 #' @examples
 #' dummy_lab_cbc_electrolyte(10, 1, seed = 1)
 #' dummy_lab_cbc_electrolyte(cohort = dummy_ipdmdad())
 #'
 dummy_lab_cbc_electrolyte <- function(
-  nid = 1000, n_hospitals = 10, time_period = c(2015, 2023), cohort = NULL, seed = NULL) {
+  nid = 1000, n_hospitals = 10, time_period = c(2015, 2023), cohort = NULL, seed = NULL
+) {
   ### check for valid inputs ###
   if (!is.null(cohort)) {
     # if `cohort` is provided, check for columns and their types
