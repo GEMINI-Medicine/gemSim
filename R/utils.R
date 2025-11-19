@@ -7,10 +7,373 @@
 #' "isoweek"))
 #' @rawNamespace
 #' import(dplyr, except = c("first", "last", "between", "matches"))
-#' @rawNamespace
-#' import(lubridate)
 #'
 NULL
+
+#' @title
+#' Check user inputs
+#'
+#' @description
+#' Function checking whether user-provided inputs for a function are
+#' appropriate. The following check is applied for all inputs:
+#' - Whether input is of correct type (e.g., `logical`, `numeric`, `character`
+#' etc.)
+#' For some input types, the following additional checks can be applied
+#' optionally:
+#' - Check whether length of provided input is as expected
+#' - For `numeric`/`integer` inputs: Check whether provided input is within
+#' acceptable interval (e.g., between 1-100).
+#' - For `character` (categorical) inputs: Check whether input corresponds to
+#' one of acceptable categories.
+#' - For `data.table|data.frame` inputs: 1) Check whether required columns exist
+#' in table, 2) whether each column is of a specified type, and 3) whether all
+#' entries are unique.
+#'
+#' @param arginput (`character`)\cr
+#' Input argument to be checked. Users can provide multiple inputs to be checked
+#' within a single call to this function by providing all inputs as a list
+#' (e.g., `arginput = list(input1, input2)`). However, this only works if all
+#' input arguments (e.g., input1 AND input2) are supposed to meet the same
+#' criteria (e.g., both should be numeric within interval 0-10).
+#'
+#' @param argtype (`character`)\cr
+#' Required type of input argument based on `class()`. Example type(s) users can
+#' specify:
+#' - `"logical"`
+#' - `"character"`
+#' - `"numeric"` (or `"integer"` if specifically checking for integers)
+#' - `"data.table"`
+#' - `"data.frame"`
+#' - `"DBI" | "dbcon" | "PostgreSQL"` for DB connection input
+#' - `"list"`
+#' - `"Date"`, `"POSIXct"`, `"POSIXt"`
+#' - ...
+#'
+#' If an input object can be one of several acceptable types (e.g.,
+#' `data.table` OR `data.frame`), types should be provided as a character vector
+#' (e.g., `argtype = c("data.frame", "data.table")`).
+#'
+#' If `argtype` is `"integer"`, the tests will pass
+#' 1) if `class(input) == "integer"` or
+#' 2) if `class(input) == "numeric"` and the number is an integer
+#'
+#' If `argtype` is `"numeric"`, inputs that are of class `"integer"` will also
+#' pass. In other words, integers are treated as a special case of numeric in
+#' the case of `argtype`. Therefore, checks with
+#' `argtype = c("integer", "numeric")` (i.e., input should be either integer
+#' *or* numeric) are not meaningful and should be avoided. Instead, users should
+#' specify if inputs need to be an `"integer"` specifically
+#' (`argtype = "integer"`), or if they just need to be any `"numeric"` input
+#' (`argtype = "numeric"`).
+#'
+#' @param length (`numeric`)\cr
+#' Optional input specifying the expected length of a given input argument
+#' (e.g., use `length = 2` to check if a vector/list contains 2 elements).
+#'
+#' @param categories (`character`)\cr
+#' Optional input if argtype is `"character"`.
+#' Character vector specifying acceptable categories for character inputs (e.g.,
+#' `categories = c("none", "all")`)
+#'
+#' @param interval (`numeric`)\cr
+#' Optional input if argtype is `"numeric"` or `"integer"`.
+#' Numeric vector specifying acceptable range for numeric inputs (e.g.,
+#' `interval = c(1,100)`, or for non-negative numbers: `interval = c(0, Inf)`).
+#' Note that `interval` specifies a closed interval (i.e., end points are
+#' included).
+#'
+#' @param colnames (`character`)\cr
+#' Optional input if argtype is `"data.frame"` or `"data.table"`.
+#' Character vector specifying all columns that need to exist in the input table
+#' (e.g., `colnames = c("genc_id", "discharge_date_time")`).
+#'
+#' @param coltypes (`character`)\cr
+#' Optional input if argtype is `"data.frame"` or `"data.table"`.
+#' Character vector specifying required data type of each column in `colnames`
+#' (e.g., `coltypes = c("integer", "character")`) where the order of the vector
+#' elements should correspond to the order of the entries in `colnames`.
+#' If a column can have multiple acceptable types, types should be separated by
+#' `|` (e.g., `coltypes = c("integer|numeric", "character|POSIXct")`)). For any
+#' columns that do not have to be of a particular type, simply specify as `""`
+#' (e.g., `coltypes = c("integer|numeric", "")`).
+#'
+#' Note: As opposed to `argtype`, `coltypes` need to strictly correspond to the
+#' type that is returned by `class(column)`. That means that type `"integer"` is
+#' *not* a special case of `"numeric"`, but is treated as a separate type. This
+#' is relevant for `genc_id` columns, which are of class `"integer"`, and
+#' therefore `coltype = "numeric"` will return an error.
+#'
+#' @param unique (`logical`)\cr
+#' Optional input if argtype is `"data.frame"` or `"data.table"`. Flag
+#' indicating whether all rows in the provided input table need to be distinct.
+#'
+#' @return \cr
+#' If any of the input checks fail, function will return error message and stop
+#' execution of parent `Rgemini` function. Otherwise, function will not return
+#' anything.
+#'
+#' @examples
+#' \dontrun{
+#' my_function <- function(input1 = TRUE, # logical
+#'                         input2 = 2, # numeric
+#'                         input3 = 1.5, # numeric
+#'                         input4 = data.frame(
+#'                           genc_id = as.integer(5),
+#'                           discharge_date_time = Sys.time(),
+#'                           hospital_num = 1
+#'                         )) {
+#'   # check single input
+#'   check_input(input1, "logical")
+#'
+#'   # check multiple inputs that should be of same type/meet same criteria
+#'   check_input(
+#'     arginput = list(input2, input3), argtype = "numeric",
+#'     length = 1, interval = c(1, 10)
+#'   )
+#'
+#'   # check table input (can be either data.frame or data.table)
+#'   check_input(input4,
+#'     argtype = c("data.table", "data.frame"),
+#'     colnames = c("genc_id", "discharge_date_time", "hospital_num"),
+#'     coltypes = c("integer", "character|POSIXct", ""),
+#'     unique = TRUE
+#'   )
+#' }
+#'
+#' # will not result in any errors (default inputs are correct)
+#' my_function()
+#'
+#' # will result in an error
+#' my_function(input1 = 1) # input 1 has to be logical
+#' }
+#'
+check_input <- function(arginput, argtype,
+                        length = NULL,
+                        categories = NULL, # for character inputs only
+                        interval = NULL, # for numeric inputs only
+                        colnames = NULL, # for data.table/.frame inputs only
+                        coltypes = NULL, #          "-"
+                        unique = FALSE) { #          "-"
+
+
+  ## Get argument names and restructure input
+  if (any(class(arginput) == "list")) {
+    # Note: Users can provide multiple arginputs to be checked by combining them
+    # into a list ...or they might want to check an arginput that is supposed to
+    # be a list itself
+    # Here: We infer which one it is based on deparse(substitute)
+    # If arginput is provided as a single input name:
+    # -> assume input itself is supposed to be a list
+    # If each list item corresponds to a separate argument name
+    # -> assume user wants to check individual items
+    # it's a bit hacky but seems to work for tested scenarios
+    argnames <- sapply(substitute(arginput), deparse)[-1]
+    if (length(argnames) < 1) {
+      argnames <- deparse(substitute(arginput))
+      arginput <- list(arginput = arginput)
+    }
+  } else {
+    # get name of argument
+    argnames <- deparse(substitute(arginput))
+
+    # turn arginput into list (for Map function below to work)
+    arginput <- list(arginput = arginput)
+  }
+
+
+  ## Define new function to check for integers
+  #  Note: base R's `is.integer` does not return TRUE if type == numeric
+  #  Note 2: For coltypes check below, this function is not used
+  #  (instead coltypes are checked for whether class(column) returns "integer")
+  is_integer <- function(x) {
+    if (is.numeric(x)) {
+      tol <- .Machine$double.eps
+      return(abs(x - round(x)) < tol)
+    } else {
+      return(FALSE)
+    }
+  }
+
+
+  ## Function defining all input checks
+  run_checks <- function(arginput, argname) {
+    ###### CHECK 1 (for all input types): Check if type is correct
+    ## For DB connections
+    if (any(grepl("dbi|con|posgre|sql", argtype, ignore.case = TRUE))) {
+      if (inherits(arginput, "OdbcConnection") || !grepl("PostgreSQL", class(arginput)[1])) {
+        stop(
+          paste0(
+            "Invalid user input in '",
+            as.character(sys.calls()[[1]])[1], "': '",
+            argname, "' needs to be a valid PostgreSQL database connection.\n",
+            "Database connections established with `odbc` are currently not supported.\n",
+            "Instead, please use the following method to establish a DB connection:\n",
+            "drv <- dbDriver('PostgreSQL')\n",
+            "dbcon <- DBI::dbConnect(drv, dbname = 'db_name', ",
+            "host = 'domain_name.ca', port = 1234, ",
+            "user = getPass('Enter user:'), password = getPass('password'))\n",
+            "\nPlease refer to the function documentation for more details."
+          ),
+          call. = FALSE
+        )
+      } else if (!RPostgreSQL::isPostgresqlIdCurrent(arginput)) {
+        # if PostgreSQL connection, make sure it's still active
+        stop(
+          paste0(
+            "Please make sure your database connection is still active.\n",
+            "You may need to reconnect to the database if the connection has timed out."
+          ),
+          call. = FALSE
+        )
+      }
+
+      ## For all other inputs
+    } else if ((any(argtype == "integer") && !all(is_integer(arginput))) ||
+      (!any(argtype == "integer") && !any(class(arginput) %in% argtype) &&
+        (!(any(argtype == "numeric") &&
+          all(is_integer(arginput)))))) { # in case argtype is "numeric" and provided input is "integer", don't show error
+      stop(
+        paste0(
+          "Invalid user input in '", as.character(sys.calls()[[1]])[1], "': '",
+          argname, "' needs to be of type '", paste(argtype,
+            collapse = "' or '"
+          ), "'.",
+          "\nPlease refer to the function documentation for more details."
+        ),
+        call. = FALSE
+      )
+    }
+
+
+    ###### CHECK 2: Check if length of input argument is as expected [optional]
+    if (!is.null(length)) {
+      if (length(arginput) != length) {
+        stop(
+          paste0(
+            "Invalid user input in '", as.character(sys.calls()[[1]])[1],
+            "': '", argname, "' needs to be of length ", length,
+            "\nPlease refer to the function documentation for more details."
+          ),
+          call. = FALSE
+        )
+      }
+    }
+
+
+    ###### CHECK 3 (for character inputs):
+    ###### Check if option is one of acceptable alternatives [optional]
+    if (any(argtype == "character") && !is.null(categories)) {
+      if (any(!arginput %in% categories)) {
+        stop(
+          paste0(
+            "Invalid user input in '", as.character(sys.calls()[[1]])[1],
+            "': '", argname, "' needs to be either '", paste0(
+              paste(categories[seq_along(categories) - 1], collapse = "', '"),
+              "' or '", categories[length(categories)]
+            ), "'.",
+            "\nPlease refer to the function documentation for more details."
+          ),
+          call. = FALSE
+        )
+      }
+    }
+
+
+    ###### CHECK 4 (for numeric/integer inputs):
+    ###### Check if number is within acceptable interval [optional]
+    if (any(argtype %in% c("numeric", "integer")) && !is.null(interval)) {
+      if (any(arginput < interval[1]) || any(arginput > interval[2])) {
+        stop(
+          paste0(
+            "Invalid user input in '", as.character(sys.calls()[[1]])[1],
+            "': '", argname, "' needs to be within closed interval [",
+            interval[1], ", ", interval[2], "].",
+            "\nPlease refer to the function documentation for more details."
+          ),
+          call. = FALSE
+        )
+      }
+    }
+
+
+    ###### CHECK 5 (for data.table/data.frame inputs):
+    ###### Check if nrow() > 0 & if relevant columns exist [optional]
+    if (any(argtype %in% c("data.frame", "data.table")) && !is.null(colnames)) {
+      if (nrow(arginput) == 0) {
+        stop(
+          paste0(
+            "Invalid user input in '", as.character(sys.calls()[[1]])[1],
+            "': '", argname, "' input table has 0 rows.",
+            "\nPlease carefully check your input."
+          ),
+          call. = FALSE
+        )
+      }
+
+      # get missing columns
+      missing_cols <- setdiff(colnames, colnames(arginput))
+
+      if (length(missing_cols) > 0) {
+        stop(
+          paste0(
+            "Invalid user input in '", as.character(sys.calls()[[1]])[1],
+            "': '", argname, "' input table is missing required column(s) '",
+            paste0(missing_cols, collapse = "', '"), "'.",
+            "\nPlease refer to the function documentation for more details."
+          ),
+          call. = FALSE
+        )
+      }
+    }
+
+
+    ###### CHECK 6 (for data.table/data.frame inputs):
+    ###### Check if required columns are of correct type [optional]
+    if (any(argtype %in% c("data.frame", "data.table")) && !is.null(coltypes)) {
+      # for simplicity of error output:
+      # only show first column where incorrect type was found (if any)
+      # ignore coltypes without specification ("")
+      check_col_type <- function(col, coltype) {
+        if (coltype != "" && !any(grepl(coltype,
+          class(as.data.table(arginput)[[col]]),
+          ignore.case = TRUE
+        ))) {
+          stop(
+            paste0(
+              "Invalid user input in '", as.character(sys.calls()[[1]])[1],
+              "': '", col, "' in input table '", argname,
+              "' has to be of type '", coltype, "'.",
+              "\nPlease refer to the function documentation for more details."
+            ),
+            call. = FALSE
+          )
+        }
+      }
+      mapply(check_col_type, colnames, coltypes)
+    }
+
+
+    ###### CHECK 7 (for data.table/data.frame inputs):
+    ###### Check if all rows are distinct [optional]
+    if (any(argtype %in% c("data.frame", "data.table")) && unique == TRUE) {
+      if (any(duplicated(arginput))) {
+        stop(
+          paste0(
+            "Invalid user input in '", as.character(sys.calls()[[1]])[1], "': ",
+            "Input table '", argname, "' has to contain unique rows.",
+            "\nPlease check for duplicate entries and ",
+            "refer to the function documentation for more details."
+          ),
+          call. = FALSE
+        )
+      }
+    }
+  }
+
+
+  ### Run checks on all input arguments (if multiple)
+  check_all <- Map(run_checks, arginput, argnames)
+}
 
 #' @title
 #' Sample a truncated log normal distribution
@@ -39,7 +402,7 @@ rlnorm_trunc <- function(n, meanlog, sdlog, min, max, seed = NULL) {
   if (!is.null(seed)) {
     set.seed(seed)
   }
-  if (min > max) {
+  if (any(min > max)) {
     stop("The min is greater than the max. Invalid sampling range provided - stopping.")
   }
   res <- rlnorm(n, meanlog, sdlog)
@@ -79,7 +442,7 @@ rnorm_trunc <- function(n, mean, sd, min, max, seed = NULL) {
   if (!is.null(seed)) {
     set.seed(seed)
   }
-  if (min > max) {
+  if (any(min > max)) {
     stop("The min is greater than the max. Invalid sampling range provided - stopping.")
   }
   res <- rnorm(n, mean, sd)
@@ -121,7 +484,7 @@ rnorm_trunc <- function(n, mean, sd, min, max, seed = NULL) {
 #'
 rsn_trunc <- function(n, xi, omega, alpha, min, max, seed = NULL) {
   # checks for input validity
-  if (min > max) {
+  if (any(min > max)) {
     stop("The min is greater than the max. Invalid sampling range provided - stopping.")
   }
   if (!is.null(seed)) {
@@ -131,7 +494,7 @@ rsn_trunc <- function(n, xi, omega, alpha, min, max, seed = NULL) {
   res <- rsn(n = n, xi = xi, omega = omega, alpha = alpha)
   if (n == 1) {
     # if only one number is sampled
-    while (res[1] < min || res[1] > max) {
+    while (res[1] < min | res[1] > max) {
       res <- rsn(n = 1, xi = xi, omega = omega, alpha = alpha)
     }
     return(res[1])
@@ -266,7 +629,6 @@ sample_time_shifted_lnorm <- function(nrow, meanlog, sdlog, min = 0, max = 48, s
 #' The creation is either based on user's desired number of encounters and unique hospitals,
 #' or based on a given set of encounter IDs. It can be used to create long format data tables
 #' where users have control over average repeat frequency.
-
 #'
 #' @param nid (`integer`)\cr Optional, number of unique encounter IDs to simulate
 #'
@@ -278,6 +640,12 @@ sample_time_shifted_lnorm <- function(nrow, meanlog, sdlog, min = 0, max = 48, s
 #' for the proportion of unique rows in `cohort` to include in the final data table
 #'
 #' @param cohort (`data.table`)\cr Optional, resembling the GEMINI "admdad" table to build the returned data table from
+#' It requires the following columns:
+#' - `genc_id` (`integer`): GEMINI encounter ID
+#' - `hospital_id` (`integer`): Hospital ID
+#' If `by_los` is TRUE, then it also requires:
+#' - `admission_date_time` (`character`): Inpatient admission date and time in the format "yyyy-mm-dd"
+#' - `discharge_date_time` (`character`): Inpatient discharge date and time in the format "yyyy-mm-dd"
 #'
 #' @param by_los (`logical`)\cr Optional, whether to assign more repeats to longer hospital stays or not.
 #' Default to FALSE. When TRUE, two additional columns are required in the input `cohort` dataset -
@@ -298,7 +666,9 @@ sample_time_shifted_lnorm <- function(nrow, meanlog, sdlog, min = 0, max = 48, s
 #' generate_id_hospital(cohort = sample_cohort, include_prop = 0.8, avg_repeats = 1.5, by_los = TRUE, seed = 1)
 #' generate_id_hospital(nid = 1000, n_hospitals = 10, avg_repeats = 1)
 #'
-generate_id_hospital <- function(nid = 1000, n_hospitals = 10, avg_repeats = 1.5, include_prop = 1, cohort = NULL, by_los = FALSE, seed = NULL) {
+generate_id_hospital <- function(
+  nid = 1000, n_hospitals = 10, avg_repeats = 1.5, include_prop = 1, cohort = NULL, by_los = FALSE, seed = NULL
+) {
   if (!is.null(seed)) {
     set.seed(seed)
   }
@@ -315,6 +685,7 @@ generate_id_hospital <- function(nid = 1000, n_hospitals = 10, avg_repeats = 1.5
     } else {
       n_repeats <- rep(1, nid)
     }
+
     # expand ids and sites
     id_list <- 1:nid
     id_vector <- rep(id_list, times = n_repeats)
@@ -358,5 +729,47 @@ generate_id_hospital <- function(nid = 1000, n_hospitals = 10, avg_repeats = 1.5
     }
   }
 
+  res[, genc_id := as.integer(genc_id)]
+  res[, hospital_num := as.integer(hospital_num)]
   return(res)
+}
+
+#' @title
+#' Checks a character input to verify that it is as valid date or date time format
+#'
+#' @description
+#' This function checks the format of a `character` object so that it can be converted to a Date or POSIXct type.
+#' The formats are:
+#' - Date: "YYYY-mm-dd" or "YYYY"
+#' - Date time (to convert to POSIXct): "YYYY-mm-dd hh:mm"
+#'
+#' @param x (`character`)\cr The string to be checked for format.
+#'
+#' @param check_time (`logical`)\cr Optional, a flag indicating whether the function will check for
+#' a date or date time format. The default is `FALSE`, meaning it will check for a date only.
+#'
+#' @return (`logical`)\cr The function returns `TRUE` if the input was a valid date or date time format.
+#' Otherwise, it returns `FALSE`.
+#'
+#' @export
+#'
+#' @examples
+#' check_date_format("2020-01-01", check_time = FALSE)
+#' check_date_format("2021-01-01 12:01", check_time = TRUE)
+#' check_date_format(c("2015-12-31 01:01", "2016-01-01 01:01"), check_time = TRUE)
+#' check_date_format("November 13th, 2025")
+#'
+check_date_format <- function(x, check_time = FALSE) {
+  x <- as.character(x)
+  x_trim <- trimws(x)
+  if (check_time == FALSE) {
+    return(
+      grepl("^[0-9]{4}-[0-9]{2}-[0-9]{2}$", x_trim) | grepl("^[0-9]{4}$", x_trim)
+    )
+  } else {
+    x_trim <- substr(x_trim, 1, 16) # removes seconds from the date time object
+    return(
+      grepl("^[0-9]{4}-[0-9]{2}-[0-9]{2} [0-9]{2}:[0-9]{2}$", x_trim)
+    )
+  }
 }
