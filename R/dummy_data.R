@@ -692,8 +692,13 @@ dummy_admdad <- function(id, admtime) {
 #' @importFrom MCMCpack rdirichlet
 #'
 #' @export
+#' 
+#' @examples
+#' dummy_lab_cbc_electrolyte(10, 1, seed = 1)
+#' dummy_lab_cbc_electrolyte(cohort = dummy_ipdmdad())
 #'
-dummy_lab <- function(nid = 1000, n_hospitals = 10, time_period = c(2015, 2023), cohort = NULL, seed = NULL) {
+dummy_lab_cbc_electrolyte <- function(
+  nid = 1000, n_hospitals = 10, time_period = c(2015, 2023), cohort = NULL, seed = NULL) {
   ### check for valid inputs ###
   if (!is.null(cohort)) {
     # if `cohort` is provided, check for columns and their types
@@ -703,6 +708,7 @@ dummy_lab <- function(nid = 1000, n_hospitals = 10, time_period = c(2015, 2023),
     )
 
     # check for the date time format in admission and discharge date times
+    # all data need to be valid to convert into POSIXct objects
     if (!all(check_date_format(c(cohort$admission_date_time, cohort$discharge_date_time), check_time = TRUE))) {
       stop("An invalid IP admission and/or discharge date time input was provided in cohort.")
     }
@@ -724,6 +730,7 @@ dummy_lab <- function(nid = 1000, n_hospitals = 10, time_period = c(2015, 2023),
 
   # Sample from the t distribution truncated within a given range
   # Samples a numeric vector as per the params and returns it
+  # This is used to sample "electrolyte" tests result values
   # Params:
   # - `n` (`integer`): length of final vector
   # - `df` (`integer`): degrees of freedom
@@ -766,7 +773,7 @@ dummy_lab <- function(nid = 1000, n_hospitals = 10, time_period = c(2015, 2023),
   }
 
   if (!is.null(cohort)) {
-    # if `cohort` is included, get  `df1` based on it
+    # if `cohort` is included, get `df1` based on it
     cohort <- as.data.table(cohort)
 
     cohort$admission_date_time <- as.POSIXct(cohort$admission_date_time,
@@ -779,8 +786,8 @@ dummy_lab <- function(nid = 1000, n_hospitals = 10, time_period = c(2015, 2023),
       tz = "UTC"
     )
 
-    # on average, the included encounters have 15.8 lab tests
-    df1 <- generate_id_hospital(cohort = cohort, include_prop = 1, avg_repeats = 15.8, by_los = FALSE, seed = seed)
+    # on average, each `genc_id` has 15.8 lab tests
+    df1 <- generate_id_hospital(cohort = cohort, avg_repeats = 15.8, by_los = FALSE, seed = seed)
 
     ####### get `collection_date_time` #######
     # add sampled hours to `admission_date_time`
@@ -788,12 +795,12 @@ dummy_lab <- function(nid = 1000, n_hospitals = 10, time_period = c(2015, 2023),
       min = as.Date(admission_date_time),
       max = as.Date(discharge_date_time)
     ))) +
-      dhours(rsn_trunc(.N, 3.5, 7.1, 4.6, min_n = 0, max = 24, seed = seed))]
+      dhours(rsn_trunc(.N, 3.5, 7.1, 4.6, min = 0, max = 24, seed = seed))]
 
-    # if `collection_date_time` is sampled to be later than `discharge+date_time`, re-sample
+    # if `collection_date_time` is sampled to be later than `discharge_date_time`, re-sample
     while (length(which(df1$collection_date_time > df1$discharge_date_time))) {
       df1[collection_date_time > discharge_date_time, collection_date_time := as.Date(admission_date_time) +
-        dhours(rsn_trunc(.N, 3.5, 7.1, 4.6, min_n = 0, max = 24))]
+        dhours(rsn_trunc(.N, 3.5, 7.1, 4.6, min = 0, max = 24))]
     }
 
     # only include the genc_id and hospital_num columns from `cohort`
@@ -842,7 +849,7 @@ dummy_lab <- function(nid = 1000, n_hospitals = 10, time_period = c(2015, 2023),
       min = as.numeric(min_collection_date),
       max = as.numeric(max_collection_date)
     ))) +
-      dhours(rsn_trunc(.N, 3.5, 7.1, 4.6, min_n = 0, max_n = 24, seed = seed))]
+      dhours(rsn_trunc(.N, 3.5, 7.1, 4.6, min = 0, max = 24, seed = seed))]
 
     # Remove columns excluded from final output
     df1 <- df1[, -c("min_collection_date", "max_collection_date", "num_id_repeats")]
@@ -932,7 +939,7 @@ dummy_lab <- function(nid = 1000, n_hospitals = 10, time_period = c(2015, 2023),
 
   ####### sample the `result_values` based on test type #######
 
-  # sample test result for CBC
+  ### sample test result for CBC ###
   # for CBC, sample separate distributions for < 25th quantile and > 25th quantile, around 87
   # lower: gamma, upper: johnson
   df1[test_type_mapped_omop == 3000963, result_value := ifelse(
@@ -941,7 +948,7 @@ dummy_lab <- function(nid = 1000, n_hospitals = 10, time_period = c(2015, 2023),
     rjohnson_trunc(.N, min = 87, max = 260)
   )]
 
-  # sample test result for electrolyte
+  ### sample test result for electrolyte ###
   # t-distribution: shaped like normal distribution but with longer tail
   # truncate it so it includes outliers but no values that are too extreme
   df1[test_type_mapped_omop == 3019550, result_value := rt_trunc(.N, 3.62, 3.96, 137.64, 1, 416)]
@@ -949,7 +956,7 @@ dummy_lab <- function(nid = 1000, n_hospitals = 10, time_period = c(2015, 2023),
   # remove seconds from date times
   df1[, collection_date_time := substr(as.character(collection_date_time), 1, 16)]
 
-  # round result values and set to character
+  # round result values and set it to character type
   df1[, result_value := as.character(round(result_value))]
 
   return(df1[order(df1$genc_id)])
