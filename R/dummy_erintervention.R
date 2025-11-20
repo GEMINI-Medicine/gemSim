@@ -1,4 +1,3 @@
-
 #' @title
 #' Generate simulated erintervention data
 #'
@@ -43,63 +42,63 @@
 #' @export
 #'
 dummy_erintervention_mri <- function(
-  dbcon = NULL, nid = 1000, n_hospitals = 10, int_code = NULL, cohort = NULL, seed = NULL) {
-    ############## CHECKS: for valid inputs: `n_id`, `n_hospitals`, `cohort`
-    if (is.null(cohort)) {
-        # use `nid` and `n_hospitals` when `cohort` is NULL
-        check_input(list(nid, n_hospitals), "integer")
-    } else {
-        # check that `cohort` has the required columns and types
-        check_input(cohort,
-            c("data.frame", "data.table"),
-            colnames = c("genc_id", "hospital_num"),
-            coltypes = c("integer", "integer")
-        )
+  dbcon = NULL, nid = 1000, n_hospitals = 10, int_code = NULL, cohort = NULL, seed = NULL
+) {
+  ############## CHECKS: for valid inputs: `n_id`, `n_hospitals`, `cohort`
+  if (is.null(cohort)) {
+    # use `nid` and `n_hospitals` when `cohort` is NULL
+    check_input(list(nid, n_hospitals), "integer")
+  } else {
+    # check that `cohort` has the required columns and types
+    check_input(cohort,
+      c("data.frame", "data.table"),
+      colnames = c("genc_id", "hospital_num"),
+      coltypes = c("integer", "integer")
+    )
+  }
+
+  if (!is.null(dbcon)) {
+    # get CCI intervention codes for MRI
+    lookup_cci_mri <- dbGetQuery(dbcon, "SELECT * FROM lookup_cci WHERE intervention_code ~ '^3..40'") %>%
+      data.table()
+    mri_codes <- unique(lookup_cci_mri$intervention_code)
+  } else if (is.null(int_code)) {
+    stop("A DB connection or intervention code list is required.")
+  }
+
+  if (!is.null(seed)) {
+    set.seed(seed)
+  }
+
+  if (!is.null(cohort)) {
+    # if `cohort` is provided, use its `genc_id` and `hospital_num`
+    cohort <- as.data.table(cohort)
+    # each `genc_id` repeats an average of 1.9 times
+    df1 <- generate_id_hospital(cohort = cohort, avg_repeats = 1.9, seed = seed)
+    # only include the `genc_id` and `hospital_num` columns from `cohort`
+    df1 <- df1[, c("genc_id", "hospital_num")]
+  } else {
+    # Generate a data table with `genc_id` and `hospital_num`
+    df1 <- generate_id_hospital(nid = nid, n_hospitals = n_hospitals, avg_repeats = 1.9, seed = seed)
+  }
+
+  # if the user specifies intervention code(s), use it to sample
+  if (is.character(int_code)) {
+    # if it is a character, turn into a vector for sampling
+    if (length(int_code) == 1 && !(is.na(int_code))) {
+      int_code <- c(int_code)
     }
+    df1[, intervention_code := sample(int_code, .N, replace = TRUE)]
+  } else {
+    # get sample most common codes for 90% of rows
+    # remaining rows are filled with all other codes
+    top_codes <- c("3SC40VA", "3AN40VA", "3SC40WC", "3ER40VA", "3AN40WC")
+    top_props <- c(0.44, 0.2, 0.13, 0.13, 0.1)
+    df1[, intervention_code := ifelse(rbinom(nrow(df1), 1, 0.9),
+      sample(top_codes, nrow(df1), replace = TRUE, prob = top_props),
+      sample(setdiff(mri_codes, top_codes), nrow(df1), replace = TRUE)
+    )]
+  }
 
-    if (!is.null(dbcon)) {
-        # get CCI intervention codes for MRI
-        lookup_cci_mri <- dbGetQuery(dbcon, "SELECT * FROM lookup_cci WHERE intervention_code ~ '^3..40'") %>%
-            data.table()
-        mri_codes <- unique(lookup_cci_mri$intervention_code)
-    } else if (is.null(int_code)) {
-        stop("A DB connection or intervention code list is required.")
-    }
-
-    if (!is.null(seed)) {
-        set.seed(seed)
-    }
-
-    if (!is.null(cohort)) {
-        # if `cohort` is provided, use its `genc_id` and `hospital_num`
-        cohort <- as.data.table(cohort)
-        # each `genc_id` repeats an average of 1.9 times
-        df1 <- generate_id_hospital(cohort = cohort, avg_repeats = 1.9, seed = seed)
-        # only include the `genc_id` and `hospital_num` columns from `cohort`
-        df1 <- df1[, c("genc_id", "hospital_num")]
-    } else {
-        # Generate a data table with `genc_id` and `hospital_num`
-        df1 <- generate_id_hospital(nid = nid, n_hospitals = n_hospitals, avg_repeats = 1.9, seed = seed)
-    }
-
-    # if the user specifies intervention code(s), use it to sample
-    if (is.character(int_code)) {
-      # if it is a character, turn into a vector for sampling
-      if (length(int_code) == 1 && !(is.na(int_code))) {
-        int_code <- c(int_code)
-      }
-      df1[, intervention_code := sample(int_code, .N, replace = TRUE)]
-
-    } else {
-        # get sample most common codes for 90% of rows
-        # remaining rows are filled with all other codes
-        top_codes <- c("3SC40VA", "3AN40VA", "3SC40WC", "3ER40VA", "3AN40WC")
-        top_props <- c(0.44, 0.2, 0.13, 0.13, 0.1)
-        df1[, intervention_code := ifelse(rbinom(nrow(df1), 1, 0.9),
-            sample(top_codes, nrow(df1), replace = TRUE, prob = top_props),
-            sample(setdiff(mri_codes, top_codes), nrow(df1), replace = TRUE)
-        )]
-    }
-
-    return(df1[order(df1$genc_id)])
+  return(df1[order(df1$genc_id)])
 }
