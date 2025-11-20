@@ -52,7 +52,7 @@ dummy_lab_cbc_electrolyte <- function(
   if (!is.null(cohort)) {
     # if `cohort` is provided, check for columns and their types
     Rgemini:::check_input(cohort, c("data.table", "data.frame"),
-      colnames = c("genc_id", "hospital_id", "admission_date_time", "discharge_date_time"),
+      colnames = c("genc_id", "hospital_num", "admission_date_time", "discharge_date_time"),
       coltypes = c("integer", "integer", "", "")
     )
 
