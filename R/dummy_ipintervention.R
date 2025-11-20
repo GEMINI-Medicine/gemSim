@@ -47,10 +47,10 @@ dummy_ipintervention_mri_maid <- function(
   ############## CHECKS: for valid inputs: `n_id`, `n_hospitals`, `cohort`
   if (is.null(cohort)) {
     # use `nid` and `n_hospitals` when `cohort` is NULL
-    Rgemini::check_input(list(nid, n_hospitals), "integer")
+    Rgemini:::check_input(list(nid, n_hospitals), "integer")
   } else {
     # check that `cohort` has the required columns and types
-    Rgemini::check_input(cohort,
+    Rgemini:::check_input(cohort,
       c("data.frame", "data.table"),
       colnames = c("genc_id", "hospital_num"),
       coltypes = c("integer", "integer")

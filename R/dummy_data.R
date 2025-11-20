@@ -321,6 +321,9 @@ dummy_diag <- function(
 #' (starting in April each year). For example, `c(2015, 2019)` generates data
 #' from 2015-04-01 to 2020-03-31.
 #'
+#' @param seed (`numeric`)\cr
+#' Optional, a number to set the seed for reproducible results
+#'
 #' @return (`data.frame`)\cr A data.frame object similar to the "ipadmdad" table
 #' containing the following fields:
 #' - `genc_id` (`integer`): GEMINI encounter ID
