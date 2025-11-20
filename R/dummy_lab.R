@@ -37,6 +37,7 @@
 #' @importFrom SuppDists rJohnson
 #' @importFrom lubridate dhours days
 #' @importFrom MCMCpack rdirichlet
+#' @importFrom Rgemini check_input
 #'
 #' @export
 #'
