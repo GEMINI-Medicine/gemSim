@@ -22,11 +22,5 @@ Imports:
     sn,
     stringi,
     textstem
-Suggests:
-    testthat (>= 3.0.0)
-Config/testthat/edition: 3
 Remotes:
     GEMINI-Medicine/Rgemini
-Depends: 
-    R (>= 2.10)
-LazyData: true
