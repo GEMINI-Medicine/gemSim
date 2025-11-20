@@ -26,113 +26,118 @@
 #' @export
 #'
 simulate_data_tables <- function(tables, nid = 1000, n_hospitals = 10, time_period = c(2015, 2023), ...) {
-    # Check inputs: `nid`, `n_hospitals`, `time_period`
-    check_input(tables, "character")
+  # Check inputs: `nid`, `n_hospitals`, `time_period`
+  check_input(tables, "character")
 
-    check_input(list(nid, n_hospitals), "integer")
+  check_input(list(nid, n_hospitals), "integer")
 
-    if (any(is.null(time_period)) || any(is.na(time_period)) || length(time_period) != 2) {
-      stop("Please provide time_period as a vector of length 2") # check for date formatting
-    } else if (!check_date_format(time_period[1]) || !check_date_format(time_period[2])) {
-      stop("Time period is in the incorrect date format, please fix")
+  if (any(is.null(time_period)) || any(is.na(time_period)) || length(time_period) != 2) {
+    stop("Please provide time_period as a vector of length 2") # check for date formatting
+  } else if (!check_date_format(time_period[1]) || !check_date_format(time_period[2])) {
+    stop("Time period is in the incorrect date format, please fix")
+  }
+
+  # Get all data table options
+  table_list <- c(
+    "admdad", "ipscu", "locality", "erintervention", "ipintervention",
+    "locality", "physicians", "radiology", "transfusion", "lab", "diagnosis", "er"
+  )
+
+  # additional arguments' storage to be passed into simulation functions
+  args <- list(...)
+
+  #### empty list to add simulated tables to ####
+  results <- list()
+
+  ### map each possible GEMINI data table to its simulation function ###
+  function_map <- list(
+    ipscu = dummy_ipscu,
+    locality_variables = dummy_locality,
+    erdiagnosis = dummy_diagnosis, # ipdiagnosis flag = FALSE
+    ipdiagnosis = dummy_diagnosis, # ipdiagnosis flag = TRUE (default)
+    erintervention = dummy_erintervention_mri,
+    ipintervention = dummy_ipintervention_mri_maid,
+    locality = dummy_locality,
+    physicians = dummy_physicians,
+    radiology = dummy_radiology,
+    transfusion = dummy_transfusion,
+    lab = dummy_lab_cbc_electrolyte,
+    er = dummy_er
+  )
+
+  # separate `cohort` based on which encounters are sent to the SCU, ER, etc.
+  cohort_props <- data.table(
+    table = c("ipscu", "er", "ipdiagnosis", "erdiagnosis", "transfusion", "radiology"),
+    prop = c(0.24, 0.81, 1, 0.81, 0.1, 0.54)
+  )
+
+  ### get admdad table ###
+  # this is always included and added first as the cohort
+  new_ipadmdad <- dummy_ipadmdad(nid = nid, n_hospitals, time_period)
+  results[["admdad"]] <- new_ipadmdad # add to the results list
+
+  ### a cohort is required for ER data ###
+  # subset the `ipadmdad` cohort
+  # this cohort is used for er-related tables
+  er_cohort <- generate_id_hospital(
+    cohort = new_ipadmdad, include_prop = 0.81
+  )
+
+  # remove `admdad` from `tables` if it's included
+  tables <- tables[!tables %in% c("admdad")]
+
+  # Construct cohorts for each table
+  # Every cohort is a subset of `new_ipadmdad` if they do not include the entire set
+  cohort_list <- list(
+    ipscu = generate_id_hospital(
+      cohort = new_ipadmdad, include_prop = 0.24
+    ),
+    locality_variables = new_ipadmdad, # all of `ipadmdad`
+    erdiagnosis = er_cohort, # include all of `er`
+    ipdiagnosis = new_ipadmdad, # all of `ipadmdad`
+    erintervention = generate_id_hospital(
+      cohort = er_cohort, include_prop = 0.85
+    ),
+    ipintervention = generate_id_hospital(
+      cohort = new_ipadmdad, include_prop = 0.1
+    ),
+    physicians = new_ipadmdad,
+    radiology = generate_id_hospital(
+      cohort = new_ipadmdad, include_prop = 0.54
+    ),
+    transfusion = generate_id_hospital(
+      cohort = new_ipadmdad, include_prop = 0.1
+    ),
+    lab = generate_id_hospital(cohort = new_ipadmdad, include_prop = 0.91),
+    er = er_cohort
+  )
+
+  #### loop through list of tables and simulate them with functions ####
+  for (tab in tables) {
+    # verify that the function for each requested table exists
+    if (!tab %in% names(function_map)) {
+      warning(sprintf("No function defined for variable '%s'", tab))
+      next
+    }
+    # get function for this data table
+    func <- function_map[[tab]]
+    # find the arguments the function will accept
+    func_formals <- names(formals(func))
+
+    # pass in the cohort plus extra arguments
+    args_to_pass <- c(
+      args[intersect(names(args), func_formals)]
+    )
+
+    args_to_pass$cohort <- cohort_list[[tab]]
+
+    # ip/er diagnosis needs a flag, TRUE or FALSE
+    if (tab %in% c("ipdiagnosis", "erdiagnosis")) {
+      args_to_pass$ipdiagnosis <- (tab == "ipdiagnosis")
     }
 
-    # Get all data table options
-    table_list <- c(
-        "admdad", "ipscu", "locality", "erintervention", "ipintervention",
-        "locality", "physicians", "radiology", "transfusion", "lab", "diagnosis", "er"
-    )
+    results[[tab]] <- do.call(func, args_to_pass)
+  }
 
-    # additional arguments' storage to be passed into simulation functions
-    args <- list(...)
-
-    #### empty list to add simulated tables to ####
-    results <- list()
-
-    ### map each possible GEMINI data table to its simulation function ###
-    function_map <- list(
-        ipscu = dummy_ipscu,
-        locality_variables = dummy_locality,
-        erdiagnosis = dummy_diagnosis, # ipdiagnosis flag = FALSE
-        ipdiagnosis = dummy_diagnosis, # ipdiagnosis flag = TRUE (default)
-        erintervention = dummy_erintervention_mri,
-        ipintervention = dummy_ipintervention_mri_maid,
-        locality = dummy_locality,
-        physicians = dummy_physicians,
-        radiology = dummy_radiology,
-        transfusion = dummy_transfusion,
-        lab = dummy_lab_cbc_electrolyte,
-        er = dummy_er
-    )
-
-    # separate `cohort` based on which encounters are sent to the SCU, ER, etc.
-    cohort_props <- data.table(
-        table = c("ipscu", "er", "ipdiagnosis", "erdiagnosis", "transfusion", "radiology"),
-        prop = c(0.24, 0.81, 1, 0.81, 0.1, 0.54)
-    )
-
-    ### get admdad table ###
-    # this is always included and added first as the cohort
-    new_ipadmdad <- dummy_ipadmdad(nid = nid, n_hospitals, time_period)
-    results[["admdad"]] <- new_ipadmdad # add to the results list
-
-    ### a cohort is required for ER data ###
-    # subset the `ipadmdad` cohort
-    # this cohort is used for er-related tables
-    er_cohort <- generate_id_hospital(
-        cohort = new_ipadmdad, include_prop = 0.81
-    )
-
-    # remove `admdad` from `tables` if it's included
-    tables <- tables[!tables %in% c("admdad")]
-
-    # Construct cohorts for each table
-    # Every cohort is a subset of `new_ipadmdad` if they do not include the entire set
-    cohort_list <- list(
-        ipscu = generate_id_hospital(
-            cohort = new_ipadmdad, include_prop = 0.24),
-        locality_variables = new_ipadmdad, # all of `ipadmdad`
-        erdiagnosis = er_cohort, # include all of `er`
-        ipdiagnosis = new_ipadmdad, # all of `ipadmdad`
-        erintervention = generate_id_hospital(
-            cohort = er_cohort, include_prop = 0.85),
-        ipintervention = generate_id_hospital(
-            cohort = new_ipadmdad, include_prop = 0.1),
-        physicians = new_ipadmdad,
-        radiology = generate_id_hospital(
-            cohort = new_ipadmdad, include_prop = 0.54),
-        transfusion = generate_id_hospital(
-            cohort = new_ipadmdad, include_prop = 0.1),
-        lab = generate_id_hospital(cohort = new_ipadmdad, include_prop = 0.91),
-        er = er_cohort
-    )
-
-    #### loop through list of tables and simulate them with functions ####
-    for (tab in tables) {
-        # verify that the function for each requested table exists
-        if (!tab %in% names(function_map)) {
-            warning(sprintf("No function defined for variable '%s'", tab))
-            next
-        }
-        # get function for this data table
-        func <- function_map[[tab]]
-        # find the arguments the function will accept
-        func_formals <- names(formals(func))
-
-        # pass in the cohort plus extra arguments
-        args_to_pass <- c(
-            args[intersect(names(args), func_formals)]
-        )
-
-        args_to_pass$cohort <- cohort_list[[tab]]
-
-        # ip/er diagnosis needs a flag, TRUE or FALSE
-        if (tab %in% c("ipdiagnosis", "erdiagnosis")) {
-            args_to_pass$ipdiagnosis <- (tab == "ipdiagnosis")
-        }
-
-        results[[tab]] <- do.call(func, args_to_pass)
-    }
-
-    return(results)
+  return(results)
 }
