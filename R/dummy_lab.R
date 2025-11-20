@@ -43,7 +43,7 @@
 #'
 #' @examples
 #' dummy_lab_cbc_electrolyte(10, 1, seed = 1)
-#' dummy_lab_cbc_electrolyte(cohort = dummy_ipdmdad())
+#' dummy_lab_cbc_electrolyte(cohort = dummy_ipadmdad())
 #'
 dummy_lab_cbc_electrolyte <- function(
   nid = 1000, n_hospitals = 10, time_period = c(2015, 2023), cohort = NULL, seed = NULL
