@@ -7,8 +7,6 @@
 #' "isoweek"))
 #' @rawNamespace
 #' import(dplyr, except = c("first", "last", "between", "matches"))
-#' @rawNamespace
-#' import(lubridate)
 #'
 NULL
 
@@ -39,7 +37,7 @@ rlnorm_trunc <- function(n, meanlog, sdlog, min, max, seed = NULL) {
   if (!is.null(seed)) {
     set.seed(seed)
   }
-  if (min > max) {
+  if (any(min > max)) {
     stop("The min is greater than the max. Invalid sampling range provided - stopping.")
   }
   res <- rlnorm(n, meanlog, sdlog)
@@ -79,7 +77,7 @@ rnorm_trunc <- function(n, mean, sd, min, max, seed = NULL) {
   if (!is.null(seed)) {
     set.seed(seed)
   }
-  if (min > max) {
+  if (any(min > max)) {
     stop("The min is greater than the max. Invalid sampling range provided - stopping.")
   }
   res <- rnorm(n, mean, sd)
@@ -121,7 +119,7 @@ rnorm_trunc <- function(n, mean, sd, min, max, seed = NULL) {
 #'
 rsn_trunc <- function(n, xi, omega, alpha, min, max, seed = NULL) {
   # checks for input validity
-  if (min > max) {
+  if (any(min > max)) {
     stop("The min is greater than the max. Invalid sampling range provided - stopping.")
   }
   if (!is.null(seed)) {
@@ -131,7 +129,7 @@ rsn_trunc <- function(n, xi, omega, alpha, min, max, seed = NULL) {
   res <- rsn(n = n, xi = xi, omega = omega, alpha = alpha)
   if (n == 1) {
     # if only one number is sampled
-    while (res[1] < min || res[1] > max) {
+    while (res[1] < min | res[1] > max) {
       res <- rsn(n = 1, xi = xi, omega = omega, alpha = alpha)
     }
     return(res[1])
@@ -266,7 +264,6 @@ sample_time_shifted_lnorm <- function(nrow, meanlog, sdlog, min = 0, max = 48, s
 #' The creation is either based on user's desired number of encounters and unique hospitals,
 #' or based on a given set of encounter IDs. It can be used to create long format data tables
 #' where users have control over average repeat frequency.
-
 #'
 #' @param nid (`integer`)\cr Optional, number of unique encounter IDs to simulate
 #'
@@ -278,6 +275,12 @@ sample_time_shifted_lnorm <- function(nrow, meanlog, sdlog, min = 0, max = 48, s
 #' for the proportion of unique rows in `cohort` to include in the final data table
 #'
 #' @param cohort (`data.table`)\cr Optional, resembling the GEMINI "admdad" table to build the returned data table from
+#' It requires the following columns:
+#' - `genc_id` (`integer`): Mock encounter ID number
+#' - `hospital_id` (`integer`): Mock hospital ID number
+#' If `by_los` is TRUE, then it also requires:
+#' - `admission_date_time` (`character`): Inpatient admission date and time in the format "yyyy-mm-dd"
+#' - `discharge_date_time` (`character`): Inpatient discharge date and time in the format "yyyy-mm-dd"
 #'
 #' @param by_los (`logical`)\cr Optional, whether to assign more repeats to longer hospital stays or not.
 #' Default to FALSE. When TRUE, two additional columns are required in the input `cohort` dataset -
@@ -288,8 +291,8 @@ sample_time_shifted_lnorm <- function(nrow, meanlog, sdlog, min = 0, max = 48, s
 #' @return (`data.table`)\cr A data.table object with the same columns as `cohort`,
 #' but with some rows excluded and/or repeated based on user specifications.
 #' If `cohort` is not included, then it will have the following fields:
-#' - `genc_id` (`integer`): GEMINI encounter number, may be repeated in multiple rows based on avg_repeats
-#' - `hospital_num` (`integer`): An integer identifying the hospital attached to the encounter
+#' - `genc_id` (`integer`): Mock encounter number, may be repeated in multiple rows based on avg_repeats
+#' - `hospital_num` (`integer`): Mock hospital ID number
 #'
 #' @export
 #'
@@ -298,7 +301,9 @@ sample_time_shifted_lnorm <- function(nrow, meanlog, sdlog, min = 0, max = 48, s
 #' generate_id_hospital(cohort = sample_cohort, include_prop = 0.8, avg_repeats = 1.5, by_los = TRUE, seed = 1)
 #' generate_id_hospital(nid = 1000, n_hospitals = 10, avg_repeats = 1)
 #'
-generate_id_hospital <- function(nid = 1000, n_hospitals = 10, avg_repeats = 1.5, include_prop = 1, cohort = NULL, by_los = FALSE, seed = NULL) {
+generate_id_hospital <- function(
+  nid = 1000, n_hospitals = 10, avg_repeats = 1.5, include_prop = 1, cohort = NULL, by_los = FALSE, seed = NULL
+) {
   if (!is.null(seed)) {
     set.seed(seed)
   }
@@ -315,6 +320,7 @@ generate_id_hospital <- function(nid = 1000, n_hospitals = 10, avg_repeats = 1.5
     } else {
       n_repeats <- rep(1, nid)
     }
+
     # expand ids and sites
     id_list <- 1:nid
     id_vector <- rep(id_list, times = n_repeats)
@@ -358,5 +364,47 @@ generate_id_hospital <- function(nid = 1000, n_hospitals = 10, avg_repeats = 1.5
     }
   }
 
+  res[, genc_id := as.integer(genc_id)]
+  res[, hospital_num := as.integer(hospital_num)]
   return(res)
+}
+
+#' @title
+#' Checks a character input to verify that it is as valid date or date time format
+#'
+#' @description
+#' This function checks the format of a `character` object so that it can be converted to a Date or POSIXct type.
+#' The formats are:
+#' - Date: "YYYY-mm-dd" or "YYYY"
+#' - Date time (to convert to POSIXct): "YYYY-mm-dd hh:mm"
+#'
+#' @param x (`character`)\cr The string to be checked for format.
+#'
+#' @param check_time (`logical`)\cr Optional, a flag indicating whether the function will check for
+#' a date or date time format. The default is `FALSE`, meaning it will check for a date only.
+#'
+#' @return (`logical`)\cr The function returns `TRUE` if the input was a valid date or date time format.
+#' Otherwise, it returns `FALSE`.
+#'
+#' @export
+#'
+#' @examples
+#' check_date_format("2020-01-01", check_time = FALSE)
+#' check_date_format("2021-01-01 12:01", check_time = TRUE)
+#' check_date_format(c("2015-12-31 01:01", "2016-01-01 01:01"), check_time = TRUE)
+#' check_date_format("November 13th, 2025")
+#'
+check_date_format <- function(x, check_time = FALSE) {
+  x <- as.character(x)
+  x_trim <- trimws(x)
+  if (check_time == FALSE) {
+    return(
+      grepl("^[0-9]{4}-[0-9]{2}-[0-9]{2}$", x_trim) | grepl("^[0-9]{4}$", x_trim)
+    )
+  } else {
+    x_trim <- substr(x_trim, 1, 16) # removes seconds from the date time object
+    return(
+      grepl("^[0-9]{4}-[0-9]{2}-[0-9]{2} [0-9]{2}:[0-9]{2}$", x_trim)
+    )
+  }
 }

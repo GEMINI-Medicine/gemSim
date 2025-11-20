@@ -7,8 +7,7 @@ import(data.table, except = c("first", "last", "between", "month", "hour",
 
 import(dplyr, except = c("first", "last", "between", "matches"))
 
-import(lubridate)
-
+export(check_date_format)
 export(dummy_diag)
 export(dummy_ipadmdad)
 export(generate_id_hospital)

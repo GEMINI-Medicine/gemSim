@@ -26,7 +26,15 @@ generate_id_hospital(
 \item{include_prop}{(\code{numeric})\cr A number between 0 and 1,
 for the proportion of unique rows in \code{cohort} to include in the final data table}
 
-\item{cohort}{(\code{data.table})\cr Optional, resembling the GEMINI "admdad" table to build the returned data table from}
+\item{cohort}{(\code{data.table})\cr Optional, resembling the GEMINI "admdad" table to build the returned data table from
+It requires the following columns:
+\itemize{
+\item \code{genc_id} (\code{integer}): Mock encounter ID number
+\item \code{hospital_id} (\code{integer}): Mock hospital ID number
+If \code{by_los} is TRUE, then it also requires:
+\item \code{admission_date_time} (\code{character}): Inpatient admission date and time in the format "yyyy-mm-dd"
+\item \code{discharge_date_time} (\code{character}): Inpatient discharge date and time in the format "yyyy-mm-dd"
+}}
 
 \item{by_los}{(\code{logical})\cr Optional, whether to assign more repeats to longer hospital stays or not.
 Default to FALSE. When TRUE, two additional columns are required in the input \code{cohort} dataset -
@@ -39,8 +47,8 @@ Default to FALSE. When TRUE, two additional columns are required in the input \c
 but with some rows excluded and/or repeated based on user specifications.
 If \code{cohort} is not included, then it will have the following fields:
 \itemize{
-\item \code{genc_id} (\code{integer}): GEMINI encounter number, may be repeated in multiple rows based on avg_repeats
-\item \code{hospital_num} (\code{integer}): An integer identifying the hospital attached to the encounter
+\item \code{genc_id} (\code{integer}): Mock encounter number, may be repeated in multiple rows based on avg_repeats
+\item \code{hospital_num} (\code{integer}): Mock hospital ID number
 }
 }
 \description{
