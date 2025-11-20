@@ -368,7 +368,7 @@ dummy_diag <- function(
 #'
 #' @importFrom sn rsn
 #' @importFrom MCMCpack rdirichlet
-#' @importFrom lubridate ymd_hm
+#' @importFrom lubridate ymd_hm round_date dhours days ddays
 #' @import Rgemini
 #' @export
 #'
