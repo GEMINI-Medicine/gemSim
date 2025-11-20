@@ -7,7 +7,8 @@
 #' "isoweek"))
 #' @rawNamespace
 #' import(dplyr, except = c("first", "last", "between", "matches"))
-#'
+#'@rawNamespace
+#' import(lubridate)
 NULL
 
 #' @title
