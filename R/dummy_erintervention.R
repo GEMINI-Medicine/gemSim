@@ -43,7 +43,7 @@
 #' @export
 #'
 dummy_erintervention_mri <- function(
-  dbcon = NULL, nid = 1000, n_hospitals = 10, int_code = NULL, cohort = NULL, cohort_type = "admdad", seed = NULL) {
+  dbcon = NULL, nid = 1000, n_hospitals = 10, int_code = NULL, cohort = NULL, seed = NULL) {
     ############## CHECKS: for valid inputs: `n_id`, `n_hospitals`, `cohort`
     if (is.null(cohort)) {
         # use `nid` and `n_hospitals` when `cohort` is NULL

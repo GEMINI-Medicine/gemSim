@@ -6,7 +6,7 @@
 \usage{
 dummy_ipintervention_mri_maid(
   dbcon = NULL,
-  n = 1000,
+  nid = 1000,
   n_hospitals = 10,
   cohort = NULL,
   int_code = NULL,
@@ -17,6 +17,10 @@ dummy_ipintervention_mri_maid(
 \item{dbcon}{(\code{DBIConnection})\cr
 A database connection to a GEMINI database, required to look up intervention codes.
 Required when \code{int_code} is missing, otherwise not used if \code{int_code} is provided.}
+
+\item{nid}{(\code{integer})\cr Number of unique encounter IDs to simulate.
+Encounter IDs may repeat, resulting in a data table with more rows than \code{nid}.
+It is not used if \code{cohort} is provided.}
 
 \item{cohort}{(\verb{data.frame or data.table})\cr Optional, data frame or data table containing the columns:
 \itemize{
@@ -29,10 +33,6 @@ When \code{cohort} is not NULL, \code{nid} and \code{n_hospitals} are ignored.
 Required when \code{dbcon} is missing.}
 
 \item{seed}{(\code{integer})\cr Optional, a number to be used to set the seed for reproducible results}
-
-\item{nid}{(\code{integer})\cr Number of unique encounter IDs to simulate.
-Encounter IDs may repeat, resulting in a data table with more rows than \code{nid}.
-It is not used if \code{cohort} is provided.}
 }
 \value{
 (\code{data.table})\cr A data.table object similar to the "ipintervention" table that contains the columns:

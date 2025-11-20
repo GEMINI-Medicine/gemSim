@@ -10,7 +10,6 @@ dummy_erintervention_mri(
   n_hospitals = 10,
   int_code = NULL,
   cohort = NULL,
-  cohort_type = "admdad",
   seed = NULL
 )
 }
