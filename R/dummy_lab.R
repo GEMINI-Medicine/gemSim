@@ -51,7 +51,7 @@ dummy_lab_cbc_electrolyte <- function(
   ### check for valid inputs ###
   if (!is.null(cohort)) {
     # if `cohort` is provided, check for columns and their types
-    check_input(cohort, c("data.table", "data.frame"),
+    Rgemini:::check_input(cohort, c("data.table", "data.frame"),
       colnames = c("genc_id", "hospital_id", "admission_date_time", "discharge_date_time"),
       coltypes = c("integer", "integer", "", "")
     )
@@ -63,7 +63,7 @@ dummy_lab_cbc_electrolyte <- function(
     }
   } else {
     # when `cohort` is not provided, `nid`, `n_hospitals`, and `time_period` need to be valid
-    check_input(list(nid, n_hospitals), "integer")
+    Rgemini:::check_input(list(nid, n_hospitals), "integer")
 
     if (as.Date(time_period[1]) > as.Date(time_period[2])) {
       stop("Time period needs to end later than it starts")
