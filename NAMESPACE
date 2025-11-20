@@ -8,10 +8,8 @@ import(data.table, except = c("first", "last", "between", "month", "hour",
 import(dplyr, except = c("first", "last", "between", "matches"))
 
 export(check_date_format)
-export(dummy_admdad)
 export(dummy_diag)
 export(dummy_ipadmdad)
-export(dummy_lab)
 export(dummy_lab_cbc_electrolyte)
 export(generate_id_hospital)
 export(rlnorm_trunc)
