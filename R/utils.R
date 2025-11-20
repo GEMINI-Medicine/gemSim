@@ -276,8 +276,8 @@ sample_time_shifted_lnorm <- function(nrow, meanlog, sdlog, min = 0, max = 48, s
 #'
 #' @param cohort (`data.table`)\cr Optional, resembling the GEMINI "admdad" table to build the returned data table from
 #' It requires the following columns:
-#' - `genc_id` (`integer`): GEMINI encounter ID
-#' - `hospital_id` (`integer`): Hospital ID
+#' - `genc_id` (`integer`): Mock encounter ID number
+#' - `hospital_id` (`integer`): Mock hospital ID number
 #' If `by_los` is TRUE, then it also requires:
 #' - `admission_date_time` (`character`): Inpatient admission date and time in the format "yyyy-mm-dd"
 #' - `discharge_date_time` (`character`): Inpatient discharge date and time in the format "yyyy-mm-dd"
@@ -291,8 +291,8 @@ sample_time_shifted_lnorm <- function(nrow, meanlog, sdlog, min = 0, max = 48, s
 #' @return (`data.table`)\cr A data.table object with the same columns as `cohort`,
 #' but with some rows excluded and/or repeated based on user specifications.
 #' If `cohort` is not included, then it will have the following fields:
-#' - `genc_id` (`integer`): GEMINI encounter number, may be repeated in multiple rows based on avg_repeats
-#' - `hospital_num` (`integer`): An integer identifying the hospital attached to the encounter
+#' - `genc_id` (`integer`): Mock encounter number, may be repeated in multiple rows based on avg_repeats
+#' - `hospital_num` (`integer`): Mock hospital ID number
 #'
 #' @export
 #'
