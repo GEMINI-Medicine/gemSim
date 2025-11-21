@@ -387,10 +387,10 @@ generate_id_hospital <- function(
 #'
 #' @examples
 #' \dontrun{
-#'  check_date_format("2020-01-01", check_time = FALSE)
-#'  check_date_format("2021-01-01 12:01", check_time = TRUE)
-#'  check_date_format(c("2015-12-31 01:01", "2016-01-01 01:01"), check_time = TRUE)
-#'  check_date_format("November 13th, 2025")
+#' check_date_format("2020-01-01", check_time = FALSE)
+#' check_date_format("2021-01-01 12:01", check_time = TRUE)
+#' check_date_format(c("2015-12-31 01:01", "2016-01-01 01:01"), check_time = TRUE)
+#' check_date_format("November 13th, 2025")
 #' }
 #'
 #' @keywords internal
