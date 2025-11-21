@@ -31,3 +31,4 @@ check_date_format(c("2015-12-31 01:01", "2016-01-01 01:01"), check_time = TRUE)
 check_date_format("November 13th, 2025")
 
 }
+\keyword{internal}

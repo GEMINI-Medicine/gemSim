@@ -26,3 +26,4 @@ A numeric vector following the specified distribution.
 The function samples from a log normal using \code{rlnorm} to obtain time of day data in hours.
 Values greater than 24 are subtracted by 24 (moved to the next day) so that a real time variable is observed.
 }
+\keyword{internal}

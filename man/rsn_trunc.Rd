@@ -28,3 +28,4 @@ A numeric vector following the skewed normal distribution, truncated to the spec
 Sample from a skewed normal distribution using the \code{rsn} function
 Truncate it to specified minimum and maximum values
 }
+\keyword{internal}

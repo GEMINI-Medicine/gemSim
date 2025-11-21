@@ -31,7 +31,7 @@ NULL
 #'
 #' @return A numeric vector following the log normal distribution, truncated to the specified range.
 #'
-#' @export
+#' @keywords internal
 #'
 rlnorm_trunc <- function(n, meanlog, sdlog, min, max, seed = NULL) {
   if (!is.null(seed)) {
@@ -71,7 +71,7 @@ rlnorm_trunc <- function(n, meanlog, sdlog, min, max, seed = NULL) {
 #'
 #' @return A numeric vector following the normal distribution, truncated to the specified range.
 #'
-#' @export
+#' @keywords internal
 #'
 rnorm_trunc <- function(n, mean, sd, min, max, seed = NULL) {
   if (!is.null(seed)) {
@@ -115,7 +115,8 @@ rnorm_trunc <- function(n, mean, sd, min, max, seed = NULL) {
 #' @return A numeric vector following the skewed normal distribution, truncated to the specified range.
 #'
 #' @importFrom sn rsn
-#' @export
+#'
+#' @keywords internal
 #'
 rsn_trunc <- function(n, xi, omega, alpha, min, max, seed = NULL) {
   # checks for input validity
@@ -168,10 +169,9 @@ rsn_trunc <- function(n, xi, omega, alpha, min, max, seed = NULL) {
 #'
 #' @param seed (`integer`) Optional, an integer for setting the seed for reproducible results.
 #'
-#'
 #' @return A numeric vector following the specified distribution.
 #'
-#' @export
+#' @keywords internal
 #'
 sample_time_shifted <- function(nrow, xi, omega, alpha, min = 0, max = 48, seed = NULL) {
   if (!is.null(seed)) {
@@ -218,10 +218,9 @@ sample_time_shifted <- function(nrow, xi, omega, alpha, min = 0, max = 48, seed 
 #'
 #' @param seed (`integer`) Optional, an integer for setting the seed for reproducible results.
 #'
-#'
 #' @return A numeric vector following the specified distribution.
 #'
-#' @export
+#' @keywords internal
 #'
 sample_time_shifted_lnorm <- function(nrow, meanlog, sdlog, min = 0, max = 48, seed = NULL) {
   if (!is.null(seed)) {
@@ -294,12 +293,12 @@ sample_time_shifted_lnorm <- function(nrow, meanlog, sdlog, min = 0, max = 48, s
 #' - `genc_id` (`integer`): Mock encounter number, may be repeated in multiple rows based on avg_repeats
 #' - `hospital_num` (`integer`): Mock hospital ID number
 #'
-#' @export
-#'
 #' @examples
 #' sample_cohort <- data.table::data.table(genc_id = 1:100, hospital_num = rep(1:5, each = 20))
 #' generate_id_hospital(cohort = sample_cohort, include_prop = 0.8, avg_repeats = 1.5, by_los = TRUE, seed = 1)
 #' generate_id_hospital(nid = 1000, n_hospitals = 10, avg_repeats = 1)
+#'
+#' @export
 #'
 generate_id_hospital <- function(
   nid = 1000, n_hospitals = 10, avg_repeats = 1.5, include_prop = 1, cohort = NULL, by_los = FALSE, seed = NULL
@@ -386,13 +385,13 @@ generate_id_hospital <- function(
 #' @return (`logical`)\cr The function returns `TRUE` if the input was a valid date or date time format.
 #' Otherwise, it returns `FALSE`.
 #'
-#' @export
-#'
 #' @examples
 #' check_date_format("2020-01-01", check_time = FALSE)
 #' check_date_format("2021-01-01 12:01", check_time = TRUE)
 #' check_date_format(c("2015-12-31 01:01", "2016-01-01 01:01"), check_time = TRUE)
 #' check_date_format("November 13th, 2025")
+#'
+#' @keywords internal
 #'
 check_date_format <- function(x, check_time = FALSE) {
   x <- as.character(x)
