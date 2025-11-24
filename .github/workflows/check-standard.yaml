@@ -10,6 +10,7 @@ name: R-CMD-check
 
 permissions:
   contents: read
+  packages: read
 
 jobs:
   R-CMD-check:
