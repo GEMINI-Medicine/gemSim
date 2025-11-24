@@ -57,13 +57,13 @@ jobs:
       - name: Create R package library directory
         run: mkdir -p ${{ env.R_LIBS_USER }}
         
-      - name: Install R package dependencies (testhat, devtools, remotes, and Rgemini's deps)
+      - name: Install R package dependencies (testthat, devtools, remotes, and Rgemini's deps)
         env:
           R_PROFILE_USER: ${{ github.workspace }}/.Rprofile_gha
         run: |
           echo "options(repos = c(CRAN = 'https://cloud.r-project.org/'), download.file.method = 'libcurl')" > ${{ env.R_PROFILE_USER }}
           echo ".libPaths(c(Sys.getenv('R_LIBS_USER'), .libPaths()))" >> ${{ env.R_PROFILE_USER }}
-          Rscript -e "install.packages(c('remotes', 'devtools', 'testhat'), Ncpus=2)" # Lib path set via R_PROFILE_USER
+          Rscript -e "install.packages(c('remotes', 'devtools', 'testthat'), Ncpus=2)" # Lib path set via R_PROFILE_USER
           Rscript -e "remotes::install_deps(dependencies = TRUE, Ncpus=2)"
         working-directory: ${{ github.workspace }}
 
