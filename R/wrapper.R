@@ -43,9 +43,9 @@
 #'
 simulate_data_tables <- function(tables, nid = 1000, n_hospitals = 10, time_period = c(2015, 2023), ...) {
   # Check inputs: `tables`, `nid`, `n_hospitals`, `time_period`
-  check_input(tables, "character")
+  Rgemini:::check_input(tables, "character")
 
-  check_input(list(nid, n_hospitals), "integer")
+  Rgemini:::check_input(list(nid, n_hospitals), "integer")
 
   if (any(is.null(time_period)) || any(is.na(time_period)) || length(time_period) != 2) {
     stop("Please provide time_period as a vector of length 2") # check for date formatting
@@ -69,8 +69,8 @@ simulate_data_tables <- function(tables, nid = 1000, n_hospitals = 10, time_peri
   function_map <- list(
     ipscu = dummy_ipscu,
     locality_variables = dummy_locality,
-    erdiagnosis = dummy_diagnosis, # ipdiagnosis flag = FALSE
-    ipdiagnosis = dummy_diagnosis, # ipdiagnosis flag = TRUE (default)
+    erdiagnosis = dummy_diag, # ipdiagnosis flag = FALSE
+    ipdiagnosis = dummy_diag, # ipdiagnosis flag = TRUE (default)
     erintervention = dummy_erintervention_mri,
     ipintervention = dummy_ipintervention_mri_maid,
     locality = dummy_locality,
@@ -89,12 +89,15 @@ simulate_data_tables <- function(tables, nid = 1000, n_hospitals = 10, time_peri
 
   ### get admdad table ###
   # this is always included and added first as the cohort
-  new_ipadmdad <- dummy_ipadmdad(nid = nid, n_hospitals, time_period)
+  new_ipadmdad <- dummy_ipadmdad(
+    nid = nid,
+    n_hospitals = n_hospitals,
+    time_period = time_period
+  ) %>% data.table()
   results[["admdad"]] <- new_ipadmdad # add to the results list
 
   # remove `admdad` from `tables` if it's included
   tables <- tables[!tables %in% c("admdad")]
-
   ### a cohort is required for ER data ###
   # subset the `ipadmdad` cohort
   # this cohort is used for er-related tables

@@ -7,7 +7,10 @@
 #' "isoweek"))
 #' @rawNamespace
 #' import(dplyr, except = c("first", "last", "between", "matches"))
-#'
+#' @rawNamespace
+#' import(lubridate)
+#' @rawNamespace
+#' import(Rgemini)
 NULL
 
 #' @title
@@ -382,6 +385,7 @@ generate_id_hospital <- function(
 #'
 #' @param check_time (`logical`)\cr Optional, a flag indicating whether the function will check for
 #' a date or date time format. The default is `FALSE`, meaning it will check for a date only.
+#'
 #' @return (`logical`)\cr The function returns `TRUE` if the input was a valid date or date time format.
 #' Otherwise, it returns `FALSE`.
 #'
