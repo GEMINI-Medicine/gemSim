@@ -6,6 +6,19 @@
 #' The user is required to input a list of data tables they want to create,
 #' in addition to other inputs to customize data tables.
 #' It returns a list of data tables, considering inter-table relations, creating a full database.
+#' Possible tables are:
+#' - `admdad`: administrative data table
+#' - `ipscu`: special care unit stays, including ICU
+#' - `er`: triage information from the ER
+#' - `erdiagnosis`: diagnosis codes from the ER
+#' - `ipdiagnosis`: inpatient diagnosis codes
+#' - `locality_variables`: dissemination area ID information
+#' - `lab`: information about CBC or electrolyte tests
+#' - `radiology`: MRI, CT, and Ultrasound data
+#' - `erintervention`: intervention codes from the ER
+#' - `ipintervention`: inpatient intervention codes
+#' - `transfusion`: transfusion information about blood product and issue date times
+#' - `physicians`: admitting, most responsible, and discharging physician CPSO codes
 #'
 #' @param tables (`vector`)\cr A `character` vector listing the names of required data tables
 #'
@@ -19,14 +32,17 @@
 #' is the date range format provided.
 #'
 #' @param ... Additional arguments that may be passed into data simulation functions.
+#' These arguments are normally used to customize table outputs.
 #'
 #' @return (`list`)\cr A list containing `data.table` objects,
 #' one per entry in the `tables` parameter where entries are valid GEMINI data tables.
+#' May include: `admdad`, `ipscu`, `er`, `erdiagnosis`, `ipdiagnosis`, `locality_variables`,
+#' `lab`, `radiology`, `erintervention`, `ipintervention`, `transfusion`, `physicians`
 #'
 #' @export
 #'
 simulate_data_tables <- function(tables, nid = 1000, n_hospitals = 10, time_period = c(2015, 2023), ...) {
-  # Check inputs: `nid`, `n_hospitals`, `time_period`
+  # Check inputs: `tables`, `nid`, `n_hospitals`, `time_period`
   check_input(tables, "character")
 
   check_input(list(nid, n_hospitals), "integer")
@@ -76,6 +92,9 @@ simulate_data_tables <- function(tables, nid = 1000, n_hospitals = 10, time_peri
   new_ipadmdad <- dummy_ipadmdad(nid = nid, n_hospitals, time_period)
   results[["admdad"]] <- new_ipadmdad # add to the results list
 
+  # remove `admdad` from `tables` if it's included
+  tables <- tables[!tables %in% c("admdad")]
+
   ### a cohort is required for ER data ###
   # subset the `ipadmdad` cohort
   # this cohort is used for er-related tables
@@ -83,11 +102,8 @@ simulate_data_tables <- function(tables, nid = 1000, n_hospitals = 10, time_peri
     cohort = new_ipadmdad, include_prop = 0.81
   )
 
-  # remove `admdad` from `tables` if it's included
-  tables <- tables[!tables %in% c("admdad")]
-
-  # Construct cohorts for each table
-  # Every cohort is a subset of `new_ipadmdad` if they do not include the entire set
+  # Construct cohorts for all other tables after `er`
+  # Every cohort is a subset of `new_ipadmdad`
   cohort_list <- list(
     ipscu = generate_id_hospital(
       cohort = new_ipadmdad, include_prop = 0.24
