@@ -24,15 +24,33 @@ by years or specific dates in either format: ("yyyy-mm-dd", "yyyy-mm-dd") or (yy
 The start date and end date will be (yyyy-01-01 and yyyy-12-31) if (yyyy, yyyy)
 is the date range format provided.}
 
-\item{...}{Additional arguments that may be passed into data simulation functions.}
+\item{...}{Additional arguments that may be passed into data simulation functions.
+These arguments are normally used to customize table outputs.}
 }
 \value{
 (\code{list})\cr A list containing \code{data.table} objects,
 one per entry in the \code{tables} parameter where entries are valid GEMINI data tables.
+May include: \code{admdad}, \code{ipscu}, \code{er}, \code{erdiagnosis}, \code{ipdiagnosis}, \code{locality_variables},
+\code{lab}, \code{radiology}, \code{erintervention}, \code{ipintervention}, \code{transfusion}, \code{physicians}
 }
 \description{
 This function works in conjunction with all other data simulation functions.
 The user is required to input a list of data tables they want to create,
 in addition to other inputs to customize data tables.
 It returns a list of data tables, considering inter-table relations, creating a full database.
+Possible tables are:
+\itemize{
+\item \code{admdad}: administrative data table
+\item \code{ipscu}: special care unit stays, including ICU
+\item \code{er}: triage information from the ER
+\item \code{erdiagnosis}: diagnosis codes from the ER
+\item \code{ipdiagnosis}: inpatient diagnosis codes
+\item \code{locality_variables}: dissemination area ID information
+\item \code{lab}: information about CBC or electrolyte tests
+\item \code{radiology}: MRI, CT, and Ultrasound data
+\item \code{erintervention}: intervention codes from the ER
+\item \code{ipintervention}: inpatient intervention codes
+\item \code{transfusion}: transfusion information about blood product and issue date times
+\item \code{physicians}: admitting, most responsible, and discharging physician CPSO codes
+}
 }
