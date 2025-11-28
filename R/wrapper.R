@@ -2,10 +2,15 @@
 #' Wrapper function to call other data simulation functions.
 #'
 #' @description
-#' This function works in conjunction with all other data simulation functions.
-#' The user is required to input a list of data tables they want to create,
-#' in addition to other inputs to customize data tables.
-#' It returns a list of data tables, considering inter-table relations, creating a full database.
+#' A wrapper that coordinates table-specific simulation functions to generate 
+#' relational synthetic tables that reflect the inter-table structure of the GEMINI data.  
+#' Users specify which tables to generate and provide shared inputs such as the
+#' number of encounters, hospitals, and the time period.  
+#' The function returns a list of simulated `data.table`s with inter-table
+#' relationships handled automatically. Specifically,  the `admdad` table is generated first 
+#' and provides the encounter IDs used as the primary key for subsequent table.
+#' All tables are simulated to mirror their real-world linkage patterns to the
+#' `admdad` table in GEMINI data.
 #' Possible tables are:
 #' - `admdad`: administrative data table
 #' - `ipscu`: special care unit stays, including ICU
