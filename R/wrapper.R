@@ -12,18 +12,21 @@
 #' All tables are simulated to mirror their real-world linkage patterns to the
 #' `admdad` table in GEMINI data.
 #' Available tables include:
-#' - `admdad`: administrative data table
-#' - `ipscu`: special care unit stays, including ICU
-#' - `er`: triage information from the ER
-#' - `erdiagnosis`: diagnosis codes from the ER
-#' - `ipdiagnosis`: inpatient diagnosis codes
-#' - `locality_variables`: dissemination area ID information
-#' - `lab`: information about CBC or electrolyte tests
-#' - `radiology`: MRI, CT, and Ultrasound data
-#' - `erintervention`: intervention codes from the ER
-#' - `ipintervention`: inpatient intervention codes
+#' - `admdad`
+#' - `ipscu`
+#' - `er`
+#' - `erdiagnosis`
+#' - `ipdiagnosis`
+#' - `locality_variables`
+#' - `lab` *: currently simulates CBC or electrolyte tests only
+#' - `radiology` *: currently simulates MRI, CT, and ultrasound imaging data only
+#' - `erintervention` *: currently simulates intervention MRI
+#' - `ipintervention` *: currently simulates interventions MRI and MAID only
 #' - `transfusion`: transfusion information about blood product and issue date times
-#' - `physicians`: admitting, most responsible, and discharging physician CPSO codes
+#' - `physicians`
+#'
+#' See [GEMINI Data Repository Dictionary](https://geminimedicine.ca/the-gemini-database/) for
+#' table definitions and individual simulation function documentation for details.
 #'
 #' @param tables (`vector`)\cr A `character` vector listing the names of required data tables
 #'
