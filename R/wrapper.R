@@ -11,7 +11,7 @@
 #' and provides the encounter IDs used as the primary key for subsequent table.
 #' All tables are simulated to mirror their real-world linkage patterns to the
 #' `admdad` table in GEMINI data.
-#' Possible tables are:
+#' Available tables include:
 #' - `admdad`: administrative data table
 #' - `ipscu`: special care unit stays, including ICU
 #' - `er`: triage information from the ER
