@@ -89,7 +89,7 @@ simulate_data_tables <- function(tables, nid = 1000, n_hospitals = 10, time_peri
     er = dummy_er
   )
 
-  # separate `cohort` based on which encounters are sent to the SCU, ER, etc.
+  # subset cohort based on the proportion of admdad encounters that appear in SCU, ER, etc
   cohort_props <- data.table(
     table = c("ipscu", "er", "ipdiagnosis", "erdiagnosis", "transfusion", "radiology"),
     prop = c(0.24, 0.81, 1, 0.81, 0.1, 0.54)
