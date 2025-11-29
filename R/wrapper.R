@@ -1,13 +1,14 @@
 #' @title
-#' Wrapper function to call other data simulation functions.
+#' Wrapper function that calls data simulation functions to create a synthetic,
+#' # customizable database that reflects the inter-table relations of the GEMINI database.
 #'
 #' @description
-#' A wrapper that coordinates table-specific simulation functions to generate 
-#' relational synthetic tables that reflect the inter-table structure of the GEMINI data.  
+#' A wrapper that coordinates table-specific simulation functions to generate
+#' relational synthetic tables that reflect the inter-table structure of the GEMINI data.
 #' Users specify which tables to generate and provide shared inputs such as the
-#' number of encounters, hospitals, and the time period.  
+#' number of encounters, hospitals, and the time period.
 #' The function returns a list of simulated `data.table`s with inter-table
-#' relationships handled automatically. Specifically,  the `admdad` table is generated first 
+#' relationships handled automatically. Specifically, the `admdad` table is generated first
 #' and provides the encounter IDs used as the primary key for subsequent table.
 #' All tables are simulated to mirror their real-world linkage patterns to the
 #' `admdad` table in GEMINI data.
@@ -47,19 +48,18 @@
 #' May include: `admdad`, `ipscu`, `er`, `erdiagnosis`, `ipdiagnosis`, `locality_variables`,
 #' `lab`, `radiology`, `erintervention`, `ipintervention`, `transfusion`, `physicians`
 #'
+#' @import data.table
+#' @importFrom Rgemini check_input
+#'
 #' @export
 #'
+#' @example simulate_data_tables(c("admdad", "ipscu", "er"))
+#' @example simulate_data_tables(c("admdad", "transfusion"), blood_product_list = c("4023915", "4137859"))
+#' @example simulate_data_tables(c("er", "erintervention", "erdiagnosis"), int_code = c("3AN40VA", "3SC40WC"))
+#'
 simulate_data_tables <- function(tables, nid = 1000, n_hospitals = 10, time_period = c(2015, 2023), ...) {
-  # Check inputs: `tables`, `nid`, `n_hospitals`, `time_period`
+  # Check inputs: `tables`
   Rgemini:::check_input(tables, "character")
-
-  Rgemini:::check_input(list(nid, n_hospitals), "integer")
-
-  if (any(is.null(time_period)) || any(is.na(time_period)) || length(time_period) != 2) {
-    stop("Please provide time_period as a vector of length 2") # check for date formatting
-  } else if (!check_date_format(time_period[1]) || !check_date_format(time_period[2])) {
-    stop("Time period is in the incorrect date format, please fix")
-  }
 
   # Get all data table options
   table_list <- c(
@@ -91,8 +91,8 @@ simulate_data_tables <- function(tables, nid = 1000, n_hospitals = 10, time_peri
 
   # subset cohort based on the proportion of admdad encounters that appear in SCU, ER, etc
   cohort_props <- data.table(
-    table = c("ipscu", "er", "ipdiagnosis", "erdiagnosis", "transfusion", "radiology"),
-    prop = c(0.24, 0.81, 1, 0.81, 0.1, 0.54)
+    table = c("ipscu", "er", "ipdiagnosis", "ipintervention", "transfusion", "radiology"),
+    prop = c(0.2, 0.7, 1, 0.09, 0.1, 0.49)
   )
 
   ### get admdad table ###
@@ -110,32 +110,32 @@ simulate_data_tables <- function(tables, nid = 1000, n_hospitals = 10, time_peri
   # subset the `ipadmdad` cohort
   # this cohort is used for er-related tables
   er_cohort <- generate_id_hospital(
-    cohort = new_ipadmdad, include_prop = 0.81
+    cohort = new_ipadmdad, include_prop = cohort_props[table == "er", prop]
   )
 
   # Construct cohorts for all other tables after `er`
   # Every cohort is a subset of `new_ipadmdad`
   cohort_list <- list(
     ipscu = generate_id_hospital(
-      cohort = new_ipadmdad, include_prop = 0.24
+      cohort = new_ipadmdad, include_prop = cohort_props[table == "ipscu", prop]
     ),
     locality_variables = new_ipadmdad, # all of `ipadmdad`
     erdiagnosis = er_cohort, # include all of `er`
     ipdiagnosis = new_ipadmdad, # all of `ipadmdad`
     erintervention = generate_id_hospital(
-      cohort = er_cohort, include_prop = 0.85
+      cohort = er_cohort, include_prop = cohort_props[table == "erintervention", prop]
     ),
     ipintervention = generate_id_hospital(
-      cohort = new_ipadmdad, include_prop = 0.1
+      cohort = new_ipadmdad, include_prop = cohort_props[table == "ipintervention", prop]
     ),
     physicians = new_ipadmdad,
     radiology = generate_id_hospital(
-      cohort = new_ipadmdad, include_prop = 0.54
+      cohort = new_ipadmdad, include_prop = cohort_props[table == "radiology", prop]
     ),
     transfusion = generate_id_hospital(
-      cohort = new_ipadmdad, include_prop = 0.1
+      cohort = new_ipadmdad, include_prop = cohort_props[table == "transfusion", prop]
     ),
-    lab = generate_id_hospital(cohort = new_ipadmdad, include_prop = 0.91),
+    lab = generate_id_hospital(cohort = new_ipadmdad, include_prop = cohort_props[table == "lab", prop]),
     er = er_cohort
   )
 
