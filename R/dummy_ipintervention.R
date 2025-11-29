@@ -61,7 +61,9 @@ dummy_ipintervention_mri_maid <- function(
   }
 
   # get intervention codes from rda
-  lookup_cci <- load("data/lookup_cci_mri_maid.rda") %>% data.table()
+  data("lookup_cci_mri_maid", envir = environment())
+  lookup_cci <- data.table::as.data.table(lookup_cci_mri_maid)
+
   lookup_cci[, intervention_code := trimws(intervention_code)]
 
   if (!is.null(seed)) {
