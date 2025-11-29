@@ -5,7 +5,6 @@
 \title{Generate simulated erintervention data}
 \usage{
 dummy_erintervention_mri(
-  dbcon = NULL,
   nid = 1000,
   n_hospitals = 10,
   int_code = NULL,
@@ -14,10 +13,6 @@ dummy_erintervention_mri(
 )
 }
 \arguments{
-\item{dbcon}{(\code{DBIConnection})\cr
-A database connection to a GEMINI database, required to look up intervention codes.
-Required when \code{int_code} is missing.}
-
 \item{nid}{(\code{integer})\cr Number of unique encounter IDs to simulate.
 Encounter IDs may repeat, resulting in a data table with more rows than \code{nid}.
 Optional when \code{cohort} is provided.}
@@ -26,7 +21,7 @@ Optional when \code{cohort} is provided.}
 Optional when \code{cohort} is provided.}
 
 \item{int_code}{(\verb{character or vector})\cr Optional, user-specified intervention codes to include in the returned
-data table. Required when \code{dbcon} is not provided.}
+data table.}
 
 \item{cohort}{(\verb{data.frame or data.table})\cr Optional, data frame or data table containing the fields:
 \itemize{
@@ -56,5 +51,7 @@ This function simulates data with CCI codes detailing the type of intervention u
 \examples{
 dummy_erintervention_mri(nid = 1000, int_code = c("3AN40VA", "3SC40WC"))
 dummy_erintervention_mri(cohort = dummy_ipadmdad(), int_code = "3AN40VA")
+
+dummy_erintervention_mri(nid = 100, n_hospitals = 2, seed = 1)
 
 }

@@ -5,7 +5,6 @@
 \title{Generate simulated ipintervention data}
 \usage{
 dummy_ipintervention_mri_maid(
-  dbcon = NULL,
   nid = 1000,
   n_hospitals = 10,
   cohort = NULL,
@@ -14,10 +13,6 @@ dummy_ipintervention_mri_maid(
 )
 }
 \arguments{
-\item{dbcon}{(\code{DBIConnection})\cr
-A database connection to a GEMINI database, required to look up intervention codes.
-Required when \code{int_code} is missing, otherwise not used if \code{int_code} is provided.}
-
 \item{nid}{(\code{integer})\cr Number of unique encounter IDs to simulate.
 Encounter IDs may repeat, resulting in a data table with more rows than \code{nid}.
 It is not used if \code{cohort} is provided.}
@@ -29,8 +24,7 @@ It is not used if \code{cohort} is provided.}
 When \code{cohort} is not NULL, \code{nid} and \code{n_hospitals} are ignored.
 }}
 
-\item{int_code}{(\code{character})\cr Optional, user-specified intervention codes to include in the returned data table.
-Required when \code{dbcon} is missing.}
+\item{int_code}{(\code{character})\cr Optional, user-specified intervention codes to include in the returned data table.}
 
 \item{seed}{(\code{integer})\cr Optional, a number to be used to set the seed for reproducible results}
 }
@@ -54,5 +48,7 @@ This function simulates data with CCI codes detailing the type of intervention t
 \examples{
 dummy_ipintervention_mri_maid(nid = 1000, int_code = c("3AN40VA", "3SC40WC"))
 dummy_ipintervention_mri_maid(nid = 1000, int_code = "3SC40WC")
+
+dummy_ipintervention_mri_maid(nid = 1000, n_hospitals = 10, seed = 1)
 
 }

@@ -8,10 +8,6 @@
 #'
 #' This function simulates data with CCI codes detailing the type of intervention used in the emergency department.
 #'
-#' @param dbcon (`DBIConnection`)\cr
-#' A database connection to a GEMINI database, required to look up intervention codes.
-#' Required when `int_code` is missing.
-#'
 #' @param nid (`integer`)\cr Number of unique encounter IDs to simulate.
 #' Encounter IDs may repeat, resulting in a data table with more rows than `nid`.
 #' Optional when `cohort` is provided.
@@ -20,7 +16,7 @@
 #' Optional when `cohort` is provided.
 #'
 #' @param int_code (`character or vector`)\cr Optional, user-specified intervention codes to include in the returned
-#' data table. Required when `dbcon` is not provided.
+#' data table.
 #'
 #' @param cohort (`data.frame or data.table`)\cr Optional, data frame or data table containing the fields:
 #' - `genc_id` (`integer`): Mock encounter ID number
@@ -39,12 +35,16 @@
 #' dummy_erintervention_mri(nid = 1000, int_code = c("3AN40VA", "3SC40WC"))
 #' dummy_erintervention_mri(cohort = dummy_ipadmdad(), int_code = "3AN40VA")
 #'
-#' @importFrom Rgemini check_input
+#' @import Rgemini
+#' @import data.table
 #'
 #' @export
 #'
+#' @examples
+#' dummy_erintervention_mri(nid = 100, n_hospitals = 2, seed = 1)
+#'
 dummy_erintervention_mri <- function(
-  dbcon = NULL, nid = 1000, n_hospitals = 10, int_code = NULL, cohort = NULL, seed = NULL
+  nid = 1000, n_hospitals = 10, int_code = NULL, cohort = NULL, seed = NULL
 ) {
   ############## CHECKS: for valid inputs: `n_id`, `n_hospitals`, `cohort`
   if (is.null(cohort)) {
@@ -59,14 +59,9 @@ dummy_erintervention_mri <- function(
     )
   }
 
-  if (!is.null(dbcon)) {
-    # get CCI intervention codes for MRI
-    lookup_cci_mri <- dbGetQuery(dbcon, "SELECT * FROM lookup_cci WHERE intervention_code ~ '^3..40'") %>%
-      data.table()
-    mri_codes <- unique(lookup_cci_mri$intervention_code)
-  } else if (is.null(int_code)) {
-    stop("A DB connection or intervention code list is required.")
-  }
+  # get intervention code data
+  lookup_cci_mri <- load("data/erintervention_cci_mri.rda")
+  mri_codes <- unique(lookup_cci_mri$intervention_code)
 
   if (!is.null(seed)) {
     set.seed(seed)
@@ -74,7 +69,8 @@ dummy_erintervention_mri <- function(
 
   if (!is.null(cohort)) {
     # if `cohort` is provided, use its `genc_id` and `hospital_num`
-    cohort <- as.data.table(cohort)
+    cohort <- suppressWarnings(Rgemini::coerce_to_datatable(cohort))
+
     # each `genc_id` repeats an average of 1.9 times
     df1 <- generate_id_hospital(cohort = cohort, avg_repeats = 1.9, seed = seed)
     # only include the `genc_id` and `hospital_num` columns from `cohort`
