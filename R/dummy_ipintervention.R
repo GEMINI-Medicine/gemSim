@@ -12,6 +12,9 @@
 #' Encounter IDs may repeat, resulting in a data table with more rows than `nid`.
 #' It is not used if `cohort` is provided.
 #'
+#' @param n_hospitals (`integer`)\cr Number of unique hospitals to simulate.
+#' It is not used if `cohort` is provided.
+#'
 #' @param int_code (`character`)\cr Optional, user-specified intervention codes to include in the returned data table.
 #'
 #' @param cohort (`data.frame or data.table`)\cr Optional, data frame or data table containing the columns:
@@ -58,7 +61,7 @@ dummy_ipintervention_mri_maid <- function(
   }
 
   # get intervention codes from rda
-  lookup_cci <- load("data/ipintervention_cci_mri_maid.rda") %>% data.table()
+  lookup_cci <- load("data/lookup_cci_mri_maid.rda") %>% data.table()
   lookup_cci[, intervention_code := trimws(intervention_code)]
 
   if (!is.null(seed)) {

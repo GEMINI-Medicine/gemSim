@@ -24,3 +24,6 @@ Imports:
     textstem
 Remotes:
     GEMINI-Medicine/Rgemini
+Depends: 
+    R (>= 3.5)
+LazyData: true

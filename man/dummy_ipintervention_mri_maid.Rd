@@ -17,6 +17,9 @@ dummy_ipintervention_mri_maid(
 Encounter IDs may repeat, resulting in a data table with more rows than \code{nid}.
 It is not used if \code{cohort} is provided.}
 
+\item{n_hospitals}{(\code{integer})\cr Number of unique hospitals to simulate.
+It is not used if \code{cohort} is provided.}
+
 \item{cohort}{(\verb{data.frame or data.table})\cr Optional, data frame or data table containing the columns:
 \itemize{
 \item \code{genc_id} (\code{integer}): Mock encounter ID number

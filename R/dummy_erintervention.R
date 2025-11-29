@@ -61,7 +61,7 @@ dummy_erintervention_mri <- function(
   }
 
   # get intervention code data
-  lookup_cci_mri <- load("data/erintervention_cci_mri.rda") %>% data.table()
+  lookup_cci_mri <- load("data/lookup_cci_mri.rda") %>% data.table()
   lookup_cci_mri[, intervention_code := trimws(intervention_code)]
   mri_codes <- unique(lookup_cci_mri$intervention_code)
 
