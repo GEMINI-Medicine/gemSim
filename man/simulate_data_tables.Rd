@@ -2,7 +2,7 @@
 % Please edit documentation in R/wrapper.R
 \name{simulate_data_tables}
 \alias{simulate_data_tables}
-\title{Wrapper function to call other data simulation functions.}
+\title{Wrapper function that calls data simulation functions to create a synthetic,customizable database that reflects the inter-table relations of the GEMINI database.}
 \usage{
 simulate_data_tables(
   tables,
@@ -39,7 +39,7 @@ relational synthetic tables that reflect the inter-table structure of the GEMINI
 Users specify which tables to generate and provide shared inputs such as the
 number of encounters, hospitals, and the time period.
 The function returns a list of simulated \code{data.table}s with inter-table
-relationships handled automatically. Specifically,  the \code{admdad} table is generated first
+relationships handled automatically. Specifically, the \code{admdad} table is generated first
 and provides the encounter IDs used as the primary key for subsequent table.
 All tables are simulated to mirror their real-world linkage patterns to the
 \code{admdad} table in GEMINI data.
