@@ -34,6 +34,7 @@
 #'
 #' @import Rgemini
 #' @import data.table
+#' @import dplyr
 #'
 #' @export
 #'
@@ -57,7 +58,8 @@ dummy_ipintervention_mri_maid <- function(
   }
 
   # get intervention codes from rda
-  lookup_cci <- load("data/ipintervention_cci_mri_maid.rda")
+  lookup_cci <- load("data/ipintervention_cci_mri_maid.rda") %>% data.table()
+  lookup_cci[, intervention_code := trimws(intervention_code)]
 
   if (!is.null(seed)) {
     set.seed(seed)
