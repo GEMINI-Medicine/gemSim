@@ -34,23 +34,31 @@ May include: \code{admdad}, \code{ipscu}, \code{er}, \code{erdiagnosis}, \code{i
 \code{lab}, \code{radiology}, \code{erintervention}, \code{ipintervention}, \code{transfusion}, \code{physicians}
 }
 \description{
-This function works in conjunction with all other data simulation functions.
-The user is required to input a list of data tables they want to create,
-in addition to other inputs to customize data tables.
-It returns a list of data tables, considering inter-table relations, creating a full database.
-Possible tables are:
+A wrapper that coordinates table-specific simulation functions to generate
+relational synthetic tables that reflect the inter-table structure of the GEMINI data.
+Users specify which tables to generate and provide shared inputs such as the
+number of encounters, hospitals, and the time period.
+The function returns a list of simulated \code{data.table}s with inter-table
+relationships handled automatically. Specifically,  the \code{admdad} table is generated first
+and provides the encounter IDs used as the primary key for subsequent table.
+All tables are simulated to mirror their real-world linkage patterns to the
+\code{admdad} table in GEMINI data.
+Available tables include:
 \itemize{
-\item \code{admdad}: administrative data table
-\item \code{ipscu}: special care unit stays, including ICU
-\item \code{er}: triage information from the ER
-\item \code{erdiagnosis}: diagnosis codes from the ER
-\item \code{ipdiagnosis}: inpatient diagnosis codes
-\item \code{locality_variables}: dissemination area ID information
-\item \code{lab}: information about CBC or electrolyte tests
-\item \code{radiology}: MRI, CT, and Ultrasound data
-\item \code{erintervention}: intervention codes from the ER
-\item \code{ipintervention}: inpatient intervention codes
+\item \code{admdad}
+\item \code{ipscu}
+\item \code{er}
+\item \code{erdiagnosis}
+\item \code{ipdiagnosis}
+\item \code{locality_variables}
+\item \code{lab} *: currently simulates CBC or electrolyte tests only
+\item \code{radiology} *: currently simulates MRI, CT, and ultrasound imaging data only
+\item \code{erintervention} *: currently simulates intervention MRI
+\item \code{ipintervention} *: currently simulates interventions MRI and MAID only
 \item \code{transfusion}: transfusion information about blood product and issue date times
-\item \code{physicians}: admitting, most responsible, and discharging physician CPSO codes
+\item \code{physicians}
 }
+
+See \href{https://geminimedicine.ca/the-gemini-database/}{GEMINI Data Repository Dictionary} for
+table definitions and individual simulation function documentation for details.
 }
