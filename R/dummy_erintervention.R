@@ -89,7 +89,7 @@ dummy_erintervention_mri <- function(
     if (length(int_code) == 1 && !(is.na(int_code))) {
       int_code <- c(int_code)
     }
-    if (any(!(int_code %in% lookup_cci$intervention_code))) {
+    if (any(!(int_code %in% lookup_cci_mri$intervention_code))) {
       stop("The provided CCI code was not valid. Stopping.")
     }
     df1[, intervention_code := sample(int_code, .N, replace = TRUE)]
