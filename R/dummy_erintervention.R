@@ -61,8 +61,7 @@ dummy_erintervention_mri <- function(
   }
 
   # get intervention code data
-  data("lookup_cci_mri", envir = environment())
-  lookup_cci_mri <- data.table::as.data.table(lookup_cci_mri)
+  lookup_cci_mri <- GEMINIdatasimulation::lookup_cci_mri %>% data.table()
 
   lookup_cci_mri[, intervention_code := trimws(intervention_code)]
   mri_codes <- unique(lookup_cci_mri$intervention_code)

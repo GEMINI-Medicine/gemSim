@@ -35,7 +35,7 @@ When \code{cohort} is not NULL, \code{nid} and \code{n_hospitals} are ignored.
 (\code{data.table})\cr A data.table object similar to the "ipintervention" table that contains the columns:
 \itemize{
 \item \code{genc_id} (\code{integer}): Mock encounter ID number; integers starting from 1 or provided from \code{cohort}
-\item \code{hospital_id} (\code{integer}): Mock hospital ID number; integers starting from 1 or provided from \code{cohort}
+\item \code{hospital_num} (\code{integer}): Mock hospital ID number; integers starting from 1 or provided from \code{cohort}
 \item \code{intervention_code} (\code{character}): A valid CCI code(s) describing the services (procedures/intervention)
 performed for or on behalf of the patient to improve health.
 For this simulation, it will either be for an MRI or medical assistance in dying (MAID)

@@ -26,7 +26,7 @@
 #'
 #' @return (`data.table`)\cr A data.table object similar to the "ipintervention" table that contains the columns:
 #' - `genc_id` (`integer`): Mock encounter ID number; integers starting from 1 or provided from `cohort`
-#' - `hospital_id` (`integer`): Mock hospital ID number; integers starting from 1 or provided from `cohort`
+#' - `hospital_num` (`integer`): Mock hospital ID number; integers starting from 1 or provided from `cohort`
 #' - `intervention_code` (`character`): A valid CCI code(s) describing the services (procedures/intervention)
 #' performed for or on behalf of the patient to improve health.
 #' For this simulation, it will either be for an MRI or medical assistance in dying (MAID)
@@ -61,8 +61,7 @@ dummy_ipintervention_mri_maid <- function(
   }
 
   # get intervention codes from rda
-  data("lookup_cci_mri_maid", envir = environment())
-  lookup_cci <- data.table::as.data.table(lookup_cci_mri_maid)
+  lookup_cci <- GEMINIdatasimulation::lookup_cci_mri_maid %>% data.table()
 
   lookup_cci[, intervention_code := trimws(intervention_code)]
 
