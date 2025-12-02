@@ -10,13 +10,13 @@
 #'
 #' @param nid (`integer`)\cr Number of unique encounter IDs to simulate.
 #' Encounter IDs may repeat, resulting in a data table with more rows than `nid`.
-#' Optional when `cohort` is provided.
+#' Ignored when `cohort` is provided.
 #'
 #' @param n_hospitals (`integer`)\cr Number of hospitals to simulate.
-#' Optional when `cohort` is provided.
+#' Ignored when `cohort` is provided.
 #'
 #' @param int_code (`character or vector`)\cr Optional, user-specified intervention codes to include in the returned
-#' data table.
+#' data table. It needs to be a valid MRI code.
 #'
 #' @param cohort (`data.frame or data.table`)\cr Optional, data frame or data table containing the fields:
 #' - `genc_id` (`integer`): Mock encounter ID number
@@ -28,7 +28,7 @@
 #' @return (`data.table`)\cr A data.table object similar to the "ipintervention" table that contains the columns:
 #' - `genc_id` (`integer`): Mock encounter ID number; integers starting from 1 or from `cohort`
 #' - `hospital_num` (`integer`): Mock hospital ID number; integers starting from 1 or from `cohort`
-#' - `intervention_code` (`character`): A valid CCI code(s) describing the services (procedures/intervention)
+#' - `intervention_code` (`character`): Valid CCI code(s) describing the services (procedures/intervention)
 #' performed for or on behalf of the patient to improve health. For this simulation, it will be for an MRI.
 #'
 #' @examples
@@ -88,6 +88,9 @@ dummy_erintervention_mri <- function(
     # if it is a character, turn into a vector for sampling
     if (length(int_code) == 1 && !(is.na(int_code))) {
       int_code <- c(int_code)
+    }
+    if (any(!(int_code %in% lookup_cci$intervention_code))) {
+      stop("The provided CCI code was not valid. Stopping.")
     }
     df1[, intervention_code := sample(int_code, .N, replace = TRUE)]
   } else {

@@ -16,6 +16,7 @@
 #' It is not used if `cohort` is provided.
 #'
 #' @param int_code (`character`)\cr Optional, user-specified intervention codes to include in the returned data table.
+#' It needs to be a valid MRI or MAID code.
 #'
 #' @param cohort (`data.frame or data.table`)\cr Optional, data frame or data table containing the columns:
 #' - `genc_id` (`integer`): Mock encounter ID number
@@ -27,7 +28,7 @@
 #' @return (`data.table`)\cr A data.table object similar to the "ipintervention" table that contains the columns:
 #' - `genc_id` (`integer`): Mock encounter ID number; integers starting from 1 or provided from `cohort`
 #' - `hospital_num` (`integer`): Mock hospital ID number; integers starting from 1 or provided from `cohort`
-#' - `intervention_code` (`character`): A valid CCI code(s) describing the services (procedures/intervention)
+#' - `intervention_code` (`character`): Valid CCI code(s) describing the services (procedures/intervention)
 #' performed for or on behalf of the patient to improve health.
 #' For this simulation, it will either be for an MRI or medical assistance in dying (MAID)
 #'
@@ -89,6 +90,9 @@ dummy_ipintervention_mri_maid <- function(
     # If it is a character, turn `int_code` into a vector for sampling
     if (length(int_code) == 1 && !(is.na(int_code))) {
       int_code <- c(int_code)
+    }
+    if (any(!(int_code %in% lookup_cci$intervention_code))) {
+      stop("The provided CCI code was not valid. Stopping.")
     }
     df1[, intervention_code := sample(int_code, .N, replace = TRUE)]
   } else {
