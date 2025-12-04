@@ -13,7 +13,7 @@ NULL
 #'
 #' @description
 #' This is the section of the CCI intervention lookup table with codes for MRI
-#' 
+#'
 #' @name lookup_cci_mri
 #' @docType data
 NULL
