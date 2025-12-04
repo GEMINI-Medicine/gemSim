@@ -1,6 +1,8 @@
-#' @title
+#' @title Data simulation wrapper function
+#' 
+#' @details
 #' Wrapper function that calls data simulation functions to create a synthetic,
-#' # customizable database that reflects the inter-table relations of the GEMINI database.
+#' customizable database that reflects the inter-table relations of the GEMINI database.
 #'
 #' @description
 #' A wrapper that coordinates table-specific simulation functions to generate
@@ -49,13 +51,16 @@
 #' `lab`, `radiology`, `erintervention`, `ipintervention`, `transfusion`, `physicians`
 #'
 #' @import data.table
-#' @importFrom Rgemini check_input
+#' @import Rgemini
 #'
 #' @export
 #'
-#' @example simulate_data_tables(c("admdad", "ipscu", "er"))
-#' @example simulate_data_tables(c("admdad", "transfusion"), blood_product_list = c("4023915", "4137859"))
-#' @example simulate_data_tables(c("er", "erintervention", "erdiagnosis"), int_code = c("3AN40VA", "3SC40WC"))
+#' @examples
+#' simulate_data_tables(c("admdad", "ipscu", "er"))
+#' 
+#' simulate_data_tables(c("admdad", "transfusion"), blood_product_list = c("4023915", "4137859"))
+#'
+#' simulate_data_tables(c("er", "erintervention", "erdiagnosis"), int_code = c("3AN40VA", "3SC40WC"))
 #'
 simulate_data_tables <- function(tables, nid = 1000, n_hospitals = 10, time_period = c(2015, 2023), ...) {
   # Check inputs: `tables`

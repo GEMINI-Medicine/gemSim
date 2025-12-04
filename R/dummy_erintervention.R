@@ -39,7 +39,7 @@
 #' dummy_erintervention_mri(nid = 1000, int_code = c("3AN40VA", "3SC40WC"))
 #' dummy_erintervention_mri(cohort = dummy_ipadmdad(), int_code = "3AN40VA")
 #'
-#' @importFrom Rgemini check_input
+#' @import Rgemini
 #'
 #' @export
 #'
