@@ -23,7 +23,7 @@ jobs:
           - {os: ubuntu-latest,   r: 'release'}
 
     env:
-      GITHUB_PAT: ${{ secrets.GH_PAT }}
+      GITHUB_PAT: ${{ secrets.NEW_PAT }}
       R_KEEP_PKG_SOURCE: yes
       _R_CHECK_CODETOOLS_PROFILE_: 'suppressUndefined=TRUE'
 
