@@ -1,5 +1,5 @@
 #' @title Data simulation wrapper function
-#' 
+#'
 #' @details
 #' Wrapper function that calls data simulation functions to create a synthetic,
 #' customizable database that reflects the inter-table relations of the GEMINI database.
@@ -57,7 +57,7 @@
 #'
 #' @examples
 #' simulate_data_tables(c("admdad", "ipscu", "er"))
-#' 
+#'
 #' simulate_data_tables(c("admdad", "transfusion"), blood_product_list = c("4023915", "4137859"))
 #'
 #' simulate_data_tables(c("er", "erintervention", "erdiagnosis"), int_code = c("3AN40VA", "3SC40WC"))
