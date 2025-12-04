@@ -1,4 +1,3 @@
-
 #' @title
 #' Generate simulated transfusion data
 #'
