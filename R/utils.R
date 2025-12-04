@@ -1,17 +1,4 @@
-#' Imports for the entire package
-#' Doesn't require Depends or `@import` per function
-#'
-#' @rawNamespace
-#' import(data.table, except = c("first", "last", "between", "month", "hour",
-#' "quarter", "week", "year", "wday", "second", "minute", "mday", "yday",
-#' "isoweek"))
-#' @rawNamespace
-#' import(dplyr, except = c("first", "last", "between", "matches"))
-#'
-NULL
-
-#' @title
-#' Sample a truncated log normal distribution
+#' @title Sample a truncated log normal distribution
 #'
 #' @description
 #' Sample from a log normal distribution using the `rlnorm` function
@@ -72,7 +59,7 @@ rlnorm_trunc <- function(n, meanlog, sdlog, min, max, seed = NULL) {
 #' @return A numeric vector following the normal distribution, truncated to the specified range.
 #'
 #' @export
-#'
+
 rnorm_trunc <- function(n, mean, sd, min, max, seed = NULL) {
   if (!is.null(seed)) {
     set.seed(seed)
@@ -129,7 +116,7 @@ rsn_trunc <- function(n, xi, omega, alpha, min, max, seed = NULL) {
   res <- rsn(n = n, xi = xi, omega = omega, alpha = alpha)
   if (n == 1) {
     # if only one number is sampled
-    while (res[1] < min | res[1] > max) {
+    while (res[1] < min || res[1] > max) {
       res <- rsn(n = 1, xi = xi, omega = omega, alpha = alpha)
     }
     return(res[1])
@@ -190,7 +177,7 @@ sample_time_shifted <- function(nrow, xi, omega, alpha, min = 0, max = 48, seed 
     max = max,
   )
   # times greater than 24 hours are after 12am
-  # subtract 25 to turn 12am into 00:00
+  # subtract 24 to turn 12am into 00:00
   final_time <- ifelse(time_orig >= 24,
     time_orig - 24,
     time_orig
@@ -248,7 +235,7 @@ sample_time_shifted_lnorm <- function(nrow, meanlog, sdlog, min = 0, max = 48, s
   res <- sample_dist(nrow, meanlog, sdlog)
   while (sum(res < min) + sum(res > max) > 0) {
     oor_sum <- sum(res < min) + sum(res > max)
-    res[c(res < min | res > max)] <- sample_dist(oor_sum, meanlog, sdlog)
+    res[c(res < min || res > max)] <- sample_dist(oor_sum, meanlog, sdlog)
   }
   return(res)
 }
@@ -275,12 +262,6 @@ sample_time_shifted_lnorm <- function(nrow, meanlog, sdlog, min = 0, max = 48, s
 #' for the proportion of unique rows in `cohort` to include in the final data table
 #'
 #' @param cohort (`data.table`)\cr Optional, resembling the GEMINI "admdad" table to build the returned data table from
-#' It requires the following columns:
-#' - `genc_id` (`integer`): Mock encounter ID number
-#' - `hospital_id` (`integer`): Mock hospital ID number
-#' If `by_los` is TRUE, then it also requires:
-#' - `admission_date_time` (`character`): Inpatient admission date and time in the format "yyyy-mm-dd"
-#' - `discharge_date_time` (`character`): Inpatient discharge date and time in the format "yyyy-mm-dd"
 #'
 #' @param by_los (`logical`)\cr Optional, whether to assign more repeats to longer hospital stays or not.
 #' Default to FALSE. When TRUE, two additional columns are required in the input `cohort` dataset -
@@ -291,8 +272,8 @@ sample_time_shifted_lnorm <- function(nrow, meanlog, sdlog, min = 0, max = 48, s
 #' @return (`data.table`)\cr A data.table object with the same columns as `cohort`,
 #' but with some rows excluded and/or repeated based on user specifications.
 #' If `cohort` is not included, then it will have the following fields:
-#' - `genc_id` (`integer`): Mock encounter number, may be repeated in multiple rows based on avg_repeats
-#' - `hospital_num` (`integer`): Mock hospital ID number
+#' - `genc_id` (`integer`): GEMINI encounter number, may be repeated in multiple rows based on avg_repeats
+#' - `hospital_num` (`integer`): An integer identifying the hospital attached to the encounter
 #'
 #' @export
 #'
@@ -320,7 +301,6 @@ generate_id_hospital <- function(
     } else {
       n_repeats <- rep(1, nid)
     }
-
     # expand ids and sites
     id_list <- 1:nid
     id_vector <- rep(id_list, times = n_repeats)
@@ -341,11 +321,22 @@ generate_id_hospital <- function(
     # may sort by LOS to assign more repeats to longer stays
     if (by_los) {
       # convert date times to a useable format
-      include_set$admission_date_time <- as.POSIXct(include_set$admission_date_time,
-        format = "%Y-%m-%d %H:%M"
+      tryCatch(
+        {
+          include_set$admission_date_time <- Rgemini::convert_dt(include_set$admission_date_time, "ymd HM")
+        },
+        warning = function(w) {
+          stop(conditionMessage(w))
+        }
       )
-      include_set$discharge_date_time <- as.POSIXct(include_set$discharge_date_time,
-        format = "%Y-%m-%d %H:%M"
+
+      tryCatch(
+        {
+          include_set$discharge_date_time <- Rgemini::convert_dt(include_set$discharge_date_time, "ymd HM")
+        },
+        warning = function(w) {
+          stop(conditionMessage(w))
+        }
       )
 
       include_set$los <- as.numeric(difftime(
@@ -356,55 +347,12 @@ generate_id_hospital <- function(
       # order from shortest to longest
       include_set <- include_set[order(los)]
       n_repeats <- sort(n_repeats)
-
-      res <- include_set[rep(seq_len(.N), times = n_repeats), ]
-    } else {
-      # if not sorting by LOS, just assign repeats randomly
-      res <- include_set[rep(seq_len(.N), times = n_repeats), ]
     }
+    # In both cases, assign repeats
+    res <- include_set[rep(seq_len(.N), times = n_repeats), ]
   }
 
   res[, genc_id := as.integer(genc_id)]
   res[, hospital_num := as.integer(hospital_num)]
   return(res)
-}
-
-#' @title
-#' Checks a character input to verify that it is as valid date or date time format
-#'
-#' @description
-#' This function checks the format of a `character` object so that it can be converted to a Date or POSIXct type.
-#' The formats are:
-#' - Date: "YYYY-mm-dd" or "YYYY"
-#' - Date time (to convert to POSIXct): "YYYY-mm-dd hh:mm"
-#'
-#' @param x (`character`)\cr The string to be checked for format.
-#'
-#' @param check_time (`logical`)\cr Optional, a flag indicating whether the function will check for
-#' a date or date time format. The default is `FALSE`, meaning it will check for a date only.
-#'
-#' @return (`logical`)\cr The function returns `TRUE` if the input was a valid date or date time format.
-#' Otherwise, it returns `FALSE`.
-#'
-#' @export
-#'
-#' @examples
-#' check_date_format("2020-01-01", check_time = FALSE)
-#' check_date_format("2021-01-01 12:01", check_time = TRUE)
-#' check_date_format(c("2015-12-31 01:01", "2016-01-01 01:01"), check_time = TRUE)
-#' check_date_format("November 13th, 2025")
-#'
-check_date_format <- function(x, check_time = FALSE) {
-  x <- as.character(x)
-  x_trim <- trimws(x)
-  if (check_time == FALSE) {
-    return(
-      grepl("^[0-9]{4}-[0-9]{2}-[0-9]{2}$", x_trim) | grepl("^[0-9]{4}$", x_trim)
-    )
-  } else {
-    x_trim <- substr(x_trim, 1, 16) # removes seconds from the date time object
-    return(
-      grepl("^[0-9]{4}-[0-9]{2}-[0-9]{2} [0-9]{2}:[0-9]{2}$", x_trim)
-    )
-  }
 }

@@ -135,12 +135,21 @@ sample_icd <- function(n = 1, source = "comorbidity", dbcon = NULL, pattern = NU
 #' the output data or manually generating the desired combinations.
 #'
 #' @param nid (`integer`)\cr Number of unique encounter IDs (`genc_id`) to simulate. Value must be greater than 0.
+#' Optional when `cohort` is provided.
 #'
-#' @param n_hospitals (`integer`)\cr Number of hospitals to simulate in the resulting data table
+#' @param n_hospitals (`integer`)\cr Number of hospitals to simulate in the resulting data table.
+#' Optional when `cohort` is provided.
+#' @param n_hospitals (`integer`)\cr Number of hospitals to simulate in the resulting data table.
+#' Optional when `cohort` is provided.
 #'
-#' @param cohort (`data.frame`)\cr Optional, the administrative data frame containing `genc_id`
+#' @param cohort (`data.frame` or `data.table`)\cr Optional, the administrative data frame containing `genc_id`
 #' and `hospital_num` information to be used in the output. `cohort` takes precedence over parameters `nid` and
 #' `n_hospitals`: when `cohort` is not NULL, `nid` and `n_hospitals` are ignored.
+#' @param cohort (`data.frame or data.table`)\cr Optional, the administrative data frame with the columns:
+#' - `genc_id` (`integer`): GEMINI encounter ID
+#' - `hospital_num` (`integer`): hospital ID
+#' `cohort` takes precedence over parameters `nid` and`n_hospitals`.
+#' When `cohort` is not NULL, `nid` and `n_hospitals` are ignored.
 #'
 #' @param ipdiagnosis (`logical`)\cr Default to "TRUE" and returns simulated "ipdiagnosis" table.
 #' If FALSE, returns simulated "erdiagnosis" table.
@@ -158,6 +167,9 @@ sample_icd <- function(n = 1, source = "comorbidity", dbcon = NULL, pattern = NU
 #' @return (`data.table`)\cr A data table containing simulated data of
 #' `genc_id`, `(er)_diagnosis_code`, `(er)_diagnosis_type`, `hospital_num`,
 #' and other fields found in the respective diagnosis table.
+#'
+#' @importFrom dplyr select
+#' @importFrom magrittr %>%
 #'
 #' @export
 #'
@@ -235,7 +247,10 @@ dummy_diag <- function(
     mutate(diagnosis_type = "M") # ensure each id has a type M diagnosis
 
   if (!is.null(diagnosis_type)) {
-    df2[, diagnosis_type := sample(diagnosis_type, size = .N, replace = TRUE)]
+    df2 <- data.table(
+      genc_id = sample(1:nid, size = (nrow - nid), replace = TRUE),
+      diagnosis_type = sample(diagnosis_type, size = (nrow - nid), replace = TRUE)
+    )
   } else {
     df2[, diagnosis_type := sample(c("1", "2", "3", "4", "5", "6", "9", "W", "X", "Y"),
       size = .N, replace = TRUE,
@@ -243,7 +258,7 @@ dummy_diag <- function(
     )]
   }
 
-  # total number of rows in dummy data table
+  # total number of rows in synthetic data table
   n_rows <- nrow(df1) + nrow(df2)
 
   ##### sample `diagnosis_codes` #####
@@ -316,15 +331,18 @@ dummy_diag <- function(
 #' up pseudo-randomly between hospitals to ensure roughly equal sample size at
 #' each hospital.
 #'
-#' @param time_period (`numeric`)\cr
+#' @param time_period (`vector`)\cr
 #' A numeric vector containing the time period, specified as fiscal years
 #' (starting in April each year). For example, `c(2015, 2019)` generates data
 #' from 2015-04-01 to 2020-03-31.
 #'
+#' @param seed (`numeric`)\cr
+#' Optional, a number to set the seed for reproducible results
+#'
 #' @return (`data.frame`)\cr A data.frame object similar to the "ipadmdad" table
 #' containing the following fields:
-#' - `genc_id` (`integer`): GEMINI encounter ID
-#' - `hospital_num` (`integer`): Hospital ID
+#' - `genc_id` (`integer`): Mock encounter ID; integers starting from 1
+#' - `hospital_num` (`integer`): Mock hospital ID number; integers starting from 1
 #' - `admission_date_time` (`character`): Date-time of admission in YYYY-MM-DD HH:MM format
 #' - `discharge_date_time` (`character`): Date-time of discharge in YYYY-MM-DD HH:MM format
 #' - `age` (`integer`): Patient age
@@ -363,10 +381,11 @@ dummy_diag <- function(
 #' stay. However, due to the fact that ALC days are rounded up, it's possible
 #' for `number_of_alc_days` to be larger than `los_days_derived`.
 #'
+#' @import data.table
+#' @import Rgemini
 #' @importFrom sn rsn
 #' @importFrom MCMCpack rdirichlet
-#' @importFrom lubridate ymd_hm round_date dhours ddays
-#' @import Rgemini
+#' @importFrom lubridate ymd_hm dhours ddays
 #' @export
 #'
 #' @examples
@@ -377,10 +396,49 @@ dummy_ipadmdad <- function(nid = 1000,
                            n_hospitals = 10,
                            time_period = c(2015, 2023),
                            seed = NULL) {
-  ############### CHECKS: Make sure n is at least n_hospitals * length(time_period)
-  if (nid < n_hospitals * length(time_period)) {
+  ############## CHECKS: for valid inputs: `n_id`, `n_hospitals`, `time_period`
+  Rgemini:::check_input(list(nid, n_hospitals), "integer")
+  Rgemini:::check_input(time_period, c("numeric", "character", "POSIXct"), length = 2)
+
+  time_period <- as.character(time_period)
+
+  # get start and end dates
+  if (grepl("^[0-9]{4}$", time_period[1])) {
+    # if the user only provided a year
+    start_date <- convert_dt(paste0(time_period[1], "-01-01"), "ymd")
+  } else {
+    # convert to date while checking for the format
+    # stop if the format is not correct
+    tryCatch(
+      {
+        start_date <- convert_dt(time_period[1], "ymd")
+      },
+      warning = function(w) {
+        stop(conditionMessage(w))
+      }
+    )
+  }
+
+  if (grepl("^[0-9]{4}$", time_period[2])) {
+    # if the user only provided a year
+    end_date <- convert_dt(paste0(time_period[2], "-12-31"), "ymd")
+  } else {
+    # convert to date while checking for the format
+    # stop if the format is not correct
+    tryCatch(
+      {
+        end_date <- convert_dt(time_period[2], "ymd")
+      },
+      warning = function(w) {
+        stop(conditionMessage(w))
+      }
+    )
+  }
+
+  # Make sure `nid` is at least `n_hospitals`
+  if (nid < n_hospitals) {
     stop("Invalid user input.
-    Number of encounters `nid` should at least be equal to `n_hospitals` * `length(time_period)`")
+    Number of encounters `nid` should at least be equal to `n_hospitals`")
   }
 
   # set the seed if the input provided is not NULL
@@ -389,41 +447,31 @@ dummy_ipadmdad <- function(nid = 1000,
   }
 
   ############### PREPARE OUTPUT TABLE ###############
-  ## create all combinations of hospitals and fiscal years
-  hospital_num <- as.integer(seq(1, n_hospitals, 1))
-  year <- seq(time_period[1], time_period[2], 1)
+  ## create all combinations of hospitals and dates
+  hosp_names <- as.integer(seq(1, n_hospitals, 1))
+  hosp_assignment <- sample(hosp_names, nid, replace = TRUE)
 
-  data <- expand.grid(hospital_num = hospital_num, year = year) %>% data.table()
+  id_list <- 1:nid
+  id_vector <- rep(id_list, times = rep(1, nid))
+  site_vector <- rep(hosp_assignment, times = rep(1, nid))
 
-  # randomly draw number of encounters per hospital*year combo
-  data[, n := rmultinom(1, nid, rep.int(1 / nrow(data), nrow(data)))]
-
-  # blow up row number according to encounter per combo
-  data <- data[rep(seq_len(nrow(data)), data$n), ]
+  data <- data.table(genc_id = id_vector, hospital_num = site_vector, stringsAsFactors = FALSE)
 
   # turn year variable into actual date by randomly drawing date_time
-  add_random_datetime <- function(year) {
-    start_date <- paste0(year, "-04-01 00:00 UTC") # start each fisc year on Apr 1
-    end_date <- paste0(year + 1, "-03-31 23:59 UTC") # end of fisc year
-
-    random_date <- as.Date(round(runif(length(year),
+  add_random_datetime <- function(n, start_date, end_date) {
+    random_date <- as.Date(round(runif(n,
       min = as.numeric(as.Date(start_date)),
       max = as.numeric(as.Date(end_date))
     )))
 
-    random_datetime <- format(as.POSIXct(random_date + dhours(sample_time_shifted(length(year),
-      xi = 19.5, omega = 6.29, alpha = 0.20
+    random_datetime <- format(as.POSIXct(random_date + dhours(sample_time_shifted(n,
+      xi = 19.5, omega = 6.29, alpha = 0.20, seed = seed
     )), tz = "UTC"), format = "%Y-%m-%d %H:%M")
 
     return(random_datetime)
   }
 
-  data[, admission_date_time := add_random_datetime(year)]
-
-  # add genc_id from 1-n
-  data <- data[order(admission_date_time), ]
-  data[, genc_id := as.integer(seq(1, nrow(data), 1))]
-
+  data[, admission_date_time := add_random_datetime(.N, start_date, end_date)]
 
   ############### DEFINE VARIABLE DISTRIBUTIONS ###############
   ## AGE
@@ -485,7 +533,7 @@ dummy_ipadmdad <- function(nid = 1000,
     hosp_data[, discharge_date_time := format(
       round_date(as.POSIXct(admission_date_time, tz = "UTC") +
         ddays(los), unit = "days") +
-        dhours(sample_time_shifted(.N, xi = 11.37, omega = 4.79, alpha = 1.67, max = 28, seed = seed)),
+        dhours(sample_time_shifted(.N, xi = 11.37, omega = 4.79, alpha = 1.67, seed = seed)),
       format = "%Y-%m-%d %H:%M", tz = "UTC"
     )]
 
