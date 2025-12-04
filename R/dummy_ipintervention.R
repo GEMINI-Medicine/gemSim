@@ -62,7 +62,7 @@ dummy_ipintervention_mri_maid <- function(
   }
 
   # get intervention codes from rda
-  lookup_cci <- GEMINIdatasimulation::lookup_cci_mri_maid %>% data.table()
+  lookup_cci <- gemSim::lookup_cci_mri_maid %>% data.table()
 
   lookup_cci[, intervention_code := trimws(intervention_code)]
 
