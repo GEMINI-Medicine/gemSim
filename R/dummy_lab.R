@@ -10,11 +10,14 @@
 #' It is a long format data table.
 #'
 #' @param nid (`integer`) Number of unique encounter IDs to simulate. In this data table, each ID occurs once.
+#' It is ignored if `cohort` is provided.
 #'
-#' @param n_hospitals (`integer`) Number of hospitals in simulated dataset
+#' @param n_hospitals (`integer`) Number of hospitals in simulated dataset.
+#' It is ignored if `cohort` is provided
 #'
 #' @param time_period (`numeric`): Date range of data, by years or specific dates in either format:
-#' ("yyyy-mm-dd", "yyyy-mm-dd") or (yyyy, yyyy)
+#' ("yyyy-mm-dd", "yyyy-mm-dd") or (yyyy, yyyy).
+#' It is ignored if `cohort` is provided.
 #'
 #' @param cohort (`data.frame or data.table`)\cr Optional, a data frame or data table with columns:
 #' - `genc_id` (`integer`): Mock encounter ID numbers
@@ -42,7 +45,7 @@
 #' @export
 #'
 #' @examples
-#' dummy_lab_cbc_electrolyte(10, 1, seed = 1)
+#' dummy_lab_cbc_electrolyte(nid = 10, n_hospitals = 1, seed = 1)
 #' dummy_lab_cbc_electrolyte(cohort = dummy_ipadmdad())
 #'
 dummy_lab_cbc_electrolyte <- function(
@@ -62,22 +65,15 @@ dummy_lab_cbc_electrolyte <- function(
       stop("An invalid IP admission and/or discharge date time input was provided in cohort.")
     }
   } else {
-    # when `cohort` is not provided, `nid`, `n_hospitals`, and `time_period` need to be valid
-    Rgemini:::check_input(list(nid, n_hospitals), "integer")
-
-    if (as.Date(time_period[1]) > as.Date(time_period[2])) {
-      stop("Time period needs to end later than it starts")
-    }
-    if (nid < n_hospitals) {
-      stop("Number of encounters must be greater than or equal to the number of hospitals")
-    }
+    # when `cohort` is not provided create one
+    cohort <- dummy_ipadmdad(nid, n_hospitals, time_period, seed = seed)
   }
 
   if (!is.null(seed)) {
     set.seed(seed)
   }
 
-  # Sample from the t distribution truncated within a given range
+  # Internal function to sample from the t distribution truncated within a given range
   # Samples a numeric vector as per the params and returns it
   # This is used to sample "electrolyte" tests result values
   # Params:
@@ -96,7 +92,7 @@ dummy_lab_cbc_electrolyte <- function(
     return(res)
   }
 
-  # Sample from the Johnson distribution truncated within a given range
+  # Internal function to sample from the Johnson distribution truncated within a given range
   # Samples a numeric vector as per the params and returns it
   # This is used to sample `result_value` when the test type is CBC
   # Params:
@@ -121,89 +117,48 @@ dummy_lab_cbc_electrolyte <- function(
     return(res)
   }
 
-  if (!is.null(cohort)) {
-    # if `cohort` is included, get `df1` based on it
-    cohort <- as.data.table(cohort)
+  # if `cohort` is included, get `df1` based on it
+  cohort <- suppressWarnings(Rgemini::coerce_to_datatable(cohort))
 
-    cohort$admission_date_time <- as.POSIXct(cohort$admission_date_time,
-      format = "%Y-%m-%d %H:%M",
-      tz = "UTC"
-    )
-
-    cohort$discharge_date_time <- as.POSIXct(cohort$discharge_date_time,
-      format = "%Y-%m-%d %H:%M",
-      tz = "UTC"
-    )
-
-    # on average, each `genc_id` has 15.8 lab tests
-    df1 <- generate_id_hospital(cohort = cohort, avg_repeats = 15.8, by_los = FALSE, seed = seed)
-
-    ####### get `collection_date_time` #######
-    # add sampled hours to `admission_date_time`
-    df1[, collection_date_time := as.Date(round(runif(.N,
-      min = as.Date(admission_date_time),
-      max = as.Date(discharge_date_time)
-    ))) +
-      dhours(rsn_trunc(.N, 3.5, 7.1, 4.6, min = 0, max = 24, seed = seed))]
-
-    # if `collection_date_time` is sampled to be later than `discharge_date_time`, re-sample
-    while (length(which(df1$collection_date_time > df1$discharge_date_time))) {
-      df1[collection_date_time > discharge_date_time, collection_date_time := as.Date(admission_date_time) +
-        dhours(rsn_trunc(.N, 3.5, 7.1, 4.6, min = 0, max = 24))]
+  tryCatch(
+    {
+      cohort$admission_date_time <- Rgemini::convert_dt(cohort$admission_date_time, "ymd HM")
+    },
+    warning = function(w) {
+      stop(conditionMessage(w))
     }
+  )
 
-    # only include the genc_id and hospital_num columns from `cohort`
-    df1 <- df1[, c("genc_id", "hospital_num", "collection_date_time")]
-  } else {
-    # if the user doesn't input cohort, use the given `time_period`
-    time_period <- as.character(time_period)
-
-    # convert `time_period` into Date objects based on the formatting
-    if (grepl("^\\d{4}$", time_period[1])) {
-      start_date <- as.Date(paste0(time_period[1], "-01-01"))
-    } else {
-      start_date <- as.Date(time_period[1])
+  tryCatch(
+    {
+      cohort$discharge_date_time <- Rgemini::convert_dt(cohort$discharge_date_time, "ymd HM")
+    },
+    warning = function(w) {
+      stop(conditionMessage(w))
     }
+  )
 
-    if (grepl("^\\d{4}$", time_period[1])) {
-      end_date <- as.Date(paste0(time_period[2], "-01-01"))
-    } else {
-      end_date <- as.Date(time_period[2])
-    }
-    # get a long-form data table with an average of 15.8 repeats per `genc_id`
-    df1 <- generate_id_hospital(nid, n_hospitals, avg_repeats = 15.8, seed = seed)
+  # on average, each `genc_id` has 15.8 lab tests
+  df1 <- generate_id_hospital(cohort = cohort, avg_repeats = 15.8, by_los = FALSE, seed = seed)
 
-    # each encounter has a range when they have lab tests
-    # a minimum and maximum date are sampled
-    df1[, min_collection_date := as.Date(round(runif(1,
-      min = as.numeric(start_date),
-      max = as.numeric(end_date)
-    ))), by = genc_id]
+  ####### get `collection_date_time` #######
+  # add sampled hours to `admission_date_time`
+  df1[, collection_date_time := as.Date(round(runif(.N,
+    min = as.Date(admission_date_time),
+    max = as.Date(discharge_date_time)
+  ))) +
+    dhours(rsn_trunc(.N, 3.5, 7.1, 4.6, min = 0, max = 24, seed = seed))]
 
-    df1[, num_id_repeats := .N, by = genc_id] # the number of repeats per `genc_id`
-
-    # gap between the first and last lab collection date
-    df1[, max_collection_date := min_collection_date +
-      lubridate::days(round(rlnorm(1, meanlog = 1.45, sdlog = 1.17))),
-    by = genc_id
-    ]
-
-    # ensure `max_collection_date` is before `end_date` from the user-provided `time_period`
-    df1[as.numeric(max_collection_date) > as.numeric(end_date), max_collection_date := end_date]
-
-    ####### `collection_date_time` #######
-    # collection date times are within the specified window per genc_id
-    # sample a date then add a skewed normal time
-    df1[, collection_date_time := as.Date(round(runif(.N,
-      min = as.numeric(min_collection_date),
-      max = as.numeric(max_collection_date)
-    ))) +
-      dhours(rsn_trunc(.N, 3.5, 7.1, 4.6, min = 0, max = 24, seed = seed))]
-
-    # Remove columns excluded from final output
-    df1 <- df1[, -c("min_collection_date", "max_collection_date", "num_id_repeats")]
+  # if `collection_date_time` is sampled to be later than `discharge_date_time`, re-sample
+  while (nrow(df1[collection_date_time > discharge_date_time, ])) {
+    df1[collection_date_time > discharge_date_time, collection_date_time := as.Date(admission_date_time) +
+      dhours(rsn_trunc(.N, 3.5, 7.1, 4.6, min = 0, max = 24))]
   }
-  ### For the remaining variables, sample test types, codes, results ###
+
+  # only include the genc_id and hospital_num columns from `cohort`
+  df1 <- df1[, c("genc_id", "hospital_num", "collection_date_time")]
+
+  ### Remaining variables: test types, OMOP test codes, results ###
   ### get `test_name_raw` ###
   # First sample test type
   # CBC is 3000963 and electrolyte is 3019550
