@@ -4,20 +4,19 @@ Version: 0.0.0.9000
 Author: GEMINI 
 Maintainer: GEMINIdata <Gemini.data@unityhealth.to>
 Description: What the package does (one paragraph).
-License: `use_mit_license()`
+License: MIT + file LICENSE
 Encoding: UTF-8
 Imports:
+    comorbidity,
     data.table,
-    DBI,
     dplyr,
     lubridate,
     RPostgreSQL,
     SuppDists,
+    magrittr,
     MCMCpack,
     Rgemini,
     sn,
-    stringi,
-    textstem
 Remotes:
     GEMINI-Medicine/Rgemini
 Config/testthat/edition: 3
