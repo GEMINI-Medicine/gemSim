@@ -1,12 +1,10 @@
-Package: GEMINIdatasimulation
-Title: R Functions to Simulate GEMINI Data
-Version: 0.0.0
-Authors@R: 
-    c(person("GEMINI", 
-             email = "Gemini.data@unityhealth.to", 
-             role = c("aut", "cre")))
-Description: A set of functions to generate synthetic data based on the GEMINI database.
-License: MIT + file LICENSE
+Package: gemSim
+Title: GEMINI Data Simulator
+Version: 0.0.0.9000
+Author: GEMINI 
+Maintainer: GEMINIdata <Gemini.data@unityhealth.to>
+Description: What the package does (one paragraph).
+License: `use_mit_license()`
 Encoding: UTF-8
 Imports:
     data.table,
