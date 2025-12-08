@@ -13,12 +13,15 @@ dummy_lab_cbc_electrolyte(
 )
 }
 \arguments{
-\item{nid}{(\code{integer}) Number of unique encounter IDs to simulate. In this data table, each ID occurs once.}
+\item{nid}{(\code{integer}) Number of unique encounter IDs to simulate. In this data table, each ID occurs once.
+It is ignored if \code{cohort} is provided.}
 
-\item{n_hospitals}{(\code{integer}) Number of hospitals in simulated dataset}
+\item{n_hospitals}{(\code{integer}) Number of hospitals in simulated dataset.
+It is ignored if \code{cohort} is provided}
 
 \item{time_period}{(\code{numeric}): Date range of data, by years or specific dates in either format:
-("yyyy-mm-dd", "yyyy-mm-dd") or (yyyy, yyyy)}
+("yyyy-mm-dd", "yyyy-mm-dd") or (yyyy, yyyy).
+It is ignored if \code{cohort} is provided.}
 
 \item{cohort}{(\verb{data.frame or data.table})\cr Optional, a data frame or data table with columns:
 \itemize{
@@ -52,7 +55,7 @@ This function will return: collection date time, information about the test type
 It is a long format data table.
 }
 \examples{
-dummy_lab_cbc_electrolyte(10, 1, seed = 1)
+dummy_lab_cbc_electrolyte(nid = 10, n_hospitals = 1, seed = 1)
 dummy_lab_cbc_electrolyte(cohort = dummy_ipadmdad())
 
 }
