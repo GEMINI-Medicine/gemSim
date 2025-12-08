@@ -75,7 +75,7 @@ dummy_radiology <- function(
   }
 
   # convert `cohort` to `data.table`
-  cohort <- suppressWarnings(Rgemini:::coerce_to_datatable(cohort))
+  cohort <- suppressWarnings(Rgemini::coerce_to_datatable(cohort))
   # convert date times
   tryCatch(
     {
