@@ -16,6 +16,7 @@ Imports:
     lubridate,
     RPostgreSQL,
     SuppDists,
+    magrittr,
     MCMCpack,
     Rgemini,
     sn,
