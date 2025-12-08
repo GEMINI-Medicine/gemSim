@@ -59,11 +59,6 @@ dummy_lab_cbc_electrolyte <- function(
       coltypes = c("integer", "integer", "", "")
     )
 
-    # check for the date time format in admission and discharge date times
-    # all data need to be valid to convert into POSIXct objects
-    if (!all(check_date_format(c(cohort$admission_date_time, cohort$discharge_date_time), check_time = TRUE))) {
-      stop("An invalid IP admission and/or discharge date time input was provided in cohort.")
-    }
   } else {
     # when `cohort` is not provided create one
     cohort <- dummy_ipadmdad(nid, n_hospitals, time_period, seed = seed)
@@ -120,6 +115,8 @@ dummy_lab_cbc_electrolyte <- function(
   # if `cohort` is included, get `df1` based on it
   cohort <- suppressWarnings(Rgemini::coerce_to_datatable(cohort))
 
+  # Convert admission and discharge date times to POSIXct
+  # It will stop and raise error if any formats are invalid
   tryCatch(
     {
       cohort$admission_date_time <- Rgemini::convert_dt(cohort$admission_date_time, "ymd HM")
