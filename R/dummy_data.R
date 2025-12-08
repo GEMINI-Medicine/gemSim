@@ -170,7 +170,7 @@ sample_icd <- function(n = 1, source = "comorbidity", dbcon = NULL, pattern = NU
 #' `genc_id`, `(er)_diagnosis_code`, `(er)_diagnosis_type`, `hospital_num`,
 #' and other fields found in the respective diagnosis table.
 #'
-#' @importFrom dplyr select distinct
+#' @importFrom dplyr select distinct mutate
 #' @importFrom magrittr %>%
 #'
 #' @export
