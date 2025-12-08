@@ -119,7 +119,7 @@ dummy_lab_cbc_electrolyte <- function(
 
   # if `cohort` is included, get `df1` based on it
   cohort <- suppressWarnings(Rgemini::coerce_to_datatable(cohort))
-  
+
   tryCatch(
     {
       cohort$admission_date_time <- Rgemini::convert_dt(cohort$admission_date_time, "ymd HM")
