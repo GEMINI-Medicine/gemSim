@@ -8,16 +8,15 @@
 #'
 #' This function simulates data with CCI codes detailing the type of intervention that occurred in an inpatient stay.
 #'
-#' @param dbcon (`DBIConnection`)\cr
-#' A database connection to a GEMINI database, required to look up intervention codes.
-#' Required when `int_code` is missing, otherwise not used if `int_code` is provided.
-#'
 #' @param nid (`integer`)\cr Number of unique encounter IDs to simulate.
 #' Encounter IDs may repeat, resulting in a data table with more rows than `nid`.
 #' It is not used if `cohort` is provided.
 #'
+#' @param n_hospitals (`integer`)\cr Number of unique hospitals to simulate.
+#' It is not used if `cohort` is provided.
+#'
 #' @param int_code (`character`)\cr Optional, user-specified intervention codes to include in the returned data table.
-#' Required when `dbcon` is missing.
+#' It needs to be a valid MRI or MAID code.
 #'
 #' @param cohort (`data.frame or data.table`)\cr Optional, data frame or data table containing the columns:
 #' - `genc_id` (`integer`): Mock encounter ID number
@@ -28,8 +27,8 @@
 #'
 #' @return (`data.table`)\cr A data.table object similar to the "ipintervention" table that contains the columns:
 #' - `genc_id` (`integer`): Mock encounter ID number; integers starting from 1 or provided from `cohort`
-#' - `hospital_id` (`integer`): Mock hospital ID number; integers starting from 1 or provided from `cohort`
-#' - `intervention_code` (`character`): A valid CCI code(s) describing the services (procedures/intervention)
+#' - `hospital_num` (`integer`): Mock hospital ID number; integers starting from 1 or provided from `cohort`
+#' - `intervention_code` (`character`): Valid CCI code(s) describing the services (procedures/intervention)
 #' performed for or on behalf of the patient to improve health.
 #' For this simulation, it will either be for an MRI or medical assistance in dying (MAID)
 #'
@@ -37,13 +36,17 @@
 #' dummy_ipintervention_mri_maid(nid = 1000, int_code = c("3AN40VA", "3SC40WC"))
 #' dummy_ipintervention_mri_maid(nid = 1000, int_code = "3SC40WC")
 #'
+#' @import Rgemini
 #' @import data.table
 #' @importFrom magrittr %>%
 #'
 #' @export
 #'
+#' @examples
+#' dummy_ipintervention_mri_maid(nid = 1000, n_hospitals = 10, seed = 1)
+#'
 dummy_ipintervention_mri_maid <- function(
-  dbcon = NULL, nid = 1000, n_hospitals = 10, cohort = NULL, int_code = NULL, seed = NULL
+  nid = 1000, n_hospitals = 10, cohort = NULL, int_code = NULL, seed = NULL
 ) {
   ############## CHECKS: for valid inputs: `n_id`, `n_hospitals`, `cohort`
   if (is.null(cohort)) {
@@ -58,14 +61,10 @@ dummy_ipintervention_mri_maid <- function(
     )
   }
 
-  if (!is.null(dbcon)) {
-    # get intervention codes from db connection
-    lookup_cci <- dbGetQuery(dbcon, "SELECT * FROM lookup_cci
-      WHERE intervention_code ~ '^3..40'
-      OR intervention_code IN ('1ZZ35HAP7','1ZZ35HAP1','1ZZ35HAN3')") %>% data.table()
-  } else if (is.null(int_code)) {
-    stop("DB connection or intervention code list is required")
-  }
+  # get intervention codes from rda
+  lookup_cci <- gemSim::lookup_cci_mri_maid %>% data.table()
+
+  lookup_cci[, intervention_code := trimws(intervention_code)]
 
   if (!is.null(seed)) {
     set.seed(seed)
@@ -73,7 +72,7 @@ dummy_ipintervention_mri_maid <- function(
 
   if (!is.null(cohort)) {
     # get `genc_id` and `hospital_num` based on `cohort` if provided
-    cohort <- as.data.table(cohort)
+    cohort <- suppressWarnings(Rgemini::coerce_to_datatable(cohort))
 
     df1 <- generate_id_hospital(cohort = cohort, avg_repeats = 1.2, seed = seed)
 
@@ -81,7 +80,7 @@ dummy_ipintervention_mri_maid <- function(
     # In case other columns exist
     df1 <- df1[, c("genc_id", "hospital_num")]
   } else {
-    # generate a data table with average of 1.2 repeats per `genc_id`
+    # generate a `data.table` with average of 1.2 repeats per `genc_id`
     df1 <- generate_id_hospital(nid, n_hospitals, avg_repeats = 1.2, seed = seed)
   }
 
@@ -91,6 +90,9 @@ dummy_ipintervention_mri_maid <- function(
     # If it is a character, turn `int_code` into a vector for sampling
     if (length(int_code) == 1 && !(is.na(int_code))) {
       int_code <- c(int_code)
+    }
+    if (any(!(int_code %in% lookup_cci$intervention_code))) {
+      stop("The provided CCI code was not valid. Stopping.")
     }
     df1[, intervention_code := sample(int_code, .N, replace = TRUE)]
   } else {

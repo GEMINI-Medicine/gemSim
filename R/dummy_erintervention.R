@@ -8,19 +8,15 @@
 #'
 #' This function simulates data with CCI codes detailing the type of intervention used in the emergency department.
 #'
-#' @param dbcon (`DBIConnection`)\cr
-#' A database connection to a GEMINI database, required to look up intervention codes.
-#' Required when `int_code` is missing.
-#'
 #' @param nid (`integer`)\cr Number of unique encounter IDs to simulate.
 #' Encounter IDs may repeat, resulting in a data table with more rows than `nid`.
-#' Optional when `cohort` is provided.
+#' Ignored when `cohort` is provided.
 #'
 #' @param n_hospitals (`integer`)\cr Number of hospitals to simulate.
-#' Optional when `cohort` is provided.
+#' Ignored when `cohort` is provided.
 #'
 #' @param int_code (`character or vector`)\cr Optional, user-specified intervention codes to include in the returned
-#' data table. Required when `dbcon` is not provided.
+#' data table. It needs to be a valid MRI code.
 #'
 #' @param cohort (`data.frame or data.table`)\cr Optional, data frame or data table containing the fields:
 #' - `genc_id` (`integer`): Mock encounter ID number
@@ -32,7 +28,7 @@
 #' @return (`data.table`)\cr A data.table object similar to the "ipintervention" table that contains the columns:
 #' - `genc_id` (`integer`): Mock encounter ID number; integers starting from 1 or from `cohort`
 #' - `hospital_num` (`integer`): Mock hospital ID number; integers starting from 1 or from `cohort`
-#' - `intervention_code` (`character`): A valid CCI code(s) describing the services (procedures/intervention)
+#' - `intervention_code` (`character`): Valid CCI code(s) describing the services (procedures/intervention)
 #' performed for or on behalf of the patient to improve health. For this simulation, it will be for an MRI.
 #'
 #' @examples
@@ -40,12 +36,16 @@
 #' dummy_erintervention_mri(cohort = dummy_ipadmdad(), int_code = "3AN40VA")
 #'
 #' @import Rgemini
+#' @import data.table
 #' @importFrom magrittr %>%
 #'
 #' @export
 #'
+#' @examples
+#' dummy_erintervention_mri(nid = 100, n_hospitals = 2, seed = 1)
+#'
 dummy_erintervention_mri <- function(
-  dbcon = NULL, nid = 1000, n_hospitals = 10, int_code = NULL, cohort = NULL, seed = NULL
+  nid = 1000, n_hospitals = 10, int_code = NULL, cohort = NULL, seed = NULL
 ) {
   ############## CHECKS: for valid inputs: `n_id`, `n_hospitals`, `cohort`
   if (is.null(cohort)) {
@@ -60,14 +60,11 @@ dummy_erintervention_mri <- function(
     )
   }
 
-  if (!is.null(dbcon)) {
-    # get CCI intervention codes for MRI
-    lookup_cci_mri <- dbGetQuery(dbcon, "SELECT * FROM lookup_cci WHERE intervention_code ~ '^3..40'") %>%
-      data.table()
-    mri_codes <- unique(lookup_cci_mri$intervention_code)
-  } else if (is.null(int_code)) {
-    stop("A DB connection or intervention code list is required.")
-  }
+  # get intervention code data
+  lookup_cci_mri <- gemSim::lookup_cci_mri %>% data.table()
+
+  lookup_cci_mri[, intervention_code := trimws(intervention_code)]
+  mri_codes <- unique(lookup_cci_mri$intervention_code)
 
   if (!is.null(seed)) {
     set.seed(seed)
@@ -75,7 +72,8 @@ dummy_erintervention_mri <- function(
 
   if (!is.null(cohort)) {
     # if `cohort` is provided, use its `genc_id` and `hospital_num`
-    cohort <- as.data.table(cohort)
+    cohort <- suppressWarnings(Rgemini::coerce_to_datatable(cohort))
+
     # each `genc_id` repeats an average of 1.9 times
     df1 <- generate_id_hospital(cohort = cohort, avg_repeats = 1.9, seed = seed)
     # only include the `genc_id` and `hospital_num` columns from `cohort`
@@ -90,6 +88,9 @@ dummy_erintervention_mri <- function(
     # if it is a character, turn into a vector for sampling
     if (length(int_code) == 1 && !(is.na(int_code))) {
       int_code <- c(int_code)
+    }
+    if (any(!(int_code %in% lookup_cci_mri$intervention_code))) {
+      stop("The provided CCI code was not valid. Stopping.")
     }
     df1[, intervention_code := sample(int_code, .N, replace = TRUE)]
   } else {
