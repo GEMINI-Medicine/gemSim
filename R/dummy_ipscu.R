@@ -331,6 +331,7 @@ sample_scu_date_time <- function(scu_cohort, use_ip_dates = TRUE, start_date = N
 #'
 #' @import Rgemini
 #' @import data.table
+#' @import lubridate
 #'
 #' @export
 #'
