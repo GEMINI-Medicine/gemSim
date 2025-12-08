@@ -37,7 +37,8 @@
 #' dummy_ipintervention_mri_maid(nid = 1000, int_code = c("3AN40VA", "3SC40WC"))
 #' dummy_ipintervention_mri_maid(nid = 1000, int_code = "3SC40WC")
 #'
-#' @import Rgemini
+#' @import data.table
+#' @importFrom magrittr %>%
 #'
 #' @export
 #'

@@ -35,6 +35,7 @@
 #'
 #' @import Rgemini
 #' @import data.table
+#' @importFrom magrittr %>%
 #'
 #' @export
 #'
