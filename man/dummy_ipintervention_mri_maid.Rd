@@ -5,7 +5,6 @@
 \title{Generate simulated ipintervention data}
 \usage{
 dummy_ipintervention_mri_maid(
-  dbcon = NULL,
   nid = 1000,
   n_hospitals = 10,
   cohort = NULL,
@@ -14,12 +13,11 @@ dummy_ipintervention_mri_maid(
 )
 }
 \arguments{
-\item{dbcon}{(\code{DBIConnection})\cr
-A database connection to a GEMINI database, required to look up intervention codes.
-Required when \code{int_code} is missing, otherwise not used if \code{int_code} is provided.}
-
 \item{nid}{(\code{integer})\cr Number of unique encounter IDs to simulate.
 Encounter IDs may repeat, resulting in a data table with more rows than \code{nid}.
+It is not used if \code{cohort} is provided.}
+
+\item{n_hospitals}{(\code{integer})\cr Number of unique hospitals to simulate.
 It is not used if \code{cohort} is provided.}
 
 \item{cohort}{(\verb{data.frame or data.table})\cr Optional, data frame or data table containing the columns:
@@ -30,7 +28,7 @@ When \code{cohort} is not NULL, \code{nid} and \code{n_hospitals} are ignored.
 }}
 
 \item{int_code}{(\code{character})\cr Optional, user-specified intervention codes to include in the returned data table.
-Required when \code{dbcon} is missing.}
+It needs to be a valid MRI or MAID code.}
 
 \item{seed}{(\code{integer})\cr Optional, a number to be used to set the seed for reproducible results}
 }
@@ -38,8 +36,8 @@ Required when \code{dbcon} is missing.}
 (\code{data.table})\cr A data.table object similar to the "ipintervention" table that contains the columns:
 \itemize{
 \item \code{genc_id} (\code{integer}): Mock encounter ID number; integers starting from 1 or provided from \code{cohort}
-\item \code{hospital_id} (\code{integer}): Mock hospital ID number; integers starting from 1 or provided from \code{cohort}
-\item \code{intervention_code} (\code{character}): A valid CCI code(s) describing the services (procedures/intervention)
+\item \code{hospital_num} (\code{integer}): Mock hospital ID number; integers starting from 1 or provided from \code{cohort}
+\item \code{intervention_code} (\code{character}): Valid CCI code(s) describing the services (procedures/intervention)
 performed for or on behalf of the patient to improve health.
 For this simulation, it will either be for an MRI or medical assistance in dying (MAID)
 }
@@ -54,5 +52,7 @@ This function simulates data with CCI codes detailing the type of intervention t
 \examples{
 dummy_ipintervention_mri_maid(nid = 1000, int_code = c("3AN40VA", "3SC40WC"))
 dummy_ipintervention_mri_maid(nid = 1000, int_code = "3SC40WC")
+
+dummy_ipintervention_mri_maid(nid = 1000, n_hospitals = 10, seed = 1)
 
 }
