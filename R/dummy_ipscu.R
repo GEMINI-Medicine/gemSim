@@ -34,7 +34,7 @@
 #' - `scu_discharge_date_time` (`character`): the date and time of discharge from the SCU
 #'
 #' @import Rgemini
-#' @importFrom lubridate ddays dhours floor_date round_date
+#' @import lubridate
 #' @import data.table
 #'
 #' @export
@@ -331,6 +331,7 @@ sample_scu_date_time <- function(scu_cohort, use_ip_dates = TRUE, start_date = N
 #'
 #' @import Rgemini
 #' @import data.table
+#' @import lubridate
 #'
 #' @export
 #'
