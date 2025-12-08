@@ -70,7 +70,7 @@ dummy_transfusion <- function(
   }
 
   # convert to `data.table`
-  cohort <- suppressWarnings(Rgemini:::coerce_to_datatable(cohort))
+  cohort <- suppressWarnings(Rgemini::coerce_to_datatable(cohort))
 
   tryCatch(
     {
