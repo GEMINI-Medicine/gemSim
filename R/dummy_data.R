@@ -250,8 +250,8 @@ dummy_diag <- function(
 
   if (!is.null(diagnosis_type)) {
     df2 <- data.table(
-      genc_id = sample(1:nid, size = nid, replace = TRUE),
-      diagnosis_type = sample(diagnosis_type, size = nid, replace = TRUE)
+      genc_id = sample(1:nid, size = nrow(df2), replace = TRUE),
+      diagnosis_type = sample(diagnosis_type, size = nrow(df2), replace = TRUE)
     )
   } else {
     df2[, diagnosis_type := sample(c("1", "2", "3", "4", "5", "6", "9", "W", "X", "Y"),
