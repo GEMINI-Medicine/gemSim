@@ -65,6 +65,7 @@
 simulate_data_tables <- function(tables, nid = 1000, n_hospitals = 10, time_period = c(2015, 2023), ...) {
   # Check inputs: `tables`
   Rgemini:::check_input(tables, "character")
+  tables <- tolower(tables)
 
   # additional arguments' storage to be passed into simulation functions
   args <- list(...)
@@ -90,8 +91,8 @@ simulate_data_tables <- function(tables, nid = 1000, n_hospitals = 10, time_peri
 
   # subset cohort based on the proportion of admdad encounters that appear in SCU, ER, etc
   cohort_props <- data.table(
-    table = c("ipscu", "er", "ipdiagnosis", "ipintervention", "transfusion", "radiology"),
-    prop = c(0.2, 0.7, 1, 0.09, 0.1, 0.49)
+    table = c("ipscu", "er", "ipdiagnosis", "ipintervention", "transfusion", "radiology", "lab"),
+    prop = c(0.2, 0.7, 1, 0.09, 0.1, 0.49, 0.83)
   )
 
   ### get admdad table ###
@@ -122,8 +123,8 @@ simulate_data_tables <- function(tables, nid = 1000, n_hospitals = 10, time_peri
     erdiagnosis = er_cohort, # include all of `er`
     ipdiagnosis = new_ipadmdad, # all of `ipadmdad`
     erintervention = generate_id_hospital(
-      cohort = er_cohort, include_prop = cohort_props[table == "erintervention", prop]
-    ),
+      cohort = er_cohort, include_prop = 0.008
+    ), # few encounters have MRI as interventions in ER
     ipintervention = generate_id_hospital(
       cohort = new_ipadmdad, include_prop = cohort_props[table == "ipintervention", prop]
     ),
