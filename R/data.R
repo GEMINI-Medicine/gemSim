@@ -1,22 +1,14 @@
 #' @title
-#' MRI CCI lookup table with MAID
+#' CCI lookup table for MAID and MRI codes
 #'
 #' @description
-#' This is the section of the CCI intervention lookup table with codes for MRI and MAID
+#' This is the section of the CCI intervention lookup table with codes for MRI and MAID.
+#' Its columns are :
+#' - `intervention_code` (`character`): CCI intervention code
+#' - `maid` (`logical`): TRUE if the code is a MAID code, FALSE otherwise
 #'
 #' @export
-#' @name lookup_cci_mri_maid
-#' @docType data
-NULL
-
-#' @title
-#' MRI CCI lookup table
-#'
-#' @description
-#' This is the section of the CCI intervention lookup table with codes for MRI
-#'
-#' @export
-#' @name lookup_cci_mri
+#' @name lookup_cci
 #' @docType data
 NULL
 
