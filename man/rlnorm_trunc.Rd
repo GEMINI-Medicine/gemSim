@@ -26,4 +26,3 @@ A numeric vector following the log normal distribution, truncated to the specifi
 Sample from a log normal distribution using the \code{rlnorm} function
 Truncate it to specified minimum and maximum values
 }
-\keyword{internal}

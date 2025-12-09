@@ -18,7 +18,7 @@
 #'
 #' @return A numeric vector following the log normal distribution, truncated to the specified range.
 #'
-#' @keywords internal
+#' @export
 #'
 rlnorm_trunc <- function(n, meanlog, sdlog, min, max, seed = NULL) {
   if (!is.null(seed)) {
