@@ -122,7 +122,7 @@ dummy_transfusion <- function(
   ##### get `blood_product_mapped_omop` data from .Rda file #####
   # It maps the most common raw names of blood products to OMOP code
   # Also gets their average relative proportions
-  blood_product_lookup <- as.data.table(blood_product_lookup)
+  blood_product_lookup <- as.data.table(gemSim::blood_product_lookup)
 
   if (is.null(blood_product_list)) {
     all_blood_product <- blood_product_lookup$blood_product_mapped_omop

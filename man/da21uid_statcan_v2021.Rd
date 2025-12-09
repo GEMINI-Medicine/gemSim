@@ -7,4 +7,3 @@
 \description{
 It contains dissemination area IDs for Canada
 }
-\keyword{internal}

@@ -40,9 +40,8 @@
 #' @export
 #'
 #' @examples
-#' \dontrun{
 #' dummy_locality(nid = 1000, n_hospitals = 10)
-#' }
+#'
 dummy_locality <- function(nid = 1000, n_hospitals = 10, cohort = NULL, da21uid = NULL, seed = NULL) {
   ### check inputs
   if (!is.null(da21uid)) {
@@ -97,7 +96,7 @@ dummy_locality <- function(nid = 1000, n_hospitals = 10, cohort = NULL, da21uid 
   } else {
     # otherwise sample from the database
     # get dissemination code lookup table from RDA
-    lookup_statcan_v2021 <- as.data.table(da21uid_statcan_v2021)
+    lookup_statcan_v2021 <- as.data.table(gemSim::da21uid_statcan_v2021)
     lookup_statcan_v2021[, da21uid := as.numeric(trimws(da21uid))]
 
     # extract Ontario dissemination codes to resemble GEMINI data characteristics - these IDs start with 35
