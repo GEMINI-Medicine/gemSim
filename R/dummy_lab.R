@@ -58,7 +58,6 @@ dummy_lab_cbc_electrolyte <- function(
       colnames = c("genc_id", "hospital_num", "admission_date_time", "discharge_date_time"),
       coltypes = c("integer", "integer", "", "")
     )
-
   } else {
     # when `cohort` is not provided create one
     cohort <- dummy_ipadmdad(nid, n_hospitals, time_period, seed = seed)
