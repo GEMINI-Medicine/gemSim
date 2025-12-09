@@ -4,17 +4,11 @@
 \name{lookup_cci}
 \alias{lookup_cci}
 \title{CCI lookup table for MAID and MRI codes}
-\format{
-A data table with the columns:
-\describe{
-\item{intervention_code}{CCI intervention code}
-\item{maid}{TRUE if the code is a MAID code, FALSE otherwise}
-}
-}
-\usage{
-data(lookup_cci)
-}
 \description{
-CCI lookup table for MAID and MRI codes
+This is the section of the CCI intervention lookup table with codes for MRI and MAID.
+Its columns are :
+\itemize{
+\item \code{intervention_code} (\code{character}): CCI intervention code
+\item \code{maid} (\code{logical}): TRUE if the code is a MAID code, FALSE otherwise
 }
-\keyword{datasets}
+}

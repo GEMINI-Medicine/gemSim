@@ -4,19 +4,6 @@
 \name{blood_product_lookup}
 \alias{blood_product_lookup}
 \title{Blood product lookup table for \code{dummy_transfusion} function.}
-\format{
-A data table with the columns:
-\describe{
-\item{blood_product_mapped_omop}{Mapped blood product codes}
-\item{blood_product_raw}{Raw names for blood product codes}
-\item{prob}{The relative proportion of each item}
-}
+\description{
 It contains OMOP codes for blood products.
 }
-\usage{
-data(blood_product_lookup)
-}
-\description{
-Blood product lookup table for \code{dummy_transfusion} function.
-}
-\keyword{datasets}

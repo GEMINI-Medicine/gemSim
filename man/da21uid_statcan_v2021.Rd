@@ -4,16 +4,6 @@
 \name{da21uid_statcan_v2021}
 \alias{da21uid_statcan_v2021}
 \title{StatCan dissemination area ID lookup}
-\format{
-A data table with the columns:
-\describe{
-\item{da21uid}{Dissemination area IDs in Canada}
-}
-}
-\usage{
-data(da21uid_statcan_v2021)
-}
 \description{
-StatCan dissemination area ID lookup
+It contains dissemination area IDs for Canada, or da21uid.
 }
-\keyword{datasets}

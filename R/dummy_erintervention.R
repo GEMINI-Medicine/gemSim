@@ -61,7 +61,7 @@ dummy_erintervention_mri <- function(
   }
 
   # get intervention code data
-  lookup_cci_mri <- as.data.table(gemSim::lookup_cci %>% data.table())
+  lookup_cci_mri <- as.data.table(gemSim::lookup_cci)
   # filter out MAID codes
   lookup_cci_mri <- lookup_cci_mri[maid == FALSE, ]
 
