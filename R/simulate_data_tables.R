@@ -66,12 +66,6 @@ simulate_data_tables <- function(tables, nid = 1000, n_hospitals = 10, time_peri
   # Check inputs: `tables`
   Rgemini:::check_input(tables, "character")
 
-  # Get all data table options
-  table_list <- c(
-    "admdad", "ipscu", "locality", "erintervention", "ipintervention",
-    "locality", "physicians", "radiology", "transfusion", "lab", "diagnosis", "er"
-  )
-
   # additional arguments' storage to be passed into simulation functions
   args <- list(...)
 
