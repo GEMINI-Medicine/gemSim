@@ -3,7 +3,7 @@
 \docType{data}
 \name{da21uid_statcan_v2021}
 \alias{da21uid_statcan_v2021}
-\title{StatCan da21uid lookup for \code{dummy_locality} function}
+\title{StatCan dissemination area ID lookup}
 \description{
-It contains dissemination area IDs for Canada
+It contains dissemination area IDs for Canada, or da21uid.
 }

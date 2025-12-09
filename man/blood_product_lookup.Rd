@@ -3,7 +3,7 @@
 \docType{data}
 \name{blood_product_lookup}
 \alias{blood_product_lookup}
-\title{Blood product lookup table for \code{dummy_transfusion} function}
+\title{Blood product lookup table for \code{dummy_transfusion} function.}
 \description{
-It contains OMOP codes for blood products
+It contains OMOP codes for blood products.
 }
