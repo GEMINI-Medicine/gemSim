@@ -6,6 +6,7 @@
 #' - `maid` (`logical`): TRUE if the code is a MAID code, FALSE otherwise
 #' @name lookup_cci
 #' @docType data
+#' @export lookup_cci
 NULL
 
 #' @title StatCan dissemination area ID lookup
@@ -13,6 +14,7 @@ NULL
 #' It contains dissemination area IDs for Canada, or da21uid.
 #' @name da21uid_statcan_v2021
 #' @docType data
+#' @export da21uid_statcan_v2021
 NULL
 
 #' @title Blood product lookup table for `dummy_transfusion` function.
@@ -20,4 +22,5 @@ NULL
 #' It contains OMOP codes for blood products.
 #' @name blood_product_lookup
 #' @docType data
+#' @export blood_product_lookup
 NULL
