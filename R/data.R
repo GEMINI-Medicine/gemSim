@@ -1,23 +1,30 @@
-#' @title CCI lookup table for MAID and MRI codes
-#' @description
-#' This is the section of the CCI intervention lookup table with codes for MRI and MAID.
-#' Its columns are :
-#' - `intervention_code` (`character`): CCI intervention code
-#' - `maid` (`logical`): TRUE if the code is a MAID code, FALSE otherwise
-#' @name lookup_cci
-#' @docType data
-NULL
+#' CCI lookup table for MAID and MRI codes
+#' @format A data table with the columns:
+#' \describe{
+#'  \item{intervention_code}{CCI intervention code}
+#'  \item{maid}{TRUE if the code is a MAID code, FALSE otherwise}
+#' }
+#' @usage data(lookup_cci)
+#' @keywords datasets
+"lookup_cci"
 
-#' @title StatCan dissemination area ID lookup
-#' @description
-#' It contains dissemination area IDs for Canada, or da21uid.
-#' @name da21uid_statcan_v2021
-#' @docType data
-NULL
+#' StatCan dissemination area ID lookup
+#' @format A data table with the columns:
+#' \describe{
+#'  \item{da21uid}{Dissemination area IDs in Canada}
+#' }
+#' @usage data(da21uid_statcan_v2021)
+#' @keywords datasets
+"da21uid_statcan_v2021"
 
-#' @title Blood product lookup table for `dummy_transfusion` function.
-#' @description
+#' Blood product lookup table for `dummy_transfusion` function.
+#' @format A data table with the columns:
+#' \describe{
+#'  \item{blood_product_mapped_omop}{Mapped blood product codes}
+#'  \item{blood_product_raw}{Raw names for blood product codes}
+#'  \item{prob}{The relative proportion of each item}
+#' }
 #' It contains OMOP codes for blood products.
-#' @name blood_product_lookup
-#' @docType data
-NULL
+#' @usage data(blood_product_lookup)
+#' @keywords datasets
+"blood_product_lookup"
