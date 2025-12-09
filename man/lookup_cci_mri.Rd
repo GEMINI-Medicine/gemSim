@@ -7,4 +7,3 @@
 \description{
 This is the section of the CCI intervention lookup table with codes for MRI
 }
-\keyword{internal}
