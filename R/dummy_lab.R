@@ -209,8 +209,7 @@ dummy_lab_cbc_electrolyte <- function(
   # CBC test codes from most to least common
   test_code_raw_cbc <- c(
     NA, "HGB", "", "Hb", "100.06", "400.0025", "Hemoglobin", "HBCX1",
-    "HBAPC", "HBTOT", "VHBG", "AHBG", "MVHGB", "ORHCV", "HEMOC"
-  )
+    "HBAPC", "HBTOT")
 
   # sample for CBC raw test codes
   probs <- sort(rlnorm(length(test_code_raw_cbc), meanlog = -6.3, sdlog = 2.0), decreasing = TRUE)
