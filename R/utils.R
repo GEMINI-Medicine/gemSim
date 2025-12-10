@@ -34,7 +34,7 @@ NULL
 #'
 #' @return A numeric vector following the log normal distribution, truncated to the specified range.
 #'
-#' @export
+#' @keywords internal
 #'
 rlnorm_trunc <- function(n, meanlog, sdlog, min, max, seed = NULL) {
   if (!is.null(seed)) {
@@ -74,7 +74,7 @@ rlnorm_trunc <- function(n, meanlog, sdlog, min, max, seed = NULL) {
 #'
 #' @return A numeric vector following the normal distribution, truncated to the specified range.
 #'
-#' @export
+#' @keywords internal
 
 rnorm_trunc <- function(n, mean, sd, min, max, seed = NULL) {
   if (!is.null(seed)) {
@@ -174,7 +174,7 @@ rsn_trunc <- function(n, xi, omega, alpha, min, max, seed = NULL) {
 #'
 #' @return A numeric vector following the specified distribution.
 #'
-#' @export
+#' @keywords internal
 #'
 sample_time_shifted <- function(nrow, xi, omega, alpha, min = 0, max = 48, seed = NULL) {
   if (!is.null(seed)) {
@@ -224,7 +224,7 @@ sample_time_shifted <- function(nrow, xi, omega, alpha, min = 0, max = 48, seed 
 #'
 #' @return A numeric vector following the specified distribution.
 #'
-#' @export
+#' @keywords internal
 #'
 sample_time_shifted_lnorm <- function(nrow, meanlog, sdlog, min = 0, max = 48, seed = NULL) {
   if (!is.null(seed)) {
