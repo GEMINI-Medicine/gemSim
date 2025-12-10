@@ -2,7 +2,7 @@
 #' Generate simulated lab data
 #'
 #' @description
-#'  This function creates a dummy dataset with a subset of variables that
+#'  This function creates a synthetic dataset with a subset of lab tests that
 #' are contained in the GEMINI "lab" table, as seen in
 #' [GEMINI Data Repository Dictionary](https://geminimedicine.ca/the-gemini-database/).
 #'
