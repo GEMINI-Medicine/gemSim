@@ -1,4 +1,20 @@
-#' @title Sample a truncated log normal distribution
+#' Imports for the entire package
+#' Doesn't require Depends or `@import` per function
+#'
+#' @rawNamespace
+#' import(data.table, except = c("first", "last", "between", "month", "hour",
+#' "quarter", "week", "year", "wday", "second", "minute", "mday", "yday",
+#' "isoweek"))
+#' @rawNamespace
+#' import(dplyr, except = c("first", "last", "between", "matches"))
+#' @rawNamespace
+#' import(lubridate)
+#' @rawNamespace
+#' import(Rgemini)
+NULL
+
+#' @title
+#' Sample a truncated log normal distribution
 #'
 #' @description
 #' Sample from a log normal distribution using the `rlnorm` function
