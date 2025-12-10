@@ -186,15 +186,8 @@ dummy_lab_cbc_electrolyte <- function(
   ####### Sample raw test names and codes for electrolyte #######
   # List of names from most to least common
   test_names_electrolyte <- c(
-    "SODIUM", "Sodium", "Sodium,Serum,Plasma", "Electrolytes, Plasma", "Anion Gap", "Sodium - Serum/Plasma",
-    "Sodium plasma", "Sodium Arterial POC (GEMS IL)", "POCT Blood Gas Arterial", "Sodium,Gas", "Sodium, Plasma",
-    "Electrolytes, Creatinine, Glucose Profile", "Sodium,Point of Care", "Sodium blood", "Sodium, Arterial",
-    "Electrolytes, Creatinine, Profile", "Electrolytes, Creatinine, Glucose Profile RRL",
-    "Sodium                     O.R. Arterial", "Blood Gas, Arterial", "POCT Blood Gas Venous", "Sodium, Plasma RRL",
-    "Sodium, Venous", "WHOLE BLOOD SODIUM", "Electrolytes, Plasma RRL", "Sodium - Ven.", "Sodium serum",
-    "Sodium                     O.R. Venous", "SODIUM,POINT OF CARE"
+    "SODIUM", "Sodium", "Sodium,Serum,Plasma", "Electrolytes, Plasma", "Anion Gap", "Sodium - Serum/Plasma",  "Sodium plasma", "Sodium Arterial POC (GEMS IL)", "POCT Blood Gas Arterial", "Sodium,Gas"
   )
-
   # sample probabilities of getting raw test names
   probs <- sort(rlnorm(length(test_names_electrolyte), meanlog = -5.7, sdlog = 2.3), decreasing = TRUE)
   probs <- probs / sum(probs) # normalize so it adds to 1
