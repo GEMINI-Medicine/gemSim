@@ -67,50 +67,6 @@ dummy_lab_cbc_electrolyte <- function(
     set.seed(seed)
   }
 
-  # Internal function to sample from the t distribution truncated within a given range
-  # Samples a numeric vector as per the params and returns it
-  # This is used to sample "electrolyte" tests result values
-  # Params:
-  # - `n` (`integer`): length of final vector
-  # - `df` (`integer`): degrees of freedom
-  # - `sd` (`numeric`): standard deviation
-  # - `mean` (`numeric`): mean
-  # - `min` (`numeric`): minimum
-  # - `max` (`numeric`): maximum
-  rt_trunc <- function(n, df, sd, mean, min, max) {
-    res <- rt(n, df = df) * sd + mean
-    while (sum(res < min) + sum(res > max) > 0) {
-      n2 <- sum(res < min) + sum(res > max)
-      res[c(res < min | res > max)] <- rt(n2, df = df) * sd + mean
-    }
-    return(res)
-  }
-
-  # Internal function to sample from the Johnson distribution truncated within a given range
-  # Samples a numeric vector as per the params and returns it
-  # This is used to sample `result_value` when the test type is CBC
-  # Params:
-  # - `n` (`integer`): length of final vector
-  # - `min` (`numeric`): minimum
-  # - `max` (`numeric`): maximum
-  rjohnson_trunc <- function(n, min, max) {
-    fit_j_cbc <- list( # the parameters of the distribution of lab results for CBC
-      gamma = 0,
-      delta = 1.21,
-      xi = -7.7,
-      lambda = 189,
-      type = "SB"
-    )
-
-    res <- rJohnson(n, fit_j_cbc)
-
-    while (sum(res < min) + sum(res > max) > 0) {
-      n2 <- sum(res < min) + sum(res > max)
-      res[res < min | res > max] <- rJohnson(n2, fit_j_cbc)
-    }
-    return(res)
-  }
-
   # if `cohort` is included, get `df1` based on it
   cohort <- suppressWarnings(Rgemini::coerce_to_datatable(cohort))
 

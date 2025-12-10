@@ -371,3 +371,90 @@ generate_id_hospital <- function(
   res[, hospital_num := as.integer(hospital_num)]
   return(res)
 }
+
+#' @title
+#' Internal function to sample from the t distribution truncated within a given range
+#'
+#' @description
+#' This function samples a numeric vector as per the params and returns it.
+#' This is used to sample electrolyte lab test result values.
+#'
+#' @param n (`integer`)\cr The length of the final vector
+#'
+#' @param df (`numeric`)\cr The degrees of freedom for the distribution
+#'
+#' @param sd (`numeric`)\cr The standard deviation for the distribution
+#'
+#' @param mean (`numeric`)\cr The mean of the distribution
+#'
+#' @param min (`numeric`)\cr The minimum for truncating the distribution
+#'
+#' @param max (`numeric`)\cr The maximum for truncating the distribution
+#'
+#' @return A numeric vector following the specified t distribution.
+#'
+#' @import Rgemini
+#' @keywords internal
+rt_trunc <- function(n, df, sd, mean, min, max) {
+  # check inputs
+  Rgemini:::check_input(c(n,df), "integer")
+  Rgemini:::check_input(list(sd, mean, min, max), "numeric")
+  if (min < max) {
+    stop("The min is less than the max. Stopping.")
+  }
+
+  # initial distribution with given parameters
+  res <- rt(n, df = df) * sd + mean
+  # re-sample values out of range
+  while (sum(res < min) + sum(res > max) > 0) {
+    n2 <- sum(res < min) + sum(res > max)
+    res[c(res < min | res > max)] <- rt(n2, df = df) * sd + mean
+  }
+  return(res)
+}
+
+#' @title
+#' Internal function to sample from the t distribution truncated within a given range
+#'
+#' @description
+#' This function samples a numeric vector from the Johnson distribution as per the params and returns it.
+#' This is used to sample CBC lab test result values.
+#'
+#' @param n (`integer`)\cr The length of the final vector
+#'
+#' @param min (`numeric`)\cr The minimum for truncating the distribution
+#'
+#' @param max (`numeric`)\cr The maximum for truncating the distribution
+#'
+#' @return A numeric vector following the specified Johnson distribution.
+#'
+#' @import Rgemini
+#' @importFrom SuppDists rJohnson
+#' @keywords internal
+rjohnson_trunc <- function(n, min, max) {
+  # check inputs
+  Rgemini:::check_input(n, "integer")
+  Rgemini:::check_input(c(min, max), "numeric")
+  if (min < max) {
+    stop("The min is less than the max. Stopping.")
+  }
+
+  # the parameters of the distribution of lab results for CBC
+  fit_j_cbc <- list(
+    gamma = 0,
+    delta = 1.21,
+    xi = -7.7,
+    lambda = 189,
+    type = "SB"
+  )
+
+  # inital distribution
+  res <- rJohnson(n, fit_j_cbc)
+
+  # re-sample values out of range
+  while (sum(res < min) + sum(res > max) > 0) {
+    n2 <- sum(res < min) + sum(res > max)
+    res[res < min | res > max] <- rJohnson(n2, fit_j_cbc)
+  }
+  return(res)
+}
