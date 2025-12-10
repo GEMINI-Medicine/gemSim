@@ -25,3 +25,4 @@ A numeric vector following the normal distribution, truncated to the specified r
 \description{
 Sample from a normal distribution using the \code{rnorm} function but truncate it to specified minimum and maximum values
 }
+\keyword{internal}
