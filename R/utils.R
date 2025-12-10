@@ -34,7 +34,7 @@ NULL
 #'
 #' @return A numeric vector following the log normal distribution, truncated to the specified range.
 #'
-#' @export
+#' @keywords internal
 #'
 rlnorm_trunc <- function(n, meanlog, sdlog, min, max, seed = NULL) {
   if (!is.null(seed)) {
@@ -74,7 +74,7 @@ rlnorm_trunc <- function(n, meanlog, sdlog, min, max, seed = NULL) {
 #'
 #' @return A numeric vector following the normal distribution, truncated to the specified range.
 #'
-#' @export
+#' @keywords internal
 
 rnorm_trunc <- function(n, mean, sd, min, max, seed = NULL) {
   if (!is.null(seed)) {
