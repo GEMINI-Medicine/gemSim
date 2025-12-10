@@ -26,12 +26,7 @@ export(rlnorm_trunc)
 export(rnorm_trunc)
 export(sample_icd)
 export(sample_scu_date_time)
-<<<<<<< HEAD
-=======
-export(sample_time_shifted)
-export(sample_time_shifted_lnorm)
 export(simulate_data_tables)
->>>>>>> 6f071e48cedfeb7c82c63af3c688d3be5eba17a9
 import(Rgemini)
 import(comorbidity)
 import(data.table)

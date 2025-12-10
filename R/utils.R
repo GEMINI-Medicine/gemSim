@@ -397,9 +397,9 @@ generate_id_hospital <- function(
 #' @keywords internal
 rt_trunc <- function(n, df, sd, mean, min, max) {
   # check inputs
-  Rgemini:::check_input(c(n,df), "integer")
-  Rgemini:::check_input(list(sd, mean, min, max), "numeric")
-  if (min < max) {
+  Rgemini:::check_input(n, "integer")
+  Rgemini:::check_input(list(df, sd, mean, min, max), "numeric")
+  if (min > max) {
     stop("The min is less than the max. Stopping.")
   }
 
@@ -435,14 +435,14 @@ rjohnson_trunc <- function(n, min, max) {
   # check inputs
   Rgemini:::check_input(n, "integer")
   Rgemini:::check_input(c(min, max), "numeric")
-  if (min < max) {
+  if (min > max) {
     stop("The min is less than the max. Stopping.")
   }
 
   # the parameters of the distribution of lab results for CBC
   fit_j_cbc <- list(
-    gamma = 0,
-    delta = 1.21,
+    gamma = -0.8,
+    delta = 2,
     xi = -7.7,
     lambda = 189,
     type = "SB"

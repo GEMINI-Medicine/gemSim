@@ -111,7 +111,6 @@ dummy_lab_cbc_electrolyte <- function(
   df1 <- df1[, c("genc_id", "hospital_num", "collection_date_time")]
 
   ### Remaining variables: test types, OMOP test codes, results ###
-  ### get `test_name_raw` ###
   # First sample test type
   # CBC is 3000963 and electrolyte is 3019550
   df1[, test_type_mapped_omop := sample(c(3000963, 3019550),
@@ -186,7 +185,7 @@ dummy_lab_cbc_electrolyte <- function(
   # lower: gamma, upper: johnson
   df1[test_type_mapped_omop == 3000963, result_value := ifelse(
     rbinom(.N, 1, 0.25),
-    rgamma(.N, 59, 0.74),
+    rgamma(.N, 60, 0.7),
     rjohnson_trunc(.N, min = 87, max = 260)
   )]
 
