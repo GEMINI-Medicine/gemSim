@@ -5,7 +5,7 @@
 #'  This function creates a synthetic dataset with a subset of lab tests that
 #' are contained in the GEMINI "lab" table, as seen in
 #' [GEMINI Data Repository Dictionary](https://geminimedicine.ca/the-gemini-database/).
-#'
+#' The function currently focuses on simulating two lab tests: hemoglobin and sodium, as they are often used to identify routine blood work tests of complete blood count and electrolytes.
 #' This function will return: collection date time, information about the test type, test code, and test result value.
 #' It is a long format data table.
 #'
