@@ -223,9 +223,7 @@ dummy_lab_cbc_electrolyte <- function(
   # Next, sample for electrolyte
   # Electrolyte test codes from most to least common
   test_code_raw_electrolyte <- c(
-    NA, "", "Sodium", "200.051", "NAPL", "100.005", "NAAPC", "NAW", "NAART", "ORNA", "NAV", "210.2397",
-    "PANAA", "ANAA", "VNA", "PVNA", "NAS", "ORNAV", "MVNA", "PMNA"
-  )
+    NA, "", "Sodium", "200.051", "NAPL", "100.005", "NAAPC", "NAW", "NAART", "ORNA"  )
 
   # sample for electrolyte raw test codes
   probs <- sort(rlnorm(length(test_code_raw_electrolyte), meanlog = -5.3, sdlog = 3.0), decreasing = TRUE)
