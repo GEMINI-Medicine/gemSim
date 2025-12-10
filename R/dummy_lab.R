@@ -31,7 +31,7 @@
 #' @return (`data.table`)\cr A data.table object similar to the "lab" table that contains the following fields:
 #' - `genc_id` (`integer`): Mock encounter ID; integers starting from 1 or as seen in `cohort`
 #' - `hospital_num` (`integer`): Mock hospital ID; integers starting from 1 or as seen in `cohort`
-#' - `test_type_mapped_omop` (`character`):	Test name and code mapped by GEMINI following international standard
+#' - `test_type_mapped_omop` (`character`):	Test name and code mapped by GEMINI; currently two tests are available: 3000963 (hemoglobin) and 3019550 (sodium)
 #' - `test_name_raw` (`character`): Test name as reported by hospital
 #' - `test_code_raw` (`character`): Test code as reported by hospital
 #' - `result_value` (`character`): Test results
