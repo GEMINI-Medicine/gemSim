@@ -167,11 +167,7 @@ dummy_lab_cbc_electrolyte <- function(
   ####### Sample raw test names and codes for CBC #######
   # List of names from most to least common
   test_names_cbc <- c(
-    "HEMOGLOBIN", "Hemoglobin", "HGB", "CBC", "Hb", "Haemoglobin*", "Haemoglobin", "tHb Arterial  POC (GEMS IL)",
-    "Haemoglobin COOX    Do not report D Mazer", "POCT Blood Gas Arterial", "Hemoglobin,Gas", "Total Haemoglobin",
-    "Blood Gas, Venous", "Total Hemoglobin,POC", "CBC RRL", "Blood Gas, Arterial", "POCT Blood Gas Venous", "HB",
-    "Total Hemoglobin", "Hematocrit", "Hemoglobin, POCT", "Hemoglobin - POCT", "Haemoglobin - POCT",
-    "HEMOGLOBIN - POCT"
+    "HEMOGLOBIN", "Hemoglobin", "HGB", "CBC", "Hb", "Haemoglobin*", "Haemoglobin", "tHb Arterial  POC (GEMS IL)",  "POCT Blood Gas Arterial", "Total Haemoglobin"
   )
 
   # sample probabilities of getting raw test names
