@@ -33,7 +33,7 @@
 #' - `hospital_num` (`integer`): Mock hospital ID; integers starting from 1 or as seen in `cohort`
 #' - `test_type_mapped_omop` (`character`):	Test name and code mapped by GEMINI following international standard
 #' - `test_name_raw` (`character`): Test name as reported by hospital
-#' - `test_code_raw` (`character`): Test code as reported by hospital, either 3000963 (CBC) or 3019550 (electrolyte)
+#' - `test_code_raw` (`character`): Test code as reported by hospital
 #' - `result_value` (`character`): Test results
 #' - `collection_date_time` (`character`):	Date and time when the sample was collected
 #'
