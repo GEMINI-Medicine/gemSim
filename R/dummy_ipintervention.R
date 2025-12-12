@@ -37,7 +37,7 @@
 #' dummy_ipintervention_mri_maid(nid = 1000, int_code = "3SC40WC")
 #'
 #' @import Rgemini
-#' @import data.table
+#' @importFrom data.table data.table as.data.table
 #' @importFrom magrittr %>%
 #'
 #' @export

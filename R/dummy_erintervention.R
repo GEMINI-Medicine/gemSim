@@ -36,7 +36,7 @@
 #' dummy_erintervention_mri(cohort = dummy_ipadmdad(), int_code = "3AN40VA")
 #'
 #' @import Rgemini
-#' @import data.table
+#' @importFrom data.table data.table as.data.table
 #' @importFrom magrittr %>%
 #'
 #' @export

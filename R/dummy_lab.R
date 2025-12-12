@@ -37,6 +37,7 @@
 #' - `result_value` (`character`): Test results
 #' - `collection_date_time` (`character`):	Date and time when the sample was collected
 #'
+#' @importFrom data.table data.table as.data.table
 #' @importFrom SuppDists rJohnson
 #' @importFrom lubridate dhours days
 #' @importFrom MCMCpack rdirichlet

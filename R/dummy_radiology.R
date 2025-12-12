@@ -45,7 +45,7 @@
 #' dummy_radiology(nid = 1000, n_hospitals = 10, time_period = c(2020, 2023))
 #'
 #' @import Rgemini
-#' @import data.table
+#' @importFrom data.table data.table as.data.table
 #' @importFrom lubridate ddays dhours
 #' @importFrom MCMCpack rdirichlet
 #'

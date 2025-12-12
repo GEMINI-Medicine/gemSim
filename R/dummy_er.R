@@ -32,9 +32,9 @@
 #' - `hospital_num` (`integer`): Mock hospital ID; integers starting from 1 or from `cohort` if provided
 #' - `triage_date_time` (`character`): The date and time of triage with format "%Y-%m-%d %H:%M"
 #'
+#' @importFrom data.table data.table as.data.table
 #' @importFrom lubridate ddays dhours
 #' @import Rgemini
-#' @import data.table
 #' @export
 #'
 #' @examples

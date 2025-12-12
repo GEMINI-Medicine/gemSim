@@ -35,7 +35,7 @@
 #'
 #' @import Rgemini
 #' @import lubridate
-#' @import data.table
+#' @importFrom data.table data.table as.data.table
 #'
 #' @export
 #'
@@ -329,8 +329,8 @@ sample_scu_date_time <- function(scu_cohort, use_ip_dates = TRUE, start_date = N
 #'   - 95: Step-Down Surgical Unit
 #'
 #' @import Rgemini
-#' @import data.table
 #' @import lubridate
+#' @importFrom data.table data.table as.data.table
 #'
 #' @export
 #'
