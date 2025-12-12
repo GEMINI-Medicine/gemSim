@@ -294,7 +294,6 @@ sample_scu_date_time <- function(scu_cohort, use_ip_dates = TRUE, start_date = N
 #' The start date and end date will be (yyyy-01-01 and yyyy-12-31) if (yyyy, yyyy)
 #' is the date range format provided. Optional when `cohort` is provided.
 #'
-#'
 #' @param n_hospitals (`integer`)\cr Number of hospitals in simulated dataset.
 #'
 #' @param seed (`integer`)\cr Optional, a number to be used to set the seed for reproducible results.
@@ -310,7 +309,7 @@ sample_scu_date_time <- function(scu_cohort, use_ip_dates = TRUE, start_date = N
 #' - `genc_id` (`integer`): Mock encounter ID; integers starting from 1 or from `cohort`
 #' - `hospital_num` (`integer`): Mock hospital ID number; integers starting from 1 or from `cohort`
 #' - `scu_admit_date_time` (`character`): Date and time of SCU admission in YYYY-MM-DD HH:MM format
-#' - `scu_discharge_date_time` (`character`): Date and time of SCU admission in YYYY-MM-DD HH:MM format
+#' - `scu_discharge_date_time` (`character`): Date and time of SCU discharge in YYYY-MM-DD HH:MM format
 #' - `icu_flag` (`logical`): Flag specifying whether the encounter was admitted to the ICU or not.
 #'    This refers to to SCU unit numbers excluding the step down units of 90, 93, and 95.
 #' - `scu_unit_number`(`integer`): Code identifying the type of special care unit where the patient receives
