@@ -17,8 +17,24 @@ reference:
   - title: "Simulation functions"
     desc: "Functions for generating synthetic GEMINI data"
     contents:
-      - sample_icd
       - dummy_diag
+      - dummy_er
+      - dummy_erintervention_mri
       - dummy_ipadmdad
+      - dummy_ipintervention_mri_maid
+      - dummy_ipscu
       - dummy_lab_cbc_electrolyte
+      - dummy_locality
+      - dummy_physicians
+      - dummy_radiology
+      - dummy_transfusion
       - generate_id_hospital
+      - sample_icd
+      - sample_scu_date_time
+      - simulate_data_tables
+  - title: "Datasets"
+    desc: "Data files used for sampling in data simulation"
+    contents:
+      - blood_product_lookup
+      - da21uid_statcan_v2021
+      - lookup_cci
