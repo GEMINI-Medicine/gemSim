@@ -3,7 +3,7 @@ Title: GEMINI Data Simulator
 Version: 0.0.0.9000
 Author: GEMINI 
 Maintainer: GEMINIdata <Gemini.data@unityhealth.to>
-Description: What the package does (one paragraph).
+Description: This package contains functions that generate synthetic data based on the GEMINI database. 
 License: MIT + file LICENSE
 Encoding: UTF-8
 Imports:

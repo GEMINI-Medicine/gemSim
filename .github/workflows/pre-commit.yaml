@@ -29,6 +29,8 @@ jobs:
 
     - name: Install dependencies
       uses: r-lib/actions/setup-r-dependencies@v2
+      env:
+          GITHUB_PAT: ${{ secrets.NEW_PAT }}
       with:
         extra-packages: any::styler, any::roxygen2
         needs: styler

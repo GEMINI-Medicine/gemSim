@@ -39,6 +39,8 @@ jobs:
           use-public-rspm: true
 
       - uses: r-lib/actions/setup-r-dependencies@v2
+        env:
+          GITHUB_PAT: ${{ secrets.NEW_PAT }}
         with:
           extra-packages: rcmdcheck
 
