@@ -40,9 +40,8 @@
 #' @export
 #'
 #' @examples
-#' \dontrun{
 #' dummy_locality(nid = 1000, n_hospitals = 10)
-#' }
+#'
 dummy_locality <- function(nid = 1000, n_hospitals = 10, cohort = NULL, da21uid = NULL, seed = NULL) {
   ### check inputs
   if (!is.null(da21uid)) {

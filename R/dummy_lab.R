@@ -2,10 +2,10 @@
 #' Generate simulated lab data
 #'
 #' @description
-#'  This function creates a dummy dataset with a subset of variables that
+#'  This function creates a synthetic dataset with a subset of lab tests that
 #' are contained in the GEMINI "lab" table, as seen in
 #' [GEMINI Data Repository Dictionary](https://geminimedicine.ca/the-gemini-database/).
-#'
+#' The function currently focuses on simulating two lab tests: hemoglobin and sodium, as they are often used to identify routine blood work tests of complete blood count and electrolytes.
 #' This function will return: collection date time, information about the test type, test code, and test result value.
 #' It is a long format data table.
 #'
@@ -31,9 +31,9 @@
 #' @return (`data.table`)\cr A data.table object similar to the "lab" table that contains the following fields:
 #' - `genc_id` (`integer`): Mock encounter ID; integers starting from 1 or as seen in `cohort`
 #' - `hospital_num` (`integer`): Mock hospital ID; integers starting from 1 or as seen in `cohort`
-#' - `test_type_mapped_omop` (`character`):	Test name and code mapped by GEMINI following international standard
+#' - `test_type_mapped_omop` (`character`):	Test name and code mapped by GEMINI; currently two tests are available: 3000963 (hemoglobin) and 3019550 (sodium)
 #' - `test_name_raw` (`character`): Test name as reported by hospital
-#' - `test_code_raw` (`character`): Test code as reported by hospital, either 3000963 (CBC) or 3019550 (electrolyte)
+#' - `test_code_raw` (`character`): Test code as reported by hospital
 #' - `result_value` (`character`): Test results
 #' - `collection_date_time` (`character`):	Date and time when the sample was collected
 #'
@@ -65,50 +65,6 @@ dummy_lab_cbc_electrolyte <- function(
 
   if (!is.null(seed)) {
     set.seed(seed)
-  }
-
-  # Internal function to sample from the t distribution truncated within a given range
-  # Samples a numeric vector as per the params and returns it
-  # This is used to sample "electrolyte" tests result values
-  # Params:
-  # - `n` (`integer`): length of final vector
-  # - `df` (`integer`): degrees of freedom
-  # - `sd` (`numeric`): standard deviation
-  # - `mean` (`numeric`): mean
-  # - `min` (`numeric`): minimum
-  # - `max` (`numeric`): maximum
-  rt_trunc <- function(n, df, sd, mean, min, max) {
-    res <- rt(n, df = df) * sd + mean
-    while (sum(res < min) + sum(res > max) > 0) {
-      n2 <- sum(res < min) + sum(res > max)
-      res[c(res < min | res > max)] <- rt(n2, df = df) * sd + mean
-    }
-    return(res)
-  }
-
-  # Internal function to sample from the Johnson distribution truncated within a given range
-  # Samples a numeric vector as per the params and returns it
-  # This is used to sample `result_value` when the test type is CBC
-  # Params:
-  # - `n` (`integer`): length of final vector
-  # - `min` (`numeric`): minimum
-  # - `max` (`numeric`): maximum
-  rjohnson_trunc <- function(n, min, max) {
-    fit_j_cbc <- list( # the parameters of the distribution of lab results for CBC
-      gamma = 0,
-      delta = 1.21,
-      xi = -7.7,
-      lambda = 189,
-      type = "SB"
-    )
-
-    res <- rJohnson(n, fit_j_cbc)
-
-    while (sum(res < min) + sum(res > max) > 0) {
-      n2 <- sum(res < min) + sum(res > max)
-      res[res < min | res > max] <- rJohnson(n2, fit_j_cbc)
-    }
-    return(res)
   }
 
   # if `cohort` is included, get `df1` based on it
@@ -155,7 +111,6 @@ dummy_lab_cbc_electrolyte <- function(
   df1 <- df1[, c("genc_id", "hospital_num", "collection_date_time")]
 
   ### Remaining variables: test types, OMOP test codes, results ###
-  ### get `test_name_raw` ###
   # First sample test type
   # CBC is 3000963 and electrolyte is 3019550
   df1[, test_type_mapped_omop := sample(c(3000963, 3019550),
@@ -167,11 +122,7 @@ dummy_lab_cbc_electrolyte <- function(
   ####### Sample raw test names and codes for CBC #######
   # List of names from most to least common
   test_names_cbc <- c(
-    "HEMOGLOBIN", "Hemoglobin", "HGB", "CBC", "Hb", "Haemoglobin*", "Haemoglobin", "tHb Arterial  POC (GEMS IL)",
-    "Haemoglobin COOX    Do not report D Mazer", "POCT Blood Gas Arterial", "Hemoglobin,Gas", "Total Haemoglobin",
-    "Blood Gas, Venous", "Total Hemoglobin,POC", "CBC RRL", "Blood Gas, Arterial", "POCT Blood Gas Venous", "HB",
-    "Total Hemoglobin", "Hematocrit", "Hemoglobin, POCT", "Hemoglobin - POCT", "Haemoglobin - POCT",
-    "HEMOGLOBIN - POCT"
+    "HEMOGLOBIN", "Hemoglobin", "HGB", "CBC", "Hb", "Haemoglobin*", "Haemoglobin", "tHb Arterial  POC (GEMS IL)",  "POCT Blood Gas Arterial", "Total Haemoglobin"
   )
 
   # sample probabilities of getting raw test names
@@ -186,15 +137,8 @@ dummy_lab_cbc_electrolyte <- function(
   ####### Sample raw test names and codes for electrolyte #######
   # List of names from most to least common
   test_names_electrolyte <- c(
-    "SODIUM", "Sodium", "Sodium,Serum,Plasma", "Electrolytes, Plasma", "Anion Gap", "Sodium - Serum/Plasma",
-    "Sodium plasma", "Sodium Arterial POC (GEMS IL)", "POCT Blood Gas Arterial", "Sodium,Gas", "Sodium, Plasma",
-    "Electrolytes, Creatinine, Glucose Profile", "Sodium,Point of Care", "Sodium blood", "Sodium, Arterial",
-    "Electrolytes, Creatinine, Profile", "Electrolytes, Creatinine, Glucose Profile RRL",
-    "Sodium                     O.R. Arterial", "Blood Gas, Arterial", "POCT Blood Gas Venous", "Sodium, Plasma RRL",
-    "Sodium, Venous", "WHOLE BLOOD SODIUM", "Electrolytes, Plasma RRL", "Sodium - Ven.", "Sodium serum",
-    "Sodium                     O.R. Venous", "SODIUM,POINT OF CARE"
+    "SODIUM", "Sodium", "Sodium,Serum,Plasma", "Electrolytes, Plasma", "Anion Gap", "Sodium - Serum/Plasma",  "Sodium plasma", "Sodium Arterial POC (GEMS IL)", "POCT Blood Gas Arterial", "Sodium,Gas"
   )
-
   # sample probabilities of getting raw test names
   probs <- sort(rlnorm(length(test_names_electrolyte), meanlog = -5.7, sdlog = 2.3), decreasing = TRUE)
   probs <- probs / sum(probs) # normalize so it adds to 1
@@ -209,8 +153,7 @@ dummy_lab_cbc_electrolyte <- function(
   # CBC test codes from most to least common
   test_code_raw_cbc <- c(
     NA, "HGB", "", "Hb", "100.06", "400.0025", "Hemoglobin", "HBCX1",
-    "HBAPC", "HBTOT", "VHBG", "AHBG", "MVHGB", "ORHCV", "HEMOC"
-  )
+    "HBAPC", "HBTOT")
 
   # sample for CBC raw test codes
   probs <- sort(rlnorm(length(test_code_raw_cbc), meanlog = -6.3, sdlog = 2.0), decreasing = TRUE)
@@ -224,9 +167,7 @@ dummy_lab_cbc_electrolyte <- function(
   # Next, sample for electrolyte
   # Electrolyte test codes from most to least common
   test_code_raw_electrolyte <- c(
-    NA, "", "Sodium", "200.051", "NAPL", "100.005", "NAAPC", "NAW", "NAART", "ORNA", "NAV", "210.2397",
-    "PANAA", "ANAA", "VNA", "PVNA", "NAS", "ORNAV", "MVNA", "PMNA"
-  )
+    NA, "", "Sodium", "200.051", "NAPL", "100.005", "NAAPC", "NAW", "NAART", "ORNA"  )
 
   # sample for electrolyte raw test codes
   probs <- sort(rlnorm(length(test_code_raw_electrolyte), meanlog = -5.3, sdlog = 3.0), decreasing = TRUE)
@@ -244,7 +185,7 @@ dummy_lab_cbc_electrolyte <- function(
   # lower: gamma, upper: johnson
   df1[test_type_mapped_omop == 3000963, result_value := ifelse(
     rbinom(.N, 1, 0.25),
-    rgamma(.N, 59, 0.74),
+    rgamma(.N, 60, 0.7),
     rjohnson_trunc(.N, min = 87, max = 260)
   )]
 

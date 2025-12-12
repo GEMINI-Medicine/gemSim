@@ -1,92 +1,24 @@
-# url: https://gemini-medicine.github.io/Rgemini/
+url: https://gemini-medicine.github.io/GEMINI-data-simulation/
 template:
   bootstrap: 5
 
+title: GEMINI Data Simulation
+description: "Tools to generate synthetic data based on the GEMINI database."
+
+navbar:
+  structure:
+    left:
+      - reference
+      - articles
+    right:
+      - github
+
 reference:
-- title: Derived Variables
-  desc: These functions derive variables from existing data.
-- contents:
-  - charlson_comorbidity_index
-  - comorbidity_index
-  - covid_flag
-  - daily_census
-  - day_time_of_admission
-  - disability
-  - elixhauser_comorbidity_index
-  - episodes_of_care
-  - er_los
-  - frailty_score
-  - homelessness
-  - hospital_fiscal_year
-  - hospitalizations_last_n_days
-  - icu_entry
-  - icu_los
-  - in_hospital_mortality
-  - laps_assign_test
-  - length_of_stay
-  - loop_mlaps
-  - mlaps
-  - n_imaging
-  - n_missing
-  - n_rbc_transfusions
-  - n_routine_bloodwork
-  - neighbourhood_ses
-  - readmission
-  - season
-  - stat_holidays_ON
-- title: Data Transformation
-  desc: These functions aid in querying the data, either by applying filters or mapping values.
-- contents:
-  - diagnoses_at_admission
-  - icd_to_ccsr
-  - max_result_value
-  - min_result_value
-- title: Cohort Creation & Data Checks
-  desc: These functions help with cohort generation and commonly performed data checks
-- contents:
-  - cohort_creation
-  - data_coverage
-- title: Cell Suppression
-  desc: This includes all helper functions associated with producing a Table 1.
-- contents:
-  - max_pairwise_smd
-  - starts_with("render")
-- title: Dummy Data
-  desc: Helper functions designed to produce sample data.
-- contents:
-  - dummy_admdad
-  - dummy_diag
-  - dummy_ipadmdad
-  - dummy_lab
-  - sample_icd
-- title: Plotting Functions
-  desc: Functions for common plotting needs.
-- contents:
-  - gemini_colors
-  - plot_color_palettes
-  - plot_over_time
-  - plot_summary
-  - plot_theme
-  - scale_color_gemini
-  - scale_fill_gemini
-- title: Mapping files
-  desc: Files containing variable mappings.
-- contents:
-  - mapping_cihi_frailty
-  - mapping_disability
-- title: Utility Functions
-- contents:
-  - check_input
-  - coerce_to_datatable
-  - compare_sets
-  - coverage_message
-  - convert_dt
-  - create_ntiles
-  - find_db_tablename
-  - fix_var_str
-  - lunique
-  - mapping_message
-  - matches("ni")
-  - normalize_text
-  - return_hospital_field
-  - quiet
+  - title: "Simulation functions"
+    desc: "Functions for generating synthetic GEMINI data"
+    contents:
+      - sample_icd
+      - dummy_diag
+      - dummy_ipadmdad
+      - dummy_lab_cbc_electrolyte
+      - generate_id_hospital

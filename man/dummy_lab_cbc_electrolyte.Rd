@@ -39,18 +39,18 @@ When \code{cohort} is not NULL, \code{nid}, \code{n_hospitals}, and \code{time_p
 \itemize{
 \item \code{genc_id} (\code{integer}): Mock encounter ID; integers starting from 1 or as seen in \code{cohort}
 \item \code{hospital_num} (\code{integer}): Mock hospital ID; integers starting from 1 or as seen in \code{cohort}
-\item \code{test_type_mapped_omop} (\code{character}):	Test name and code mapped by GEMINI following international standard
+\item \code{test_type_mapped_omop} (\code{character}):	Test name and code mapped by GEMINI; currently two tests are available: 3000963 (hemoglobin) and 3019550 (sodium)
 \item \code{test_name_raw} (\code{character}): Test name as reported by hospital
-\item \code{test_code_raw} (\code{character}): Test code as reported by hospital, either 3000963 (CBC) or 3019550 (electrolyte)
+\item \code{test_code_raw} (\code{character}): Test code as reported by hospital
 \item \code{result_value} (\code{character}): Test results
 \item \code{collection_date_time} (\code{character}):	Date and time when the sample was collected
 }
 }
 \description{
-This function creates a dummy dataset with a subset of variables that
+This function creates a synthetic dataset with a subset of lab tests that
 are contained in the GEMINI "lab" table, as seen in
 \href{https://geminimedicine.ca/the-gemini-database/}{GEMINI Data Repository Dictionary}.
-
+The function currently focuses on simulating two lab tests: hemoglobin and sodium, as they are often used to identify routine blood work tests of complete blood count and electrolytes.
 This function will return: collection date time, information about the test type, test code, and test result value.
 It is a long format data table.
 }
