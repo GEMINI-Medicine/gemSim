@@ -39,8 +39,8 @@ Default to FALSE. When TRUE, two additional columns are required in the input \c
 but with some rows excluded and/or repeated based on user specifications.
 If \code{cohort} is not included, then it will have the following fields:
 \itemize{
-\item \code{genc_id} (\code{integer}): GEMINI encounter number, may be repeated in multiple rows based on avg_repeats
-\item \code{hospital_num} (\code{integer}): An integer identifying the hospital attached to the encounter
+\item \code{genc_id} (\code{integer}): Mock encounter number, may be repeated in multiple rows based on avg_repeats
+\item \code{hospital_num} (\code{integer}): Mock hospital ID number
 }
 }
 \description{

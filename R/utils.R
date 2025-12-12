@@ -118,7 +118,8 @@ rnorm_trunc <- function(n, mean, sd, min, max, seed = NULL) {
 #' @return A numeric vector following the skewed normal distribution, truncated to the specified range.
 #'
 #' @importFrom sn rsn
-#' @export
+#'
+#' @keywords internal
 #'
 rsn_trunc <- function(n, xi, omega, alpha, min, max, seed = NULL) {
   # checks for input validity
@@ -171,7 +172,6 @@ rsn_trunc <- function(n, xi, omega, alpha, min, max, seed = NULL) {
 #'
 #' @param seed (`integer`) Optional, an integer for setting the seed for reproducible results.
 #'
-#'
 #' @return A numeric vector following the specified distribution.
 #'
 #' @keywords internal
@@ -220,7 +220,6 @@ sample_time_shifted <- function(nrow, xi, omega, alpha, min = 0, max = 48, seed 
 #' @param max (`numeric`) Optional, a maximum value to right truncate the value to; the default value is set to 48.
 #'
 #' @param seed (`integer`) Optional, an integer for setting the seed for reproducible results.
-#'
 #'
 #' @return A numeric vector following the specified distribution.
 #'
@@ -288,15 +287,15 @@ sample_time_shifted_lnorm <- function(nrow, meanlog, sdlog, min = 0, max = 48, s
 #' @return (`data.table`)\cr A data.table object with the same columns as `cohort`,
 #' but with some rows excluded and/or repeated based on user specifications.
 #' If `cohort` is not included, then it will have the following fields:
-#' - `genc_id` (`integer`): GEMINI encounter number, may be repeated in multiple rows based on avg_repeats
-#' - `hospital_num` (`integer`): An integer identifying the hospital attached to the encounter
-#'
-#' @export
+#' - `genc_id` (`integer`): Mock encounter number, may be repeated in multiple rows based on avg_repeats
+#' - `hospital_num` (`integer`): Mock hospital ID number
 #'
 #' @examples
 #' sample_cohort <- data.table::data.table(genc_id = 1:100, hospital_num = rep(1:5, each = 20))
 #' generate_id_hospital(cohort = sample_cohort, include_prop = 0.8, avg_repeats = 1.5, by_los = TRUE, seed = 1)
 #' generate_id_hospital(nid = 1000, n_hospitals = 10, avg_repeats = 1)
+#'
+#' @export
 #'
 generate_id_hospital <- function(
   nid = 1000, n_hospitals = 10, avg_repeats = 1.5, include_prop = 1, cohort = NULL, by_los = FALSE, seed = NULL
@@ -370,5 +369,92 @@ generate_id_hospital <- function(
 
   res[, genc_id := as.integer(genc_id)]
   res[, hospital_num := as.integer(hospital_num)]
+  return(res)
+}
+
+#' @title
+#' Internal function to sample from the t distribution truncated within a given range
+#'
+#' @description
+#' This function samples a numeric vector as per the params and returns it.
+#' This is used to sample electrolyte lab test result values.
+#'
+#' @param n (`integer`)\cr The length of the final vector
+#'
+#' @param df (`numeric`)\cr The degrees of freedom for the distribution
+#'
+#' @param sd (`numeric`)\cr The standard deviation for the distribution
+#'
+#' @param mean (`numeric`)\cr The mean of the distribution
+#'
+#' @param min (`numeric`)\cr The minimum for truncating the distribution
+#'
+#' @param max (`numeric`)\cr The maximum for truncating the distribution
+#'
+#' @return A numeric vector following the specified t distribution.
+#'
+#' @import Rgemini
+#' @keywords internal
+rt_trunc <- function(n, df, sd, mean, min, max) {
+  # check inputs
+  Rgemini:::check_input(n, "integer")
+  Rgemini:::check_input(list(df, sd, mean, min, max), "numeric")
+  if (min > max) {
+    stop("The min is less than the max. Stopping.")
+  }
+
+  # initial distribution with given parameters
+  res <- rt(n, df = df) * sd + mean
+  # re-sample values out of range
+  while (sum(res < min) + sum(res > max) > 0) {
+    n2 <- sum(res < min) + sum(res > max)
+    res[c(res < min | res > max)] <- rt(n2, df = df) * sd + mean
+  }
+  return(res)
+}
+
+#' @title
+#' Internal function to sample from the t distribution truncated within a given range
+#'
+#' @description
+#' This function samples a numeric vector from the Johnson distribution as per the params and returns it.
+#' This is used to sample CBC lab test result values.
+#'
+#' @param n (`integer`)\cr The length of the final vector
+#'
+#' @param min (`numeric`)\cr The minimum for truncating the distribution
+#'
+#' @param max (`numeric`)\cr The maximum for truncating the distribution
+#'
+#' @return A numeric vector following the specified Johnson distribution.
+#'
+#' @import Rgemini
+#' @importFrom SuppDists rJohnson
+#' @keywords internal
+rjohnson_trunc <- function(n, min, max) {
+  # check inputs
+  Rgemini:::check_input(n, "integer")
+  Rgemini:::check_input(c(min, max), "numeric")
+  if (min > max) {
+    stop("The min is less than the max. Stopping.")
+  }
+
+  # the parameters of the distribution of lab results for CBC
+  fit_j_cbc <- list(
+    gamma = -0.8,
+    delta = 2,
+    xi = -7.7,
+    lambda = 189,
+    type = "SB"
+  )
+
+  # inital distribution
+  res <- rJohnson(n, fit_j_cbc)
+
+  # re-sample values out of range
+  while (sum(res < min) + sum(res > max) > 0) {
+    n2 <- sum(res < min) + sum(res > max)
+    res[res < min | res > max] <- rJohnson(n2, fit_j_cbc)
+  }
   return(res)
 }
