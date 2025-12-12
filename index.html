@@ -59,10 +59,22 @@
       </header><div class="row">
   <div class="contents col-md-9">
 <div class="section level1">
-<div class="page-header"><h1 id="gemini-dummy-data">GEMINI-dummy-data<a class="anchor" aria-label="anchor" href="#gemini-dummy-data"></a>
+<div class="page-header"><h1 id="gemsim">gemSim<a class="anchor" aria-label="anchor" href="#gemsim"></a>
 </h1></div>
-<p><code>GEMINI-dummy-data</code> is a custom R package providing functions that generate synthetic data based on the <a href="https://geminimedicine.ca/the-gemini-database/" class="external-link">GEMINI database</a>.</p>
-<p>It currently creates the following tables: * Admdad * Locality Variables * IPSCU * ER * IP Diagnosis * ER Diagnosis * IP Intervention (MRI and MAID) * ER Intervention (MRI) * Lab (CBC or electrolyte) * Radiology * Transfusion * Physicians</p>
+<p><code>gemSim</code> is a custom R package providing functions that generate synthetic data based on the <a href="https://geminimedicine.ca/the-gemini-database/" class="external-link">GEMINI database</a>.</p>
+<p>It currently creates the following tables: * Admdad<br>
+* Locality Variables<br>
+* IPSCU<br>
+* ER<br>
+* IP Diagnosis<br>
+* ER Diagnosis<br>
+* IP Intervention (MRI and MAID)<br>
+* ER Intervention (MRI)<br>
+* Lab (CBC or electrolyte)<br>
+* Radiology<br>
+* Transfusion<br>
+* Physicians</p>
+<p>It also contains a wrapper function, <code>simulate_data_tables</code>, which calls on the other simulation functions to create a database, keeping inter-table relationships.</p>
 </div>
   </div>
 
