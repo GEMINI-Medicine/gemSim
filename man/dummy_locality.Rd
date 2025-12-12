@@ -50,7 +50,6 @@ user-specified set of mock encounter and hospital IDs. To mimic GEMINI data char
 of simulated area IDs are drawn from Ontario and are clustered by hospital.
 }
 \examples{
-\dontrun{
 dummy_locality(nid = 1000, n_hospitals = 10)
-}
+
 }
