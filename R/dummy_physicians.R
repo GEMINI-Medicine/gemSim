@@ -36,7 +36,7 @@
 #' dummy_physicians(cohort = dummy_ipadmdad(), seed = 2)
 #'
 #' @import Rgemini
-#' @import data.table
+#' @importFrom data.table data.table as.data.table
 #' @importFrom dplyr group_by reframe
 #' @importFrom magrittr %>%
 #'

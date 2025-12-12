@@ -50,7 +50,7 @@
 #' May include: `admdad`, `ipscu`, `er`, `erdiagnosis`, `ipdiagnosis`, `locality_variables`,
 #' `lab`, `radiology`, `erintervention`, `ipintervention`, `transfusion`, `physicians`
 #'
-#' @import data.table
+#' @importFrom data.table data.table as.data.table
 #' @import Rgemini
 #'
 #' @export

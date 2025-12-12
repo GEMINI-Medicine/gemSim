@@ -41,7 +41,7 @@
 #' dummy_transfusion(nid = 100, n_hospitals = 1, blood_product_list = c("0", "35605159", "35615187"))
 #'
 #' @import Rgemini
-#' @import data.table
+#' @importFrom data.table data.table as.data.table
 #' @importFrom lubridate dhours ddays
 #' @importFrom magrittr %>%
 #'
