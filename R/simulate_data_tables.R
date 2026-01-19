@@ -110,32 +110,32 @@ simulate_data_tables <- function(tables, nid = 1000, n_hospitals = 10, time_peri
   # subset the `ipadmdad` cohort
   # this cohort is used for er-related tables
   er_cohort <- generate_id_hospital(
-    cohort = new_ipadmdad, include_prop = cohort_props[table == "er", prop]
+    cohort = new_ipadmdad, include_prop = cohort_props[table == "er", prop], avg_repeats = 1
   )
 
   # Construct cohorts for all other tables after `er`
   # Every cohort is a subset of `new_ipadmdad`
   cohort_list <- list(
     ipscu = generate_id_hospital(
-      cohort = new_ipadmdad, include_prop = cohort_props[table == "ipscu", prop]
+      cohort = new_ipadmdad, include_prop = cohort_props[table == "ipscu", prop], avg_repeats = 1
     ),
     locality_variables = new_ipadmdad, # all of `ipadmdad`
     erdiagnosis = er_cohort, # include all of `er`
     ipdiagnosis = new_ipadmdad, # all of `ipadmdad`
     erintervention = generate_id_hospital(
-      cohort = er_cohort, include_prop = 0.008
+      cohort = er_cohort, include_prop = 0.008, avg_repeats = 1
     ), # few encounters have MRI as interventions in ER
     ipintervention = generate_id_hospital(
-      cohort = new_ipadmdad, include_prop = cohort_props[table == "ipintervention", prop]
+      cohort = new_ipadmdad, include_prop = cohort_props[table == "ipintervention", prop], avg_repeats = 1
     ),
     physicians = new_ipadmdad,
     radiology = generate_id_hospital(
-      cohort = new_ipadmdad, include_prop = cohort_props[table == "radiology", prop]
+      cohort = new_ipadmdad, include_prop = cohort_props[table == "radiology", prop], avg_repeats = 1
     ),
     transfusion = generate_id_hospital(
-      cohort = new_ipadmdad, include_prop = cohort_props[table == "transfusion", prop]
+      cohort = new_ipadmdad, include_prop = cohort_props[table == "transfusion", prop], avg_repeats = 1
     ),
-    lab = generate_id_hospital(cohort = new_ipadmdad, include_prop = cohort_props[table == "lab", prop]),
+    lab = generate_id_hospital(cohort = new_ipadmdad, include_prop = cohort_props[table == "lab", prop], avg_repeats = 1),
     er = er_cohort
   )
 
