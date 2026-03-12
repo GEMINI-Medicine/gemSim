@@ -1,8 +1,8 @@
 Package: gemSim
 Title: GEMINI Data Simulator
-Version: 0.0.0.9000
+Version: 1.0.0
 Author: GEMINI 
-Maintainer: GEMINIdata <Gemini.data@unityhealth.to>
+Maintainer: GEMINI <GEMINI.Research@unityhealth.to>
 Description: This package contains functions that generate synthetic data based on the GEMINI database. 
 License: MIT + file LICENSE
 Encoding: UTF-8
@@ -16,7 +16,7 @@ Imports:
     magrittr,
     MCMCpack,
     Rgemini,
-    sn,
+    sn
 Remotes:
     GEMINI-Medicine/Rgemini
 Config/testthat/edition: 3
@@ -24,5 +24,5 @@ RoxygenNote: 7.3.3
 Roxygen: list(markdown = TRUE)
 Depends: 
     R (>= 3.5.0)
-URL: https://gemini-medicine.github.io/GEMINI-data-simulation/
+URL: https://gemini-medicine.github.io/gemSim/
 Lazydata: true
