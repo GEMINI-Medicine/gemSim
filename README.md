@@ -51,9 +51,16 @@ admdad <- dummy_ipadmdad(
 To simulate multiple tables while maintaining key inter-table relationships (e.g., `genc_ids`, `hospital_nums`, plausible date-times), use the wrapper function `simulate_data_tables()`:
 
 ```
-dummy_data <- simulate_data_tables("admdad", "ipscu", "er", "erdiagnosis", "ipdiagnosis", "locality_variables",
+dummy_data <- simulate_data_tables(
+  tables = c(
+    "admdad", "ipscu", "er", "erdiagnosis", "ipdiagnosis", "locality_variables",
     "lab","radiology", "erintervention", "ipintervention", "transfusion",
-    "physicians"), nid = 5000, time_period = c(2021, 2024), seed = 1)
+    "physicians"
+  ),
+  nid = 5000,
+  time_period = c(2021, 2024),
+  seed = 1
+)
 ```
 
 
