@@ -25,4 +25,4 @@ Roxygen: list(markdown = TRUE)
 Depends: 
     R (>= 3.5.0)
 URL: https://gemini-medicine.github.io/gemSim/
-Lazydata: true
+LazyData: true
