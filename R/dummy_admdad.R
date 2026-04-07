@@ -174,7 +174,8 @@ dummy_admdad <- function(nid = 1000,
     return(random_datetime)
   }
 
-  data[, admission_date_time := add_random_datetime(.N, start_date, end_date)]
+  # create discharge_date_time first (because data are pulled by discharge)
+  data[, discharge_date_time := add_random_datetime(.N, start_date, end_date)]
 
   ############### DEFINE VARIABLE DISTRIBUTIONS ###############
   ## AGE
@@ -233,16 +234,16 @@ dummy_admdad <- function(nid = 1000,
       rlnorm(.N, meanlog = mean_hosp, sdlog = 1.38)
     }, by = hospital_num] # hospital-level variation in distribution
 
-    hosp_data[, discharge_date_time := format(
-      round_date(as.POSIXct(admission_date_time, tz = "UTC") +
-        ddays(los), unit = "days") +
-        dhours(sample_time_shifted(.N, xi = 11.37, omega = 4.79, alpha = 1.67, seed = seed)),
+    hosp_data[, admission_date_time := format(
+      round_date(as.POSIXct(discharge_date_time, tz = "UTC") -
+        ddays(los), unit = "days"), #+
+        #dhours(sample_time_shifted(.N, xi = 11.37, omega = 4.79, alpha = 1.67, seed = seed)),
       format = "%Y-%m-%d %H:%M", tz = "UTC"
     )]
 
     # if `discharge_date_time` ends up before `admission_date_time`
     hosp_data[, los := as.numeric(difftime(ymd_hm(discharge_date_time), ymd_hm(admission_date_time), units = "days"))]
-    hosp_data[los < 0, discharge_date_time := format(ymd_hm(discharge_date_time) + ddays(1), "%Y-%m-%d %H:%M")]
+    hosp_data[los < 0, admission_date_time := format(ymd_hm(admission_date_time) - ddays(1), "%Y-%m-%d %H:%M")]
     # handle sampling edge case with negative los
 
     ## Alternate level of care (ALC) & days spent in ALC
