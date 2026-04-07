@@ -1,1 +1,3 @@
-# GEMINI dummy data `1.0`
+# GEMINI data simulation 1.0.0
+
+* First release
