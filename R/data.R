@@ -10,7 +10,8 @@ NULL
 
 #' @title StatCan dissemination area ID lookup
 #' @description
-#' It contains dissemination area IDs for Canada, or da21uid.
+#' It contains dissemination area IDs for Canada, or da21uid, obtained from
+#' Statistics Canada.
 #' @name da21uid_statcan_v2021
 #' @docType data
 NULL
