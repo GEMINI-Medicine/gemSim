@@ -10,10 +10,10 @@ import(data.table, except = c("first", "last", "between", "month", "hour",
 import(dplyr, except = c("first", "last", "between", "matches"))
 
 import(lubridate)
+export(dummy_admdad)
 export(dummy_diag)
 export(dummy_er)
 export(dummy_erintervention_mri)
-export(dummy_ipadmdad)
 export(dummy_ipintervention_mri_maid)
 export(dummy_ipscu)
 export(dummy_lab_cbc_electrolyte)
