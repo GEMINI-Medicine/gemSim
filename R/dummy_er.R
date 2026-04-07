@@ -38,7 +38,7 @@
 #' @export
 #'
 #' @examples
-#' cohort <- dummy_ipadmdad()
+#' cohort <- dummy_admdad()
 #' dummy_er(cohort = cohort, seed = 1)
 #' dummy_er(nid = 10, n_hospitals = 1, seed = 2)
 dummy_er <- function(nid = 1000, n_hospitals = 10, time_period = c(2015, 2023), cohort = NULL, seed = NULL) {
@@ -59,7 +59,7 @@ dummy_er <- function(nid = 1000, n_hospitals = 10, time_period = c(2015, 2023), 
     n_hospitals <- uniqueN(cohort$hospital_num)
   } else { # when `cohort` is not provided
     # create a cohort
-    cohort <- dummy_ipadmdad(nid, n_hospitals, time_period, seed)
+    cohort <- dummy_admdad(nid, n_hospitals, time_period, seed)
   }
 
   ##### update `cohort` data types

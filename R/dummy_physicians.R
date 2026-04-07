@@ -33,7 +33,7 @@
 #'
 #' @examples
 #' dummy_physicians(nid = 1000, n_hospitals = 10, seed = 1)
-#' dummy_physicians(cohort = dummy_ipadmdad(), seed = 2)
+#' dummy_physicians(cohort = dummy_admdad(), seed = 2)
 #'
 #' @import Rgemini
 #' @importFrom data.table data.table as.data.table

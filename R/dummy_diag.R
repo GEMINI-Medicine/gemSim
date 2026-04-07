@@ -179,7 +179,7 @@ sample_icd <- function(n = 1, source = "comorbidity", dbcon = NULL, pattern = NU
 #' }
 #'
 #' ### Simulate an erdiagnosis table including data from `cohort`
-#' cohort <- dummy_ipadmdad()
+#' cohort <- dummy_admdad()
 #' erdiag <- dummy_diag(cohort = cohort)
 #'
 #' ### Simulate an ipdiagnosis table with diagnosis codes starting with "E11":

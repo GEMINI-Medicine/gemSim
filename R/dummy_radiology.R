@@ -40,7 +40,7 @@
 #' - `ordered_date_time` (`character`): The date and time the radiology test was ordered
 #' - `performed_date_time` (`character`): The date and time the radiology test was performed
 #' @examples
-#' cohort <- dummy_ipadmdad()
+#' cohort <- dummy_admdad()
 #' dummy_radiology(cohort = cohort)
 #' dummy_radiology(nid = 1000, n_hospitals = 10, time_period = c(2020, 2023))
 #'
@@ -65,7 +65,7 @@ dummy_radiology <- function(
     ####### if `cohort` is not provided, create it #######
     Rgemini:::check_input(list(nid, n_hospitals), "integer")
 
-    cohort <- dummy_ipadmdad(nid = nid, n_hospitals = n_hospitals, time_period = time_period, seed = seed)
+    cohort <- dummy_admdad(nid = nid, n_hospitals = n_hospitals, time_period = time_period, seed = seed)
     # include only required columns
     cohort <- cohort[, c("genc_id", "hospital_num", "admission_date_time", "discharge_date_time")]
   }

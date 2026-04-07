@@ -353,9 +353,9 @@ dummy_ipscu <- function(nid = 1000, n_hospitals = 10, time_period = c(2015, 2023
     )
   } else {
     # create a cohort
-    # `dummy_ipadmdad()` checks inputs
+    # `dummy_admdad()` checks inputs
     # create a cohort
-    cohort <- dummy_ipadmdad(nid = nid, n_hospitals = n_hospitals, time_period = time_period, seed = seed)
+    cohort <- dummy_admdad(nid = nid, n_hospitals = n_hospitals, time_period = time_period, seed = seed)
 
     # include only required columns
     cohort <- cohort[, c("genc_id", "hospital_num", "admission_date_time", "discharge_date_time")]

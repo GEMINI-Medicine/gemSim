@@ -9,8 +9,6 @@
 #' import(dplyr, except = c("first", "last", "between", "matches"))
 #' @rawNamespace
 #' import(lubridate)
-#' @rawNamespace
-#' import(Rgemini)
 NULL
 
 #' @title

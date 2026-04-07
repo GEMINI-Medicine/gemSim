@@ -37,7 +37,7 @@
 #' - `blood_product_raw` (`character`): Type of blood product or component transfused as reported by hospital.
 #' @examples
 #' dummy_transfusion(nid = 1000, n_hospitals = 30, seed = 1)
-#' dummy_transfusion(cohort = dummy_ipadmdad())
+#' dummy_transfusion(cohort = dummy_admdad())
 #' dummy_transfusion(nid = 100, n_hospitals = 1, blood_product_list = c("0", "35605159", "35615187"))
 #'
 #' @import Rgemini
@@ -65,8 +65,8 @@ dummy_transfusion <- function(
     nid <- uniqueN(cohort$genc_id)
     n_hospitals <- uniqueN(cohort$hospital_num)
   } else { # when `cohort` is not provided
-    # `dummy_ipadmdad()` checks inputs
-    cohort <- dummy_ipadmdad(nid, n_hospitals, time_period, seed)
+    # `dummy_admdad()` checks inputs
+    cohort <- dummy_admdad(nid, n_hospitals, time_period, seed)
   }
 
   # convert to `data.table`
