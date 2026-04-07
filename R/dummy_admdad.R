@@ -96,9 +96,9 @@
 #' admdad <- dummy_admdad(nid = 10000, n_hospitals = 10, time_period = c(2018, 2020))
 #'
 dummy_admdad <- function(nid = 1000,
-                           n_hospitals = 10,
-                           time_period = c(2015, 2023),
-                           seed = NULL) {
+                         n_hospitals = 10,
+                         time_period = c(2015, 2023),
+                         seed = NULL) {
   ############## CHECKS: for valid inputs: `n_id`, `n_hospitals`, `time_period`
   Rgemini:::check_input(list(nid, n_hospitals), "integer")
   Rgemini:::check_input(time_period, c("numeric", "character", "POSIXct"), length = 2)
