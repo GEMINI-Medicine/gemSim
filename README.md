@@ -40,7 +40,7 @@ To simulate data for a single table, run:
 
 ```
 library(gemSim)
-admdad <- dummy_ipadmdad(
+admdad <- dummy_admdad(
   nid = 1000, # number of encounters to be simulated
   n_hospitals = 10, # number of hospitals to be simulated
   time_period = c(2015, 2023), # fiscal years to be simulated

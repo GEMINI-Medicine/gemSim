@@ -97,45 +97,45 @@ simulate_data_tables <- function(tables, nid = 1000, n_hospitals = 10, time_peri
 
   ### get admdad table ###
   # this is always included and added first as the cohort
-  new_ipadmdad <- dummy_ipadmdad(
+  new_admdad <- dummy_admdad(
     nid = nid,
     n_hospitals = n_hospitals,
     time_period = time_period
   ) %>% data.table()
-  results[["admdad"]] <- new_ipadmdad # add to the results list
+  results[["admdad"]] <- new_admdad # add to the results list
 
   # remove `admdad` from `tables` if it's included
   tables <- tables[!tables %in% c("admdad")]
   ### a cohort is required for ER data ###
-  # subset the `ipadmdad` cohort
+  # subset the `admdad` cohort
   # this cohort is used for er-related tables
   er_cohort <- generate_id_hospital(
-    cohort = new_ipadmdad, include_prop = cohort_props[table == "er", prop], avg_repeats = 1
+    cohort = new_admdad, include_prop = cohort_props[table == "er", prop], avg_repeats = 1
   )
 
   # Construct cohorts for all other tables after `er`
-  # Every cohort is a subset of `new_ipadmdad`
+  # Every cohort is a subset of `new_admdad`
   cohort_list <- list(
     ipscu = generate_id_hospital(
-      cohort = new_ipadmdad, include_prop = cohort_props[table == "ipscu", prop], avg_repeats = 1
+      cohort = new_admdad, include_prop = cohort_props[table == "ipscu", prop], avg_repeats = 1
     ),
-    locality_variables = new_ipadmdad, # all of `ipadmdad`
+    locality_variables = new_admdad, # all of `admdad`
     erdiagnosis = er_cohort, # include all of `er`
-    ipdiagnosis = new_ipadmdad, # all of `ipadmdad`
+    ipdiagnosis = new_admdad, # all of `admdad`
     erintervention = generate_id_hospital(
       cohort = er_cohort, include_prop = 0.008, avg_repeats = 1
     ), # few encounters have MRI as interventions in ER
     ipintervention = generate_id_hospital(
-      cohort = new_ipadmdad, include_prop = cohort_props[table == "ipintervention", prop], avg_repeats = 1
+      cohort = new_admdad, include_prop = cohort_props[table == "ipintervention", prop], avg_repeats = 1
     ),
-    physicians = new_ipadmdad,
+    physicians = new_admdad,
     radiology = generate_id_hospital(
-      cohort = new_ipadmdad, include_prop = cohort_props[table == "radiology", prop], avg_repeats = 1
+      cohort = new_admdad, include_prop = cohort_props[table == "radiology", prop], avg_repeats = 1
     ),
     transfusion = generate_id_hospital(
-      cohort = new_ipadmdad, include_prop = cohort_props[table == "transfusion", prop], avg_repeats = 1
+      cohort = new_admdad, include_prop = cohort_props[table == "transfusion", prop], avg_repeats = 1
     ),
-    lab = generate_id_hospital(cohort = new_ipadmdad, include_prop = cohort_props[table == "lab", prop], avg_repeats = 1),
+    lab = generate_id_hospital(cohort = new_admdad, include_prop = cohort_props[table == "lab", prop], avg_repeats = 1),
     er = er_cohort
   )
 
