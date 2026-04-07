@@ -56,7 +56,7 @@ are contained in the GEMINI "transfusion" table, as seen in
 }
 \examples{
 dummy_transfusion(nid = 1000, n_hospitals = 30, seed = 1)
-dummy_transfusion(cohort = dummy_ipadmdad())
+dummy_transfusion(cohort = dummy_admdad())
 dummy_transfusion(nid = 100, n_hospitals = 1, blood_product_list = c("0", "35605159", "35615187"))
 
 }

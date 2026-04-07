@@ -58,7 +58,7 @@ This function only simulates modalities used in the MyPractice and OurPractice R
 Ultrasound. It does not cover all modalities seen in the actual "radiology" data table.
 }
 \examples{
-cohort <- dummy_ipadmdad()
+cohort <- dummy_admdad()
 dummy_radiology(cohort = cohort)
 dummy_radiology(nid = 1000, n_hospitals = 10, time_period = c(2020, 2023))
 

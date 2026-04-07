@@ -50,7 +50,7 @@ are contained in the GEMINI "er" table, as seen in
 This function will return one triage date time for each encounter ID.
 }
 \examples{
-cohort <- dummy_ipadmdad()
+cohort <- dummy_admdad()
 dummy_er(cohort = cohort, seed = 1)
 dummy_er(nid = 10, n_hospitals = 1, seed = 2)
 }

@@ -50,7 +50,7 @@ This function simulates data with CCI codes detailing the type of intervention u
 }
 \examples{
 dummy_erintervention_mri(nid = 1000, int_code = c("3AN40VA", "3SC40WC"))
-dummy_erintervention_mri(cohort = dummy_ipadmdad(), int_code = "3AN40VA")
+dummy_erintervention_mri(cohort = dummy_admdad(), int_code = "3AN40VA")
 
 dummy_erintervention_mri(nid = 100, n_hospitals = 2, seed = 1)
 

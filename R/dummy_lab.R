@@ -47,7 +47,7 @@
 #'
 #' @examples
 #' dummy_lab_cbc_electrolyte(nid = 10, n_hospitals = 1, seed = 1)
-#' dummy_lab_cbc_electrolyte(cohort = dummy_ipadmdad())
+#' dummy_lab_cbc_electrolyte(cohort = dummy_admdad())
 #'
 dummy_lab_cbc_electrolyte <- function(
   nid = 1000, n_hospitals = 10, time_period = c(2015, 2023), cohort = NULL, seed = NULL
@@ -61,7 +61,7 @@ dummy_lab_cbc_electrolyte <- function(
     )
   } else {
     # when `cohort` is not provided create one
-    cohort <- dummy_ipadmdad(nid, n_hospitals, time_period, seed = seed)
+    cohort <- dummy_admdad(nid, n_hospitals, time_period, seed = seed)
   }
 
   if (!is.null(seed)) {

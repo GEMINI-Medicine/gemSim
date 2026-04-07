@@ -103,7 +103,7 @@ erdiag <- dummy_diag(nid = 50, n_hospitals = 2, ipdiagnosis = F)
 }
 
 ### Simulate an erdiagnosis table including data from `cohort`
-cohort <- dummy_ipadmdad()
+cohort <- dummy_admdad()
 erdiag <- dummy_diag(cohort = cohort)
 
 ### Simulate an ipdiagnosis table with diagnosis codes starting with "E11":

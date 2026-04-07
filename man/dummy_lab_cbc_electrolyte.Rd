@@ -56,6 +56,6 @@ It is a long format data table.
 }
 \examples{
 dummy_lab_cbc_electrolyte(nid = 10, n_hospitals = 1, seed = 1)
-dummy_lab_cbc_electrolyte(cohort = dummy_ipadmdad())
+dummy_lab_cbc_electrolyte(cohort = dummy_admdad())
 
 }
