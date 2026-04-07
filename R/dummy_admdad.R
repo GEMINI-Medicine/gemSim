@@ -236,8 +236,7 @@ dummy_admdad <- function(nid = 1000,
 
     hosp_data[, admission_date_time := format(
       round_date(as.POSIXct(discharge_date_time, tz = "UTC") -
-        ddays(los), unit = "days"), #+
-        #dhours(sample_time_shifted(.N, xi = 11.37, omega = 4.79, alpha = 1.67, seed = seed)),
+        ddays(los), unit = "days"),
       format = "%Y-%m-%d %H:%M", tz = "UTC"
     )]
 
