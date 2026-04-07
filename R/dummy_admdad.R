@@ -1,9 +1,9 @@
 #' @title
-#' Simulate ipadmdad data
+#' Simulate admdad data
 #'
 #' @description
 #' This function creates a dummy dataset with a subset of variables that
-#' are contained in the GEMINI "ipadmdad" table (see details in
+#' are contained in the GEMINI "admdad" table (see details in
 #' [GEMINI Data Repository Dictionary](https://geminimedicine.ca/the-gemini-database/)).
 #'
 #' The simulated encounter-level variables that are returned by this function
@@ -42,7 +42,7 @@
 #' @param seed (`numeric`)\cr
 #' Optional, a number to set the seed for reproducible results
 #'
-#' @return (`data.frame`)\cr A data.frame object similar to the "ipadmdad" table
+#' @return (`data.frame`)\cr A data.frame object similar to the "admdad" table
 #' containing the following fields:
 #' - `genc_id` (`integer`): Mock encounter ID; integers starting from 1
 #' - `hospital_num` (`integer`): Mock hospital ID number; integers starting from 1
@@ -93,9 +93,9 @@
 #'
 #' @examples
 #' # Simulate 10,000 encounters from 10 hospitals for fiscal years 2018-2020.
-#' ipadmdad <- dummy_ipadmdad(nid = 10000, n_hospitals = 10, time_period = c(2018, 2020))
+#' admdad <- dummy_admdad(nid = 10000, n_hospitals = 10, time_period = c(2018, 2020))
 #'
-dummy_ipadmdad <- function(nid = 1000,
+dummy_admdad <- function(nid = 1000,
                            n_hospitals = 10,
                            time_period = c(2015, 2023),
                            seed = NULL) {
