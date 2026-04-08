@@ -4,82 +4,142 @@
 <meta http-equiv="Content-Type" content="text/html; charset=UTF-8">
 <meta charset="utf-8">
 <meta http-equiv="X-UA-Compatible" content="IE=edge">
-<meta name="viewport" content="width=device-width, initial-scale=1.0">
-<title>GEMINI Data Simulator • gemSim</title>
-<!-- jquery --><script src="https://cdnjs.cloudflare.com/ajax/libs/jquery/3.7.1/jquery.min.js" integrity="sha512-v2CJ7UaYy4JwqLDIrZUI/4hqeoQieOmAZNXBeQyjo21dadnwR+8ZaIJVT8EE2iyI61OV8e6M8PP2/4hpQINQ/g==" crossorigin="anonymous" referrerpolicy="no-referrer"></script><!-- Bootstrap --><link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/twitter-bootstrap/3.4.1/css/bootstrap.min.css" integrity="sha256-bZLfwXAP04zRMK2BjiO8iu9pf4FbLqX6zitd+tIvLhE=" crossorigin="anonymous">
-<script src="https://cdnjs.cloudflare.com/ajax/libs/twitter-bootstrap/3.4.1/js/bootstrap.min.js" integrity="sha256-nuL8/2cJ5NDSSwnKD8VqreErSWHtnEP9E7AySL+1ev4=" crossorigin="anonymous"></script><!-- bootstrap-toc --><link rel="stylesheet" href="bootstrap-toc.css">
-<script src="bootstrap-toc.js"></script><!-- Font Awesome icons --><link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/5.12.1/css/all.min.css" integrity="sha256-mmgLkCYLUQbXn0B1SRqzHar6dCnv9oZFPEC1g1cwlkk=" crossorigin="anonymous">
-<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/5.12.1/css/v4-shims.min.css" integrity="sha256-wZjR52fzng1pJHwx4aV2AO3yyTOXrcDW7jBpJtTwVxw=" crossorigin="anonymous">
-<!-- clipboard.js --><script src="https://cdnjs.cloudflare.com/ajax/libs/clipboard.js/2.0.6/clipboard.min.js" integrity="sha256-inc5kl9MA1hkeYUt+EC3BhlIgyp/2jDIyBLS6k3UxPI=" crossorigin="anonymous"></script><!-- headroom.js --><script src="https://cdnjs.cloudflare.com/ajax/libs/headroom/0.11.0/headroom.min.js" integrity="sha256-AsUX4SJE1+yuDu5+mAVzJbuYNPHj/WroHuZ8Ir/CkE0=" crossorigin="anonymous"></script><script src="https://cdnjs.cloudflare.com/ajax/libs/headroom/0.11.0/jQuery.headroom.min.js" integrity="sha256-ZX/yNShbjqsohH1k95liqY9Gd8uOiE1S4vZc+9KQ1K4=" crossorigin="anonymous"></script><!-- pkgdown --><link href="pkgdown.css" rel="stylesheet">
-<script src="pkgdown.js"></script><meta property="og:title" content="GEMINI Data Simulator">
+<meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no">
+<title>GEMINI Data Simulator • GEMINI Data Simulation</title>
+<script src="deps/jquery-3.6.0/jquery-3.6.0.min.js"></script><meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no">
+<link href="deps/bootstrap-5.3.1/bootstrap.min.css" rel="stylesheet">
+<script src="deps/bootstrap-5.3.1/bootstrap.bundle.min.js"></script><link href="deps/font-awesome-6.5.2/css/all.min.css" rel="stylesheet">
+<link href="deps/font-awesome-6.5.2/css/v4-shims.min.css" rel="stylesheet">
+<script src="deps/headroom-0.11.0/headroom.min.js"></script><script src="deps/headroom-0.11.0/jQuery.headroom.min.js"></script><script src="deps/bootstrap-toc-1.0.1/bootstrap-toc.min.js"></script><script src="deps/clipboard.js-2.0.11/clipboard.min.js"></script><script src="deps/search-1.0.0/autocomplete.jquery.min.js"></script><script src="deps/search-1.0.0/fuse.min.js"></script><script src="deps/search-1.0.0/mark.min.js"></script><!-- pkgdown --><script src="pkgdown.js"></script><meta property="og:title" content="GEMINI Data Simulator">
+<meta name="description" content="This package contains functions that generate synthetic data based on the GEMINI database.">
 <meta property="og:description" content="This package contains functions that generate synthetic data based on the GEMINI database.">
-<!-- mathjax --><script src="https://cdnjs.cloudflare.com/ajax/libs/mathjax/2.7.5/MathJax.js" integrity="sha256-nvJJv9wWKEm88qvoQl9ekL2J+k/RWIsaSScxxlsrv8k=" crossorigin="anonymous"></script><script src="https://cdnjs.cloudflare.com/ajax/libs/mathjax/2.7.5/config/TeX-AMS-MML_HTMLorMML.js" integrity="sha256-84DKXVJXs0/F8OTMzX4UR909+jtl4G7SPypPavF+GfA=" crossorigin="anonymous"></script><!--[if lt IE 9]>
-<script src="https://oss.maxcdn.com/html5shiv/3.7.3/html5shiv.min.js"></script>
-<script src="https://oss.maxcdn.com/respond/1.4.2/respond.min.js"></script>
-<![endif]-->
 </head>
-<body data-spy="scroll" data-target="#toc">
+<body>
+    <a href="#main" class="visually-hidden-focusable">Skip to contents</a>
 
 
-    <div class="container template-home">
-      <header><div class="navbar navbar-default navbar-fixed-top" role="navigation">
-  <div class="container">
-    <div class="navbar-header">
-      <button type="button" class="navbar-toggle collapsed" data-toggle="collapse" data-target="#navbar" aria-expanded="false">
-        <span class="sr-only">Toggle navigation</span>
-        <span class="icon-bar"></span>
-        <span class="icon-bar"></span>
-        <span class="icon-bar"></span>
-      </button>
-      <span class="navbar-brand">
-        <a class="navbar-link" href="index.html">gemSim</a>
-        <span class="version label label-default" data-toggle="tooltip" data-placement="bottom" title="">0.0.0.9000</span>
-      </span>
-    </div>
+    <nav class="navbar navbar-expand-lg fixed-top bg-light" data-bs-theme="light" aria-label="Site navigation"><div class="container">
 
-    <div id="navbar" class="navbar-collapse collapse">
-      <ul class="nav navbar-nav">
-<li>
-  <a href="reference/index.html">Reference</a>
-</li>
-<li>
-  <a href="news/index.html">Changelog</a>
-</li>
+    <a class="navbar-brand me-2" href="index.html">GEMINI Data Simulation</a>
+
+    <small class="nav-text text-muted me-auto" data-bs-toggle="tooltip" data-bs-placement="bottom" title="">1.0.0</small>
+
+
+    <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbar" aria-controls="navbar" aria-expanded="false" aria-label="Toggle navigation">
+      <span class="navbar-toggler-icon"></span>
+    </button>
+
+    <div id="navbar" class="collapse navbar-collapse ms-3">
+      <ul class="navbar-nav me-auto">
+<li class="nav-item"><a class="nav-link" href="reference/index.html">Reference</a></li>
       </ul>
-<ul class="nav navbar-nav navbar-right"></ul>
+<ul class="navbar-nav"></ul>
 </div>
-<!--/.nav-collapse -->
+
+
   </div>
-<!--/.container -->
-</div>
-<!--/.navbar -->
-
-
-
-      </header><div class="row">
-  <div class="contents col-md-9">
+</nav><div class="container template-home">
+<div class="row">
+  <main id="main" class="col-md-9">
+<!-- badges: end -->
 <div class="section level1">
 <div class="page-header"><h1 id="gemsim">gemSim<a class="anchor" aria-label="anchor" href="#gemsim"></a>
 </h1></div>
-<p><code>gemSim</code> is a custom R package providing functions that generate synthetic data based on the <a href="https://geminimedicine.ca/the-gemini-database/" class="external-link">GEMINI database</a>.</p>
-<p>It currently creates the following tables: * Admdad<br>
-* Locality Variables<br>
-* IPSCU<br>
-* ER<br>
-* IP Diagnosis<br>
-* ER Diagnosis<br>
-* IP Intervention (MRI and MAID)<br>
-* ER Intervention (MRI)<br>
-* Lab (CBC or electrolyte)<br>
-* Radiology<br>
-* Transfusion<br>
-* Physicians</p>
-<p>It also contains a wrapper function, <code>simulate_data_tables</code>, which calls on the other simulation functions to create a database, keeping inter-table relationships.</p>
+<p><code>gemSim</code> is a custom R package for generating synthetic datasets that mimic the structure of the <a href="https://geminimedicine.ca/the-gemini-database/" class="external-link">GEMINI database</a>.</p>
+<p>The package <strong>does not</strong> sample from or reproduce real GEMINI data. Instead, it generates fully synthetic, randomly simulated data designed to approximate the database schema (e.g., table names and key linkage variables) and high-level distributional characteristics of GEMINI’s current data holdings (e.g., age &amp; gender distributions, frequency of lab/radiology testing, hospital-level variability etc.).</p>
+<p>Some data elements are simulated in ways that produce plausible individual records. For instance, clinical date-time variables are generated to fall within the admission–discharge window of a given hospital encounter. However, many aspects of the data are not intended to reflect real clinical relationships. In particular, clinical outcomes, predictors, and covariates commonly used in research are simulated independently of one another and therefore should not be interpreted as having any meaningful associations.</p>
+<p><strong>As a result, the primary purpose of <code>gemSim</code> is to support software development and testing without requiring access to real GEMINI data. This includes, but is not limited to::</strong></p>
+<ul>
+<li>Unit testing within CI/CD pipelines (e.g., for Rgemini)</li>
+<li>Debugging of analytics or reporting workflows</li>
+<li>Demonstrations and example code (e.g., in package vignettes)</li>
+<li>Development of new utility functions</li>
+</ul>
 </div>
-  </div>
+<div class="section level1">
+<h1 id="supported-tables">Supported tables<a class="anchor" aria-label="anchor" href="#supported-tables"></a>
+</h1>
+<p><code>gemSim</code> currently creates synthetic data for the following tables (see <a href="https://geminimedicine.ca/the-gemini-database/#data-dictionary" class="external-link">GEMINI data dictionary</a> for more details):</p>
+<ul>
+<li>Admdad<br>
+</li>
+<li>Locality Variables<br>
+</li>
+<li>IPSCU<br>
+</li>
+<li>ER<br>
+</li>
+<li>IP Diagnosis<br>
+</li>
+<li>ER Diagnosis<br>
+</li>
+<li>IP Intervention (MRI and MAID)<br>
+</li>
+<li>ER Intervention (MRI)<br>
+</li>
+<li>Lab (CBC or electrolyte)<br>
+</li>
+<li>Radiology<br>
+</li>
+<li>Transfusion<br>
+</li>
+<li>Physicians</li>
+</ul>
+</div>
+<div class="section level1">
+<h1 id="code-examples">Code examples<a class="anchor" aria-label="anchor" href="#code-examples"></a>
+</h1>
+<p>To simulate data for a single table, run:</p>
+<pre><code><span><span class="kw"><a href="https://rdrr.io/r/base/library.html" class="external-link">library</a></span><span class="op">(</span><span class="va"><a href="https://gemini-medicine.github.io/gemSim/" class="external-link">gemSim</a></span><span class="op">)</span></span>
+<span><span class="va">admdad</span> <span class="op">&lt;-</span> <span class="fu"><a href="reference/dummy_admdad.html">dummy_admdad</a></span><span class="op">(</span></span>
+<span>  nid <span class="op">=</span> <span class="fl">1000</span>, <span class="co"># number of encounters to be simulated</span></span>
+<span>  n_hospitals <span class="op">=</span> <span class="fl">10</span>, <span class="co"># number of hospitals to be simulated</span></span>
+<span>  time_period <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/c.html" class="external-link">c</a></span><span class="op">(</span><span class="fl">2015</span>, <span class="fl">2023</span><span class="op">)</span>, <span class="co"># fiscal years to be simulated</span></span>
+<span>  seed <span class="op">=</span> <span class="fl">1</span> <span class="co"># seed for reproducilibity</span></span>
+<span><span class="op">)</span></span></code></pre>
+<p>To simulate multiple tables while maintaining key inter-table relationships (e.g., <code>genc_ids</code>, <code>hospital_nums</code>, plausible date-times), use the wrapper function <code><a href="reference/simulate_data_tables.html">simulate_data_tables()</a></code>:</p>
+<pre><code><span><span class="va">dummy_data</span> <span class="op">&lt;-</span> <span class="fu"><a href="reference/simulate_data_tables.html">simulate_data_tables</a></span><span class="op">(</span></span>
+<span>  tables <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/c.html" class="external-link">c</a></span><span class="op">(</span></span>
+<span>    <span class="st">"admdad"</span>, <span class="st">"ipscu"</span>, <span class="st">"er"</span>, <span class="st">"erdiagnosis"</span>, <span class="st">"ipdiagnosis"</span>, <span class="st">"locality_variables"</span>,</span>
+<span>    <span class="st">"lab"</span>,<span class="st">"radiology"</span>, <span class="st">"erintervention"</span>, <span class="st">"ipintervention"</span>, <span class="st">"transfusion"</span>,</span>
+<span>    <span class="st">"physicians"</span></span>
+<span>  <span class="op">)</span>,</span>
+<span>  nid <span class="op">=</span> <span class="fl">5000</span>,</span>
+<span>  time_period <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/c.html" class="external-link">c</a></span><span class="op">(</span><span class="fl">2021</span>, <span class="fl">2024</span><span class="op">)</span>,</span>
+<span>  seed <span class="op">=</span> <span class="fl">1</span></span>
+<span><span class="op">)</span></span></code></pre>
+</div>
+<div class="section level1">
+<h1 id="gemini-dummy-db">GEMINI dummy DB<a class="anchor" aria-label="anchor" href="#gemini-dummy-db"></a>
+</h1>
+<p>Using the <code>gemSim</code> package, a dummy GEMINI database with 5,000 randomly simulated <code>genc_ids</code> has been created, which can be queried as follows:</p>
+<pre><code><span><span class="kw"><a href="https://rdrr.io/r/base/library.html" class="external-link">library</a></span><span class="op">(</span><span class="va"><a href="https://dbi.r-dbi.org" class="external-link">DBI</a></span><span class="op">)</span></span>
+<span><span class="kw"><a href="https://rdrr.io/r/base/library.html" class="external-link">library</a></span><span class="op">(</span><span class="va"><a href="https://rpostgres.r-dbi.org" class="external-link">RPostgres</a></span><span class="op">)</span></span>
+<span><span class="kw"><a href="https://rdrr.io/r/base/library.html" class="external-link">library</a></span><span class="op">(</span><span class="va"><a href="https://r-datatable.com" class="external-link">data.table</a></span><span class="op">)</span></span>
+<span></span>
+<span><span class="co"># connect to dummy DB</span></span>
+<span><span class="va">con</span> <span class="op">&lt;-</span> <span class="fu"><a href="https://dbi.r-dbi.org/reference/dbConnect.html" class="external-link">dbConnect</a></span><span class="op">(</span></span>
+<span>  <span class="fu">RPostgres</span><span class="fu">::</span><span class="fu">Postgres</span><span class="op">(</span><span class="op">)</span>,</span>
+<span>  host     <span class="op">=</span> <span class="st">"gemini-db-dummy.j.aivencloud.com"</span>,</span>
+<span>  port     <span class="op">=</span> <span class="fl">10571</span>,</span>
+<span>  dbname   <span class="op">=</span> <span class="st">"dummy_db_v1_0_0"</span>, <span class="co"># most recent version</span></span>
+<span>  user     <span class="op">=</span> <span class="st">"gemini_user"</span>,</span>
+<span>  password <span class="op">=</span> <span class="st">"gemini"</span>,</span>
+<span>  sslmode  <span class="op">=</span> <span class="st">"require"</span></span>
+<span><span class="op">)</span></span>
+<span></span>
+<span><span class="co"># query dummy admdad table</span></span>
+<span><span class="va">adm</span> <span class="op">&lt;-</span> <span class="fu"><a href="https://dbi.r-dbi.org/reference/dbGetQuery.html" class="external-link">dbGetQuery</a></span><span class="op">(</span><span class="va">con</span>, <span class="st">"SELECT * FROM admdad;"</span><span class="op">)</span></span></code></pre>
+<p>The following code was used to generate the dummy DB:</p>
+<pre><code><span><span class="kw"><a href="https://rdrr.io/r/base/library.html" class="external-link">library</a></span><span class="op">(</span><span class="va"><a href="https://gemini-medicine.github.io/gemSim/" class="external-link">gemSim</a></span><span class="op">)</span></span>
+<span></span>
+<span><span class="va">test_data</span> <span class="op">&lt;-</span> <span class="fu"><a href="reference/simulate_data_tables.html">simulate_data_tables</a></span><span class="op">(</span></span>
+<span>  <span class="fu"><a href="https://rdrr.io/r/base/c.html" class="external-link">c</a></span><span class="op">(</span><span class="st">"admdad"</span>, <span class="st">"ipscu"</span>, <span class="st">"er"</span>, <span class="st">"erdiagnosis"</span>, <span class="st">"ipdiagnosis"</span>, <span class="st">"locality_variables"</span>,</span>
+<span>    <span class="st">"lab"</span>,<span class="st">"radiology"</span>, <span class="st">"erintervention"</span>, <span class="st">"ipintervention"</span>, <span class="st">"transfusion"</span>,</span>
+<span>    <span class="st">"physicians"</span><span class="op">)</span>, nid <span class="op">=</span> <span class="fl">5000</span>, time_period <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/c.html" class="external-link">c</a></span><span class="op">(</span><span class="fl">2021</span>, <span class="fl">2024</span><span class="op">)</span>, seed <span class="op">=</span> <span class="fl">1</span><span class="op">)</span></span></code></pre>
+</div>
 
-  <div class="col-md-3 hidden-xs hidden-sm" id="pkgdown-sidebar">
-    <div class="license">
+  </main><aside class="col-md-3"><div class="license">
 <h2 data-toc-skip>License</h2>
 <ul class="list-unstyled">
 <li><a href="LICENSE.html">Full license</a></li>
@@ -87,6 +147,12 @@
 </ul>
 </div>
 
+<div class="community">
+<h2 data-toc-skip>Community</h2>
+<ul class="list-unstyled">
+<li><a href="CONTRIBUTING.html">Contributing guide</a></li>
+</ul>
+</div>
 
 <div class="citation">
 <h2 data-toc-skip>Citation</h2>
@@ -98,29 +164,31 @@
 <div class="developers">
 <h2 data-toc-skip>Developers</h2>
 <ul class="list-unstyled">
-<li> GEMINIdata <br><small class="roles"> Maintainer </small>   </li>
+<li> GEMINI <br><small class="roles"> Maintainer </small>   </li>
 </ul>
 </div>
 
+<div class="dev-status">
+<h2 data-toc-skip>Dev status</h2>
+<ul class="list-unstyled">
+<li><a href="https://github.com/GEMINI-Medicine/gemSim/actions/workflows/check-standard.yaml" class="external-link"><img src="https://github.com/GEMINI-Medicine/gemSim/actions/workflows/check-standard.yaml/badge.svg" alt="R-CMD-check"></a></li>
+</ul>
+</div>
 
-
-  </div>
+  </aside>
 </div>
 
 
-      <footer><div class="copyright">
-  <p></p>
-<p>Developed by GEMINIdata.</p>
+    <footer><div class="pkgdown-footer-left">
+  <p>Developed by GEMINI.</p>
 </div>
 
-<div class="pkgdown">
-  <p></p>
-<p>Site built with <a href="https://pkgdown.r-lib.org/" class="external-link">pkgdown</a> 2.2.0.</p>
+<div class="pkgdown-footer-right">
+  <p>Site built with <a href="https://pkgdown.r-lib.org/" class="external-link">pkgdown</a> 2.2.0.</p>
 </div>
 
-      </footer>
+    </footer>
 </div>
-
 
 
 
