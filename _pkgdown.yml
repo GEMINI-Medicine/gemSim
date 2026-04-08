@@ -20,7 +20,7 @@ reference:
       - dummy_diag
       - dummy_er
       - dummy_erintervention_mri
-      - dummy_ipadmdad
+      - dummy_admdad
       - dummy_ipintervention_mri_maid
       - dummy_ipscu
       - dummy_lab_cbc_electrolyte
