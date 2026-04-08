@@ -34,6 +34,16 @@ Some data elements are simulated in ways that produce plausible individual recor
 * Transfusion  
 * Physicians
 
+# Installation
+
+`gemSim` is currently not available on CRAN. Instead, please install the package directly from GitHub as follows:
+
+``` r
+remotes::install_github("GEMINI-Medicine/gemSim", dependencies = TRUE)
+```
+
+Alternatively, you can `git clone` the `gemSim` repository from the `main` branch, and then run `devtools::install("/path/to/repo", repos = NULL, type="source")`. 
+
 # Code examples
 
 To simulate data for a single table, run: 
