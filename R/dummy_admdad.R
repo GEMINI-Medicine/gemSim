@@ -234,11 +234,14 @@ dummy_admdad <- function(nid = 1000,
       rlnorm(.N, meanlog = mean_hosp, sdlog = 1.38)
     }, by = hospital_num] # hospital-level variation in distribution
 
+
     hosp_data[, admission_date_time := format(
-      as.POSIXct(discharge_date_time, tz = "UTC") -
-        ddays(los),
+      round_date(as.POSIXct(discharge_date_time, tz = "UTC") -
+                   ddays(los), unit = "days") -
+        dhours(sample_time_shifted(.N, xi = 11.37, omega = 4.79, alpha = 1.67, seed = seed)),
       format = "%Y-%m-%d %H:%M", tz = "UTC"
     )]
+
 
     # if `discharge_date_time` ends up before `admission_date_time`
     hosp_data[, los := as.numeric(difftime(ymd_hm(discharge_date_time), ymd_hm(admission_date_time), units = "days"))]
