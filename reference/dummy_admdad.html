@@ -6,7 +6,7 @@ The simulated encounter-level variables that are returned by this function
 are currently: Admission date-time, discharge date-time, age, gender,
 discharge disposition, transfer to an alternate level of care (ALC), and ALC
 days. The distribution of these simulated variables roughly mimics the real
-distribution of each variable observed in the GIM cohort from 2015-2022.
+distribution of each variable observed in the GEMINI GIM cohort.
 Admission date-time is simulated in conjunction with discharge date-time to
 mimic realistic length of stay. All other variables are simulated
 independently of each other, i.e., there is no correlation between age,
@@ -26,7 +26,7 @@ The simulated encounter-level variables that are returned by this function
 are currently: Admission date-time, discharge date-time, age, gender,
 discharge disposition, transfer to an alternate level of care (ALC), and ALC
 days. The distribution of these simulated variables roughly mimics the real
-distribution of each variable observed in the GIM cohort from 2015-2022.
+distribution of each variable observed in the GEMINI GIM cohort.
 Admission date-time is simulated in conjunction with discharge date-time to
 mimic realistic length of stay. All other variables are simulated
 independently of each other, i.e., there is no correlation between age,
@@ -77,7 +77,7 @@ are contained in the GEMINI "admdad" table (see details in
 are currently: Admission date-time, discharge date-time, age, gender,
 discharge disposition, transfer to an alternate level of care (ALC), and ALC
 days. The distribution of these simulated variables roughly mimics the real
-distribution of each variable observed in the GIM cohort from 2015-2022.
+distribution of each variable observed in the GEMINI GIM cohort.
 Admission date-time is simulated in conjunction with discharge date-time to
 mimic realistic length of stay. All other variables are simulated
 independently of each other, i.e., there is no correlation between age,
@@ -120,10 +120,12 @@ each hospital.</p></dd>
 
 
 <dt id="arg-time-period">time_period<a class="anchor" aria-label="anchor" href="#arg-time-period"></a></dt>
-<dd><p>(<code>vector</code>)<br>
-A numeric vector containing the time period, specified as fiscal years
-(starting in April each year). For example, <code>c(2015, 2019)</code> generates data
-from 2015-04-01 to 2020-03-31.</p></dd>
+<dd><p>(<code>integer</code> or <code>character</code>)<br>
+A vector containing the time period of simulated discharge dates.
+If specified as a numeric vector (e.g., <code>c(2015, 2019)</code>), the function will
+interpret these as calendar years (starting on Jan 1 and ending on Dec 31).
+Users may provide character inputs in <code>ymd</code> format to specify more granular
+start and end dates (e.g., <code>c("2015-07-01", "2019-06-30"</code>).</p></dd>
 
 
 <dt id="arg-seed">seed<a class="anchor" aria-label="anchor" href="#arg-seed"></a></dt>

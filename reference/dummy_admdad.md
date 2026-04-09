@@ -9,14 +9,13 @@ function are currently: Admission date-time, discharge date-time, age,
 gender, discharge disposition, transfer to an alternate level of care
 (ALC), and ALC days. The distribution of these simulated variables
 roughly mimics the real distribution of each variable observed in the
-GIM cohort from 2015-2022. Admission date-time is simulated in
-conjunction with discharge date-time to mimic realistic length of stay.
-All other variables are simulated independently of each other, i.e.,
-there is no correlation between age, gender, discharge disposition etc.
-that may exist in the real data. One exception to this is
-`number_of_alc_days`, which is only \> 0 for entries where
-`alc_service_transfer_flag == TRUE` and the length of ALC is capped at
-the total length of stay.
+GEMINI GIM cohort. Admission date-time is simulated in conjunction with
+discharge date-time to mimic realistic length of stay. All other
+variables are simulated independently of each other, i.e., there is no
+correlation between age, gender, discharge disposition etc. that may
+exist in the real data. One exception to this is `number_of_alc_days`,
+which is only \> 0 for entries where `alc_service_transfer_flag == TRUE`
+and the length of ALC is capped at the total length of stay.
 
 The function simulates patient populations that differ across hospitals.
 That is, patient characteristics are simulated separately for each
@@ -52,10 +51,13 @@ dummy_admdad(
 
 - time_period:
 
-  (`vector`)  
-  A numeric vector containing the time period, specified as fiscal years
-  (starting in April each year). For example, `c(2015, 2019)` generates
-  data from 2015-04-01 to 2020-03-31.
+  (`integer` or `character`)  
+  A vector containing the time period of simulated discharge dates. If
+  specified as a numeric vector (e.g., `c(2015, 2019)`), the function
+  will interpret these as calendar years (starting on Jan 1 and ending
+  on Dec 31). Users may provide character inputs in `ymd` format to
+  specify more granular start and end dates (e.g.,
+  `c("2015-07-01", "2019-06-30"`).
 
 - seed:
 
