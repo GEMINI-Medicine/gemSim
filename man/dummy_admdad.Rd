@@ -20,10 +20,12 @@ Number of hospitals to be simulated. Total number of \code{genc_ids} will be spl
 up pseudo-randomly between hospitals to ensure roughly equal sample size at
 each hospital.}
 
-\item{time_period}{(\code{vector})\cr
-A numeric vector containing the time period, specified as fiscal years
-(starting in April each year). For example, \code{c(2015, 2019)} generates data
-from 2015-04-01 to 2020-03-31.}
+\item{time_period}{(\code{integer} or \code{character})\cr
+A vector containing the time period of simulated discharge dates.
+If specified as a numeric vector (e.g., \code{c(2015, 2019)}), the function will
+interpret these as calendar years (starting on Jan 1 and ending on Dec 31).
+Users may provide character inputs in \code{ymd} format to specify more granular
+start and end dates (e.g., \verb{c("2015-07-01", "2019-06-30"}).}
 
 \item{seed}{(\code{numeric})\cr
 Optional, a number to set the seed for reproducible results}
@@ -86,7 +88,7 @@ The simulated encounter-level variables that are returned by this function
 are currently: Admission date-time, discharge date-time, age, gender,
 discharge disposition, transfer to an alternate level of care (ALC), and ALC
 days. The distribution of these simulated variables roughly mimics the real
-distribution of each variable observed in the GIM cohort from 2015-2022.
+distribution of each variable observed in the GEMINI GIM cohort.
 Admission date-time is simulated in conjunction with discharge date-time to
 mimic realistic length of stay. All other variables are simulated
 independently of each other, i.e., there is no correlation between age,
