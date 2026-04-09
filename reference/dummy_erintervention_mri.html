@@ -97,31 +97,31 @@ performed for or on behalf of the patient to improve health. For this simulation
     <div class="sourceCode"><pre class="sourceCode r"><code><span class="r-in"><span><span class="fu">dummy_erintervention_mri</span><span class="op">(</span>nid <span class="op">=</span> <span class="fl">1000</span>, int_code <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/c.html" class="external-link">c</a></span><span class="op">(</span><span class="st">"3AN40VA"</span>, <span class="st">"3SC40WC"</span><span class="op">)</span><span class="op">)</span></span></span>
 <span class="r-out co"><span class="r-pr">#&gt;</span>       genc_id hospital_num intervention_code</span>
 <span class="r-out co"><span class="r-pr">#&gt;</span>         &lt;int&gt;        &lt;int&gt;            &lt;char&gt;</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span>    1:       1            8           3AN40VA</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span>    2:       1            8           3SC40WC</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span>    3:       2            7           3SC40WC</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span>    4:       2            7           3SC40WC</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span>    5:       3            1           3AN40VA</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span>    1:       1            4           3AN40VA</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span>    2:       1            4           3AN40VA</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span>    3:       1            4           3AN40VA</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span>    4:       1            4           3AN40VA</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span>    5:       1            4           3AN40VA</span>
 <span class="r-out co"><span class="r-pr">#&gt;</span>   ---                                       </span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> 2054:     999           10           3AN40VA</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> 2055:    1000            7           3AN40VA</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> 2056:    1000            7           3SC40WC</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> 2057:    1000            7           3SC40WC</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> 2058:    1000            7           3SC40WC</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> 2041:     999            2           3AN40VA</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> 2042:     999            2           3AN40VA</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> 2043:     999            2           3SC40WC</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> 2044:     999            2           3AN40VA</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> 2045:    1000            8           3AN40VA</span>
 <span class="r-in"><span><span class="fu">dummy_erintervention_mri</span><span class="op">(</span>cohort <span class="op">=</span> <span class="fu"><a href="dummy_admdad.html">dummy_admdad</a></span><span class="op">(</span><span class="op">)</span>, int_code <span class="op">=</span> <span class="st">"3AN40VA"</span><span class="op">)</span></span></span>
 <span class="r-out co"><span class="r-pr">#&gt;</span>       genc_id hospital_num intervention_code</span>
 <span class="r-out co"><span class="r-pr">#&gt;</span>         &lt;int&gt;        &lt;int&gt;            &lt;char&gt;</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span>    1:       1            8           3AN40VA</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span>    2:       1            8           3AN40VA</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span>    3:       1            8           3AN40VA</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span>    4:       2            2           3AN40VA</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span>    5:       3            3           3AN40VA</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span>    1:       1            7           3AN40VA</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span>    2:       1            7           3AN40VA</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span>    3:       1            7           3AN40VA</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span>    4:       1            7           3AN40VA</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span>    5:       2            9           3AN40VA</span>
 <span class="r-out co"><span class="r-pr">#&gt;</span>   ---                                       </span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> 1985:     998            3           3AN40VA</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> 1986:     999           10           3AN40VA</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> 1987:     999           10           3AN40VA</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> 1988:     999           10           3AN40VA</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> 1989:    1000            3           3AN40VA</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> 2032:     999            4           3AN40VA</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> 2033:    1000            4           3AN40VA</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> 2034:    1000            4           3AN40VA</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> 2035:    1000            4           3AN40VA</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> 2036:    1000            4           3AN40VA</span>
 <span class="r-in"><span></span></span>
 <span class="r-in"><span><span class="fu">dummy_erintervention_mri</span><span class="op">(</span>nid <span class="op">=</span> <span class="fl">100</span>, n_hospitals <span class="op">=</span> <span class="fl">2</span>, seed <span class="op">=</span> <span class="fl">1</span><span class="op">)</span></span></span>
 <span class="r-out co"><span class="r-pr">#&gt;</span>      genc_id hospital_num intervention_code</span>

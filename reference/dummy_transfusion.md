@@ -96,44 +96,17 @@ following fields:
 dummy_transfusion(nid = 1000, n_hospitals = 30, seed = 1)
 #>       genc_id hospital_num  issue_date_time blood_product_mapped_omop
 #>         <int>        <int>           <char>                    <char>
-#>    1:       1           25 2020-01-03 18:12                   4022173
+#>    1:       1           25 2020-01-05 18:12                   4022173
 #>    2:       1           25 2020-01-04 21:10                   4022173
-#>    3:       1           25 2020-01-03 13:45                   4022173
-#>    4:       1           25 2020-01-04 08:44                   4022173
+#>    3:       1           25 2020-01-04 13:45                   4022173
+#>    4:       1           25 2020-01-04 17:59                   4022173
 #>    5:       1           25 2020-01-05 09:57                   4022173
 #>   ---                                                                
-#> 4854:     999           16 2015-11-10 06:27                   4022173
-#> 4855:     999           16 2015-11-10 14:13                   4022173
-#> 4856:     999           16 2015-11-10 13:46                   4022173
-#> 4857:    1000           11 2016-06-02 12:48                   4022173
-#> 4858:    1000           11 2016-05-30 14:05                   4022173
-#>       blood_product_raw
-#>                  <char>
-#>    1:   Red Blood Cells
-#>    2:   Red Blood Cells
-#>    3:   Red Blood Cells
-#>    4:   Red Blood Cells
-#>    5:   Red Blood Cells
-#>   ---                  
-#> 4854:   Red Blood Cells
-#> 4855:   Red Blood Cells
-#> 4856:   Red Blood Cells
-#> 4857:   Red Blood Cells
-#> 4858:   Red Blood Cells
-dummy_transfusion(cohort = dummy_admdad())
-#>       genc_id hospital_num  issue_date_time blood_product_mapped_omop
-#>         <int>        <int>           <char>                    <char>
-#>    1:       1           10 2021-05-11 02:47                   4022173
-#>    2:       1           10 2021-05-09 21:32                   4022173
-#>    3:       2            9 2016-07-29 04:38                   4022173
-#>    4:       2            9 2016-07-29 04:38                   4022173
-#>    5:       2            9 2016-07-29 04:38                   4022173
-#>   ---                                                                
-#> 4803:    1000            5 2021-06-02 10:46                   4137859
-#> 4804:    1000            5 2021-06-04 12:54                   4137859
-#> 4805:    1000            5 2021-06-02 10:14                   4137859
-#> 4806:    1000            5 2021-06-03 16:01                   4137859
-#> 4807:    1000            5 2021-06-04 16:39                   4137859
+#> 4854:     999           16 2015-10-31 06:27                   4137859
+#> 4855:     999           16 2015-11-02 22:41                   4137859
+#> 4856:     999           16 2015-10-28 13:46                   4137859
+#> 4857:    1000           11 2016-06-04 12:48                   4022173
+#> 4858:    1000           11 2016-06-02 14:05                   4022173
 #>              blood_product_raw
 #>                         <char>
 #>    1:          Red Blood Cells
@@ -142,37 +115,64 @@ dummy_transfusion(cohort = dummy_admdad())
 #>    4:          Red Blood Cells
 #>    5:          Red Blood Cells
 #>   ---                         
-#> 4803: SAGM Red blood cells, LR
-#> 4804: SAGM Red blood cells, LR
-#> 4805: SAGM Red blood cells, LR
-#> 4806: SAGM Red blood cells, LR
-#> 4807: SAGM Red blood cells, LR
+#> 4854: SAGM Red blood cells, LR
+#> 4855: SAGM Red blood cells, LR
+#> 4856: SAGM Red blood cells, LR
+#> 4857:          Red Blood Cells
+#> 4858:          Red Blood Cells
+dummy_transfusion(cohort = dummy_admdad())
+#>       genc_id hospital_num  issue_date_time blood_product_mapped_omop
+#>         <int>        <int>           <char>                    <char>
+#>    1:       1            8 2023-05-26 14:03                   4137859
+#>    2:       1            8 2023-05-26 19:37                   4137859
+#>    3:       1            8 2023-05-23 17:01                   4137859
+#>    4:       1            8 2023-05-24 17:36                   4137859
+#>    5:       1            8 2023-05-26 19:54                   4137859
+#>   ---                                                                
+#> 4888:     999            9 2023-08-04 15:22                   4137859
+#> 4889:    1000            9 2015-11-29 14:03                   4137859
+#> 4890:    1000            9 2015-11-29 18:14                   4137859
+#> 4891:    1000            9 2015-11-28 15:15                   4137859
+#> 4892:    1000            9 2015-11-29 00:55                   4137859
+#>              blood_product_raw
+#>                         <char>
+#>    1: SAGM Red blood cells, LR
+#>    2: SAGM Red blood cells, LR
+#>    3: SAGM Red blood cells, LR
+#>    4: SAGM Red blood cells, LR
+#>    5: SAGM Red blood cells, LR
+#>   ---                         
+#> 4888: SAGM Red blood cells, LR
+#> 4889: SAGM Red blood cells, LR
+#> 4890: SAGM Red blood cells, LR
+#> 4891: SAGM Red blood cells, LR
+#> 4892: SAGM Red blood cells, LR
 dummy_transfusion(nid = 100, n_hospitals = 1, blood_product_list = c("0", "35605159", "35615187"))
 #> Warning: User input contains at least one invalid blood product OMOP code: 0
 #>      genc_id hospital_num  issue_date_time blood_product_mapped_omop
 #>        <int>        <int>           <char>                    <char>
-#>   1:       1            1 2017-04-26 23:34                  35605159
-#>   2:       1            1 2017-04-26 21:00                  35615187
-#>   3:       2            1 2019-06-08 15:01                  35615187
-#>   4:       2            1 2019-06-08 16:10                  35615187
-#>   5:       2            1 2019-06-10 23:56                  35605159
+#>   1:       1            1 2021-04-08 17:08                  35605159
+#>   2:       1            1 2021-04-07 11:03                  35605159
+#>   3:       2            1 2016-04-28 14:36                         0
+#>   4:       2            1 2016-04-28 15:13                  35615187
+#>   5:       2            1 2016-04-28 10:11                         0
 #>  ---                                                                
-#> 530:     100            1 2021-08-26 01:45                  35615187
-#> 531:     100            1 2021-08-26 18:12                  35615187
-#> 532:     100            1 2021-08-27 13:33                  35605159
-#> 533:     100            1 2021-08-27 15:49                  35605159
-#> 534:     100            1 2021-08-27 16:26                  35605159
+#> 473:     100            1 2017-11-29 10:55                  35605159
+#> 474:     100            1 2017-11-29 19:03                  35615187
+#> 475:     100            1 2017-11-30 02:48                         0
+#> 476:     100            1 2017-11-30 04:03                         0
+#> 477:     100            1 2017-11-29 20:40                  35615187
 #>                blood_product_raw
 #>                           <char>
 #>   1:                 C1-ESTERASE
-#>   2: Intravenous Immune Globulin
-#>   3: Intravenous Immune Globulin
+#>   2:                 C1-ESTERASE
+#>   3:                         FAR
 #>   4: Intravenous Immune Globulin
-#>   5:                 C1-ESTERASE
+#>   5:                         FAR
 #>  ---                            
-#> 530: Intravenous Immune Globulin
-#> 531: Intravenous Immune Globulin
-#> 532:                 C1-ESTERASE
-#> 533:                 C1-ESTERASE
-#> 534:                 C1-ESTERASE
+#> 473:                 C1-ESTERASE
+#> 474: Intravenous Immune Globulin
+#> 475:                         FAR
+#> 476:                         FAR
+#> 477: Intravenous Immune Globulin
 ```

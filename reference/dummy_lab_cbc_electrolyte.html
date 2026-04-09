@@ -108,57 +108,57 @@ When <code>cohort</code> is not NULL, <code>nid</code>, <code>n_hospitals</code>
     <div class="sourceCode"><pre class="sourceCode r"><code><span class="r-in"><span><span class="fu">dummy_lab_cbc_electrolyte</span><span class="op">(</span>nid <span class="op">=</span> <span class="fl">10</span>, n_hospitals <span class="op">=</span> <span class="fl">1</span>, seed <span class="op">=</span> <span class="fl">1</span><span class="op">)</span></span></span>
 <span class="r-out co"><span class="r-pr">#&gt;</span>      genc_id hospital_num collection_date_time test_type_mapped_omop</span>
 <span class="r-out co"><span class="r-pr">#&gt;</span>        &lt;int&gt;        &lt;int&gt;               &lt;char&gt;                 &lt;num&gt;</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span>   1:       1            1     2016-11-07 09:22               3000963</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span>   1:       1            1     2016-11-06 09:22               3000963</span>
 <span class="r-out co"><span class="r-pr">#&gt;</span>   2:       1            1     2016-11-08 08:07               3019550</span>
 <span class="r-out co"><span class="r-pr">#&gt;</span>   3:       1            1     2016-11-08 10:25               3000963</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span>   4:       1            1     2016-11-07 06:28               3000963</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span>   5:       1            1     2016-11-08 09:05               3019550</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span>   4:       1            1     2016-11-06 06:28               3019550</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span>   5:       1            1     2016-11-07 09:05               3019550</span>
 <span class="r-out co"><span class="r-pr">#&gt;</span>  ---                                                                </span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> 149:      10            1     2021-12-29 14:49               3019550</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> 150:      10            1     2021-12-29 11:06               3000963</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> 151:      10            1     2021-12-29 09:58               3019550</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> 152:      10            1     2021-12-29 06:19               3000963</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> 153:      10            1     2021-12-29 08:33               3000963</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> 149:      10            1     2021-12-29 05:36               3000963</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> 150:      10            1     2021-12-29 11:06               3019550</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> 151:      10            1     2021-12-29 09:58               3000963</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> 152:      10            1     2021-12-29 03:43               3019550</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> 153:      10            1     2021-12-28 08:33               3000963</span>
 <span class="r-out co"><span class="r-pr">#&gt;</span>      test_name_raw test_code_raw result_value</span>
 <span class="r-out co"><span class="r-pr">#&gt;</span>             &lt;char&gt;        &lt;char&gt;       &lt;char&gt;</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span>   1:    HEMOGLOBIN           HGB           76</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span>   1:           CBC          &lt;NA&gt;           84</span>
 <span class="r-out co"><span class="r-pr">#&gt;</span>   2:        SODIUM          &lt;NA&gt;          139</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span>   3:    HEMOGLOBIN          &lt;NA&gt;          101</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span>   4:    Hemoglobin          &lt;NA&gt;          130</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span>   5:        Sodium          &lt;NA&gt;          138</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span>   3:    HEMOGLOBIN          &lt;NA&gt;           81</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span>   4:        SODIUM          &lt;NA&gt;          135</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span>   5:        SODIUM          &lt;NA&gt;          138</span>
 <span class="r-out co"><span class="r-pr">#&gt;</span>  ---                                         </span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> 149:        Sodium          &lt;NA&gt;          138</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> 150:   Haemoglobin           HGB           89</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> 151:        SODIUM          &lt;NA&gt;          131</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> 152:    HEMOGLOBIN          &lt;NA&gt;           82</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> 153:           CBC                         85</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> 149:    HEMOGLOBIN           HGB          109</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> 150:        SODIUM          &lt;NA&gt;          135</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> 151:    HEMOGLOBIN    Hemoglobin          139</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> 152:        SODIUM                        140</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> 153:    Hemoglobin          &lt;NA&gt;           89</span>
 <span class="r-in"><span><span class="fu">dummy_lab_cbc_electrolyte</span><span class="op">(</span>cohort <span class="op">=</span> <span class="fu"><a href="dummy_admdad.html">dummy_admdad</a></span><span class="op">(</span><span class="op">)</span><span class="op">)</span></span></span>
 <span class="r-out co"><span class="r-pr">#&gt;</span>        genc_id hospital_num collection_date_time test_type_mapped_omop</span>
 <span class="r-out co"><span class="r-pr">#&gt;</span>          &lt;int&gt;        &lt;int&gt;               &lt;char&gt;                 &lt;num&gt;</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span>     1:       1            6     2019-03-08 03:56               3019550</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span>     2:       1            6     2019-03-09 07:19               3000963</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span>     3:       1            6     2019-03-08 06:43               3000963</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span>     4:       1            6     2019-03-08 11:00               3019550</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span>     5:       1            6     2019-03-08 03:40               3019550</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span>     1:       1            9     2018-10-13 18:33               3019550</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span>     2:       1            9     2018-10-07 10:14               3019550</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span>     3:       1            9     2018-10-10 07:24               3000963</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span>     4:       1            9     2018-10-31 19:18               3019550</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span>     5:       1            9     2018-10-21 05:35               3000963</span>
 <span class="r-out co"><span class="r-pr">#&gt;</span>    ---                                                                </span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> 15747:    1000            7     2022-12-24 14:56               3019550</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> 15748:    1000            7     2022-12-24 20:28               3019550</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> 15749:    1000            7     2022-12-24 03:39               3019550</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> 15750:    1000            7     2022-12-24 19:35               3000963</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> 15751:    1000            7     2022-12-24 06:11               3019550</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span>        test_name_raw test_code_raw result_value</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span>               &lt;char&gt;        &lt;char&gt;       &lt;char&gt;</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span>     1:        Sodium          &lt;NA&gt;          131</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span>     2:    Hemoglobin          &lt;NA&gt;          126</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span>     3:    Hemoglobin         HBTOT           78</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span>     4:        Sodium          &lt;NA&gt;          136</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span>     5:        SODIUM          &lt;NA&gt;          138</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span>    ---                                         </span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> 15747:        Sodium          &lt;NA&gt;          144</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> 15748:        Sodium                        132</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> 15749:        Sodium                        137</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> 15750:    Hemoglobin          &lt;NA&gt;          119</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> 15751:        Sodium          &lt;NA&gt;          137</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> 15896:    1000            1     2020-04-27 07:40               3000963</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> 15897:    1000            1     2020-04-27 06:27               3000963</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> 15898:    1000            1     2020-04-26 11:06               3019550</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> 15899:    1000            1     2020-04-29 03:27               3000963</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> 15900:    1000            1     2020-04-25 11:50               3000963</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span>              test_name_raw test_code_raw result_value</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span>                     &lt;char&gt;        &lt;char&gt;       &lt;char&gt;</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span>     1:              SODIUM                        133</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span>     2: Sodium,Serum,Plasma                        131</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span>     3:          HEMOGLOBIN           HGB           97</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span>     4:              SODIUM                        139</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span>     5:          HEMOGLOBIN        100.06          125</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span>    ---                                               </span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> 15896:          HEMOGLOBIN            Hb           70</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> 15897:          Hemoglobin          &lt;NA&gt;          130</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> 15898:              SODIUM          NAPL          145</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> 15899:          HEMOGLOBIN          &lt;NA&gt;           76</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> 15900:          HEMOGLOBIN           HGB          122</span>
 <span class="r-in"><span></span></span>
 </code></pre></div>
     </div>

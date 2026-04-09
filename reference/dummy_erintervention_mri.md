@@ -77,31 +77,31 @@ the columns:
 dummy_erintervention_mri(nid = 1000, int_code = c("3AN40VA", "3SC40WC"))
 #>       genc_id hospital_num intervention_code
 #>         <int>        <int>            <char>
-#>    1:       1            8           3AN40VA
-#>    2:       1            8           3SC40WC
-#>    3:       2            7           3SC40WC
-#>    4:       2            7           3SC40WC
-#>    5:       3            1           3AN40VA
+#>    1:       1            4           3AN40VA
+#>    2:       1            4           3AN40VA
+#>    3:       1            4           3AN40VA
+#>    4:       1            4           3AN40VA
+#>    5:       1            4           3AN40VA
 #>   ---                                       
-#> 2054:     999           10           3AN40VA
-#> 2055:    1000            7           3AN40VA
-#> 2056:    1000            7           3SC40WC
-#> 2057:    1000            7           3SC40WC
-#> 2058:    1000            7           3SC40WC
+#> 2041:     999            2           3AN40VA
+#> 2042:     999            2           3AN40VA
+#> 2043:     999            2           3SC40WC
+#> 2044:     999            2           3AN40VA
+#> 2045:    1000            8           3AN40VA
 dummy_erintervention_mri(cohort = dummy_admdad(), int_code = "3AN40VA")
 #>       genc_id hospital_num intervention_code
 #>         <int>        <int>            <char>
-#>    1:       1            8           3AN40VA
-#>    2:       1            8           3AN40VA
-#>    3:       1            8           3AN40VA
-#>    4:       2            2           3AN40VA
-#>    5:       3            3           3AN40VA
+#>    1:       1            7           3AN40VA
+#>    2:       1            7           3AN40VA
+#>    3:       1            7           3AN40VA
+#>    4:       1            7           3AN40VA
+#>    5:       2            9           3AN40VA
 #>   ---                                       
-#> 1985:     998            3           3AN40VA
-#> 1986:     999           10           3AN40VA
-#> 1987:     999           10           3AN40VA
-#> 1988:     999           10           3AN40VA
-#> 1989:    1000            3           3AN40VA
+#> 2032:     999            4           3AN40VA
+#> 2033:    1000            4           3AN40VA
+#> 2034:    1000            4           3AN40VA
+#> 2035:    1000            4           3AN40VA
+#> 2036:    1000            4           3AN40VA
 
 dummy_erintervention_mri(nid = 100, n_hospitals = 2, seed = 1)
 #>      genc_id hospital_num intervention_code
